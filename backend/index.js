@@ -17,8 +17,12 @@ app.get('/clients', (req, res) => {
     res.send(clients);
 });
 
-app.get('/', (req, res) => {
-    res.send(orders);
+app.get(`/order/:id`, (req, res) => {
+    res.send(orders[req.params.id]);
+});
+
+app.get(`/client/:id`, (req, res) => {
+    res.send(clients[req.params.id]);
 });
 
 app.listen(8000, () => {

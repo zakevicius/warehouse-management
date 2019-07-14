@@ -17,7 +17,7 @@ class Order {
 
 const orders = [];
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 20; i++) {
     let id = i;
     let randomDate = faker.date.past(1, '2019-07-13');
     let month = randomDate.getMonth() + 1;
@@ -47,7 +47,7 @@ class Client {
 
 const clients = [];
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 10; i++) {
     let id = i;
     let firstName = faker.name.firstName();
     let lastName = faker.name.lastName();
