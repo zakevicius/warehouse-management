@@ -42,7 +42,7 @@ class OrderShow extends React.Component {
     }
 
     render() {
-        return <div>{this.renderTable()}</div>;
+        return <div className="ui container">{this.renderTable()}</div>;
     }
 }
 

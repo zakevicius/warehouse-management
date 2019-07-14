@@ -1,6 +1,6 @@
 import React from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import { history } from './history';
 
 import OrderList from './orders/OrderList';
 import OrderShow from './orders/OrderShow';
@@ -17,7 +17,7 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <Router history={createBrowserHistory()}>
+                <Router history={history}>
                     <div>
                         <Header handleClick={this.handleClick} />
                         <Switch>

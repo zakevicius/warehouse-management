@@ -26,7 +26,6 @@ class ClientShow extends React.Component {
     }
 
     renderTable() {
-        console.log(this.props.client)
         if (!this.props.client) {
             return (
                 <div className="ui active inverted dimmer">
@@ -43,7 +42,7 @@ class ClientShow extends React.Component {
     }
 
     render() {
-        return <div>{this.renderTable()}</div>;
+        return <div className="ui container">{this.renderTable()}</div>;
     }
 }
 
