@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchData, setActiveTab } from '../../action';
+import { Link } from 'react-router-dom';
 import TableHeader from '../TableHeader';
 
 class OrderList extends React.Component {
@@ -9,10 +10,15 @@ class OrderList extends React.Component {
         this.props.setActiveTab('orders');
     }
 
-    renderList() {
-        return this.props.orders.map(order => {
+    renderList(orders) {
+        return orders.map(order => {
             return (
                 <tr key={order.id}>
+                    <td className="center aligned">
+                        <Link to={`/orders/${order.id}`} className="ui button secondary">
+                            More
+                        </Link>
+                    </td>
                     <td className="center aligned">{order.id}</td>
                     <td className="center aligned">{order.date}</td>
                     <td>{order.sender}</td>
@@ -29,17 +35,21 @@ class OrderList extends React.Component {
     }
 
     renderTable() {
-        if (this.props.orders === undefined) {
+        const { orders, error } = this.props.orders;
+        if (orders.length === 0) {
+            if (error) {
+                return <div className="ui error">{error}</div>;
+            }
             return (
                 <div className="ui active inverted dimmer">
                     <div className="ui text loader">Loading</div>
                 </div>
-            )
+            );
         }
         return (
             <table className="ui celled striped selectable table">
                 <TableHeader type="orders" />
-                <tbody>{this.renderList()}</tbody>
+                <tbody>{this.renderList(orders)}</tbody>
             </table>
         );
     }
@@ -56,7 +66,7 @@ class OrderList extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        orders: state.ordersData.orders
+        orders: state.ordersData,
     };
 }
 

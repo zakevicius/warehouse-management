@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import { fetchSingleData } from '../../action'
 import TableHeader from '../TableHeader';
 
-class OrderShow extends React.Component {
+class ClientShow extends React.Component {
     componentDidMount() {
-        this.props.fetchSingleData('/order', this.props.match.params.id);
+        this.props.fetchSingleData('/client', this.props.match.params.id);
     }
 
-    renderOrder(order) {
-        const firstColumn = ['ID', 'date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description', 'Declarations'];
-        const secondColumn = [order.id, order.date, order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description, order.declarations];
+    renderClient(client) {
+        const firstColumn = ['First Name', 'Last Name', 'Phone', 'E-mail'];
+        const secondColumn = [client.firstName, client.lastName, client.phone, client.email];
         let i = 0;
         return (
             firstColumn.map(text => {
@@ -26,7 +26,8 @@ class OrderShow extends React.Component {
     }
 
     renderTable() {
-        if (!this.props.order) {
+        console.log(this.props.client)
+        if (!this.props.client) {
             return (
                 <div className="ui active inverted dimmer">
                     <div className="ui text loader">Loading</div>
@@ -35,8 +36,8 @@ class OrderShow extends React.Component {
         }
         return (
             <table className="ui celled striped selectable table">
-                <TableHeader type="order" />
-                <tbody>{this.renderOrder(this.props.order)}</tbody>
+                <TableHeader type="client" />
+                <tbody>{this.renderClient(this.props.client)}</tbody>
             </table>
         );
     }
@@ -48,8 +49,8 @@ class OrderShow extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        order: state.ordersData.order
+        client: state.clientsData.client
     }
 }
 
-export default connect(mapStateToProps, { fetchSingleData })(OrderShow);
+export default connect(mapStateToProps, { fetchSingleData })(ClientShow);

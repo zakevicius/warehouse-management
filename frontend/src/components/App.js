@@ -8,6 +8,7 @@ import OrderCreate from './orders/OrderCreate';
 import OrderEdit from './orders/OrderEdit';
 import OrderDelete from './orders/OrderDelete';
 import ClientList from './clients/ClientList';
+import ClientShow from './clients/ClientShow';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -22,6 +23,7 @@ class App extends React.Component {
                         <Switch>
                             <Route path="/" exact component={OrderList} />
                             <Route path="/clients" exact component={ClientList} />
+                            <Route path="/clients/:id" exact component={ClientShow} />
                             <Route path="/orders/new" exact component={OrderCreate} />
                             <Route path="/orders/edit/:id" exact component={OrderEdit} />
                             <Route path="/orders/delete/:id" exact component={OrderDelete} />

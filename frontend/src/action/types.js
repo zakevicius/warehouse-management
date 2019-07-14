@@ -10,7 +10,11 @@ export const DELETE_ORDER = 'DELETE_ORDER';
 export const EDIT_ORDER = 'EDIT_ORDER';
 
 //CLIENTS
-export const FETCH_CLIENTS = "FETCH_CLIENTS";
+export const FETCH_CLIENTS = 'FETCH_CLIENTS';
+export const FETCH_CLIENT = "FETCH_CLIENT";
 
 //EVENTS
-export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB";
+export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
+
+// ERROR
+export const NETWORK_ERROR = 'NETWORK_ERROR';
