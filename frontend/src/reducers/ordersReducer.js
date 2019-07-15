@@ -1,12 +1,14 @@
-import * as type from '../action/types';
+import * as types from '../action/types';
 
 export default (state = { orders: [] }, action) => {
     switch (action.type) {
-        case type.FETCH_ORDERS:
+        case types.FETCH_ORDERS:
             return { ...state, orders: action.payload };
-        case type.FETCH_ORDER:
+        case types.FETCH_ORDER:
             return { ...state, order: action.payload };
-        case type.NETWORK_ERROR:
+        case types.FETCH_ORDER_ID:
+            return { ...state, newOrderId: action.payload };
+        case types.NETWORK_ERROR:
             return { ...state, error: action.payload };
         default:
             return state;

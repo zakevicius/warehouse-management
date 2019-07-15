@@ -4,8 +4,10 @@ import { history } from './history';
 
 const TableHeader = (props) => {
     let link = '/';
-    if (props.type === 'client' || props.type === 'client') {
-        link = '/clients';
+    if (props.type === 'clients') {
+        link = '/clients/new';
+    } else if (props.type === 'orders') {
+        link = '/orders/new';
     }
 
     switch (props.type) {

@@ -5,7 +5,7 @@ import TableHeader from '../TableHeader';
 
 class ClientShow extends React.Component {
     componentDidMount() {
-        this.props.fetchSingleData('/client', this.props.match.params.id);
+        this.props.fetchSingleData('/clients', this.props.match.params.id);
     }
 
     renderClient(client) {

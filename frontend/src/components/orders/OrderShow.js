@@ -5,7 +5,7 @@ import TableHeader from '../TableHeader';
 
 class OrderShow extends React.Component {
     componentDidMount() {
-        this.props.fetchSingleData('/order', this.props.match.params.id);
+        this.props.fetchSingleData('/orders', this.props.match.params.id);
     }
 
     renderOrder(order) {
