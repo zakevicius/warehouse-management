@@ -46,7 +46,7 @@ const TableHeader = (props) => {
                             </button>
                         </th>
                         <th className="six wide">
-                            {props.renderButtons()}
+                            {/* {props.renderButtons()} */}
                         </th>
                         {props.type === "order" && <th className="three wide">Files</th>}
                     </tr>
@@ -79,7 +79,6 @@ const TableHeader = (props) => {
                 </thead>
             )
     }
-
 };
 
 export default TableHeader;

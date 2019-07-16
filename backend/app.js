@@ -40,7 +40,10 @@ app.post('/clients', (req, res) => {
 
 // LISTEN
 
-app.listen(process.env.PORT, () => {
+const HEROKU_PORT = process.env.PORT;
+const LOCAL_PORT = '8000';
+
+app.listen(LOCAL_PORT, () => {
     console.log('Listening');
 })
 

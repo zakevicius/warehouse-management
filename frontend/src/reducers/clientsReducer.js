@@ -1,6 +1,6 @@
 import * as types from '../action/types';
 
-export default (state = {}, action) => {
+export default (state = { clients: [] }, action) => {
     switch (action.type) {
         case types.FETCH_CLIENTS:
             return { ...state, clients: action.payload };
