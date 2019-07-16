@@ -7,7 +7,6 @@ import * as types from './types';
 
 export const fetchData = (data) => async (dispatch) => {
     let requestType = setRequestType(data, 'fetchAll');
-    console.log(requestType);
     await api.get(data)
         .then((response) => {
             dispatch({ type: requestType, payload: response.data });

@@ -2,12 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchData, setActiveTab } from '../../action';
 import { Link } from 'react-router-dom';
-import TableHeader from '../TableHeader';
+import TableHeader from '../elements/TableHeader';
 
 class OrderList extends React.Component {
     componentDidMount() {
-        this.props.fetchData('/orders');
-        this.props.setActiveTab('orders');
+        console.log(this.props);
+        this.props.ordersByClient === undefined && this.props.fetchData('/orders');
+        this.props.ordersByClient === undefined ? this.props.setActiveTab('orders') : this.props.setActiveTab('clients');
     }
 
     renderList(orders) {
@@ -35,8 +36,17 @@ class OrderList extends React.Component {
     }
 
     renderTable() {
-        const { orders, error } = this.props.orders;
-        if (orders.length === 0) {
+        let orders, error;
+
+        /* CHECKING WHAT DATA TO SHOW. IF IN CLIENTS PAGE THEN SHOWS ONLY CLIENT'S, ELSE SHOWS EVERYTHING */
+        if (this.props.ordersByClient) {
+            orders = this.props.ordersByClient;
+        } else if (this.props.orders) {
+            orders = this.props.orders.orders;
+            error = this.props.orders.error;
+        }
+
+        if (orders === undefined) {
             if (error) {
                 return <div className="ui error">{error}</div>;
             }
@@ -45,7 +55,10 @@ class OrderList extends React.Component {
                     <div className="ui text loader">Loading</div>
                 </div>
             );
+        } else if (orders.length === 0) {
+            return <div className="ui message">No orders created</div>;
         }
+
         return (
             <table className="ui celled striped selectable table">
                 <TableHeader type="orders" />

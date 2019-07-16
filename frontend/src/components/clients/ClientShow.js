@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { fetchSingleData } from '../../action'
-import TableHeader from '../TableHeader';
+import TableHeader from '../elements/TableHeader';
+import OrderList from '../orders/OrderList';
 
 class ClientShow extends React.Component {
     componentDidMount() {
         this.props.fetchSingleData('/clients', this.props.match.params.id);
+    }
+
+    componentDidUpdate() {
+        console.log(this.props);
+        this.render();
     }
 
     renderClient(client) {
@@ -25,8 +31,18 @@ class ClientShow extends React.Component {
         );
     }
 
+    renderButtons() {
+        return (
+            <Fragment>
+                <button className="ui button negative right floated">
+                    Delete
+                </button>
+            </Fragment>
+        )
+    }
+
     renderTable() {
-        if (!this.props.client) {
+        if (!this.props.client && !this.props.orders) {
             return (
                 <div className="ui active inverted dimmer">
                     <div className="ui text loader">Loading</div>
@@ -34,22 +50,29 @@ class ClientShow extends React.Component {
             );
         }
         return (
-            <table className="ui celled striped selectable table">
-                <TableHeader type="client" />
-                <tbody>{this.renderClient(this.props.client)}</tbody>
-            </table>
+            <Fragment>
+                <table className="ui celled striped table segment">
+                    <TableHeader type="client" renderButtons={this.renderButtons} />
+                    <tbody>{this.renderClient(this.props.client.data)}</tbody>
+                </table>
+                <OrderList ordersByClient={this.props.client.orders} />
+            </Fragment>
         );
     }
 
     render() {
-        return <div className="ui container">{this.renderTable()}</div>;
+        return (
+            <div>
+                {this.renderTable()}
+            </div>
+        );
     }
 }
 
 const mapStateToProps = state => {
     return {
-        client: state.clientsData.client
-    }
-}
+        client: state.clientsData.client,
+    };
+};
 
 export default connect(mapStateToProps, { fetchSingleData })(ClientShow);

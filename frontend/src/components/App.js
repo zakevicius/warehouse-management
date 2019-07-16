@@ -12,6 +12,7 @@ import ClientShow from './clients/ClientShow';
 import ClientCreate from './clients/ClientCreate';
 // import ClientEdit from './clients/ClientEdit';
 // import ClientDelete from './clients/ClientDelete';
+import LoadingList from './loadings/LoadingList';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -32,6 +33,7 @@ class App extends React.Component {
                             <Route path="/orders/edit/:id" exact component={OrderEdit} />
                             <Route path="/orders/delete/:id" exact component={OrderDelete} />
                             <Route path="/orders/:id" exact component={OrderShow} />
+                            <Route path="/loadings" exact component={LoadingList} />
                         </Switch>
                         <Footer />
                     </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchData, setActiveTab } from '../../action';
 import { Link } from 'react-router-dom';
-import TableHeader from '../TableHeader';
+import TableHeader from '../elements/TableHeader';
 
 class ClientList extends React.Component {
     componentDidMount() {

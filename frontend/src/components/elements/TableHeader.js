@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { history } from './history';
+import { history } from '../history';
 
 const TableHeader = (props) => {
     let link = '/';
@@ -40,12 +40,15 @@ const TableHeader = (props) => {
             return (
                 <thead>
                     <tr>
-                        <th className="two wide center aligned">
-                            <button onClick={() => props.type === "client" ? history.push('/clients') : history.push('/')} className="ui button">
+                        <th className="one wide center aligned">
+                            <button onClick={() => props.type === "client" ? history.push('/clients') : history.push('/')} className="ui button secondary basic">
                                 Back
                             </button>
                         </th>
-                        <th className="six wide center aligned"></th>
+                        <th className="six wide">
+                            {props.renderButtons()}
+                        </th>
+                        {props.type === "order" && <th className="three wide">Files</th>}
                     </tr>
                 </thead>
             );

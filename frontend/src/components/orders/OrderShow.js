@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { fetchSingleData } from '../../action'
-import TableHeader from '../TableHeader';
+import TableHeader from '../elements/TableHeader';
 
 class OrderShow extends React.Component {
     componentDidMount() {
@@ -17,12 +17,26 @@ class OrderShow extends React.Component {
                 i++;
                 return (
                     <tr key={i}>
-                        <td>{text}</td>
-                        <td className="center aligned">{secondColumn[i - 1]}</td>
-                    </tr>
+                        <td className="right aligned" style={{ fontWeight: "bold" }}>{text}</td>
+                        <td>{secondColumn[i - 1]}</td>
+                        {i === 1 && <td rowspan={secondColumn.length}></td>}
+                    </tr >
                 );
             })
         );
+    }
+
+    renderButtons() {
+        return (
+            <Fragment>
+                <button className="ui button primary basic">
+                    Add to loading
+                </button>
+                <button className="ui button negative right floated">
+                    Delete
+                </button>
+            </Fragment>
+        )
     }
 
     renderTable() {
@@ -35,7 +49,7 @@ class OrderShow extends React.Component {
         }
         return (
             <table className="ui celled striped selectable table">
-                <TableHeader type="order" />
+                <TableHeader type="order" renderButtons={this.renderButtons} />
                 <tbody>{this.renderOrder(this.props.order)}</tbody>
             </table>
         );

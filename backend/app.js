@@ -30,7 +30,8 @@ app.get('/clients', (req, res) => {
 });
 
 app.get(`/clients/:id`, (req, res) => {
-    res.send(clients[req.params.id]);
+    const clientData = { data: clients[req.params.id], orders: filterOrdersByClientId(req.params.id, orders) };
+    res.send(clientData);
 });
 
 app.post('/clients', (req, res) => {
@@ -39,6 +40,13 @@ app.post('/clients', (req, res) => {
 
 // LISTEN
 
-app.listen(8000, () => {
-    console.log('Listening on port 8000');
+app.listen(process.env.PORT, () => {
+    console.log('Listening');
 })
+
+
+// FUNCTIONS
+
+const filterOrdersByClientId = (id, orders) => {
+    return orders.filter(order => order.clientId === parseInt(id));
+}

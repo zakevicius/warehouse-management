@@ -1,7 +1,7 @@
 const faker = require('faker');
 
 class Order {
-    constructor(id, date, sender, receiver, truck, trailer, qnt, bruto, description, declarations) {
+    constructor(id, date, sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientId) {
         this.id = id;
         this.date = date;
         this.sender = sender;
@@ -12,6 +12,7 @@ class Order {
         this.bruto = bruto;
         this.description = description;
         this.declarations = declarations;
+        this.clientId = clientId;
     }
 }
 
@@ -31,8 +32,9 @@ for (let i = 0; i < 20; i++) {
     let bruto = faker.random.number({ min: 10, max: 20000, precision: 1 });
     let description = faker.lorem.sentence();
     let declarations = "EX";
+    let clientId = faker.random.number({ min: 0, max: 9 });
 
-    orders.push(new Order(id, date, sender, receiver, truck, trailer, qnt, bruto, description, declarations));
+    orders.push(new Order(id, date, sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientId));
 }
 
 class Client {
@@ -57,4 +59,32 @@ for (let i = 0; i < 10; i++) {
     clients.push(new Client(id, firstName, lastName, phone, email));
 }
 
-module.exports = [orders, clients];
+class Loading {
+    constructor(id, date, truck, trailer, orders) {
+        this.id = id;
+        this.date = date;
+        this.truck = truck;
+        this.trailer = trailer;
+        this.orders = orders;
+    }
+}
+
+const loadings = [];
+
+for (let i = 0; i < 3; i++) {
+    let orders = [];
+    let id = i;
+    let randomDate = faker.date.past(1, '2019-07-13');
+    let month = randomDate.getMonth() + 1;
+    let day = randomDate.getDate();
+    let date = `${randomDate.getFullYear()}-${month < 10 ? "0" + month : month}-${day < 10 ? "0" + day : day}`;
+    let truck = `ABC ${i}${i}${i}`;
+    let trailer = `DE ${i} ${i} `;
+    for (let j = 0; j < 5; j++) {
+        let order = faker.random.number({ min: 1, max: 20 });
+        orders.push(order);
+    }
+    loadings.push(new Loading(id, date, truck, trailer, orders));
+}
+
+module.exports = [orders, clients, loadings];
