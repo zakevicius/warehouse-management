@@ -1,25 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { history } from '../history';
+import Button from './Button';
 
 const TableHeader = (props) => {
-    let link = '/';
-    if (props.type === 'clients') {
-        link = '/clients/new';
-    } else if (props.type === 'orders') {
-        link = '/orders/new';
-    }
-
     switch (props.type) {
         case 'orders':
             return (
                 <thead>
                     <tr>
                         <th className="one wide center aligned">
-                            <Link to={link}>
-                                <button className="ui button">
-                                    New order
-                                </button>
+                            <Link to='/orders/new'>
+                                <Button button={{ type: 'primary basic', text: 'New order' }} />
                             </Link>
                         </th>
                         <th className="one wide center aligned">Order</th>
@@ -29,7 +21,7 @@ const TableHeader = (props) => {
                         <th className="one wide center aligned">Truck</th>
                         <th className="one wide center aligned">Trailer</th>
                         <th className="one wide center aligned">CLL</th>
-                        <th className="one wide center aligned">Brutto</th>
+                        <th className="one wide center aligned">Bruto</th>
                         <th className="three wide center aligned">Description</th>
                         <th className="two wide center aligned">Declarations</th>
                     </tr>
@@ -41,12 +33,13 @@ const TableHeader = (props) => {
                 <thead>
                     <tr>
                         <th className="one wide center aligned">
-                            <button onClick={() => props.type === "client" ? history.push('/clients') : history.push('/')} className="ui button secondary basic">
-                                Back
-                            </button>
+                            <Button
+                                button={{ type: "secondary", text: "Back" }}
+                                onClick={() => props.type === "client" ? history.push('/clients') : history.push('/')}
+                            />
                         </th>
                         <th className="six wide">
-                            {/* {props.renderButtons()} */}
+                            <Button button={{ type: 'negative right floated', text: 'Delete' }} />
                         </th>
                         {props.type === "order" && <th className="three wide">Files</th>}
                     </tr>
@@ -57,16 +50,47 @@ const TableHeader = (props) => {
                 <thead>
                     <tr>
                         <th className="one wide center aligned">
-                            <Link to={link}>
-                                <button className="ui button">
-                                    New client
-                                </button>
+                            <Link to='/clients/new'>
+                                <Button button={{ type: 'primary basic', text: 'New client' }} />
                             </Link>
                         </th>
                         <th className="two wide center aligned">First Name</th>
                         <th className="two wide center aligned">Last Name</th>
                         <th className="two wide center aligned">Phone</th>
                         <th className="two wide center aligned">E-mail</th>
+                    </tr>
+                </thead>
+            );
+        case 'loadings':
+            return (
+                <thead>
+                    <tr>
+                        <th className="one wide center aligned">
+                            <Link to='/loadings/new'>
+                                <Button button={{ type: 'primary basic', text: 'New loading' }} />
+                            </Link>
+                        </th>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Truck</th>
+                        <th>Trailer</th>
+                        <th>Total CLL</th>
+                        <th>Total Bruto</th>
+                        <th>Client</th>
+                    </tr>
+                </thead>
+            );
+        case 'loading':
+            return (
+                <thead>
+                    <tr>
+                        <th className="two wide center aligned">Cargo ID</th>
+                        <th className="two wide center aligned">Date</th>
+                        <th className="two wide center aligned">Sender</th>
+                        <th className="two wide center aligned">Receiver</th>
+                        <th className="two wide center aligned">Auto</th>
+                        <th className="two wide center aligned">CLL</th>
+                        <th className="two wide center aligned">Bruto</th>
                     </tr>
                 </thead>
             );

@@ -1,12 +1,13 @@
-import React, { Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchSingleData } from '../../action'
+import { fetchSingleData, setActiveTab } from '../../action'
 import Table from '../elements/Table';
 import OrderList from '../orders/OrderList';
 
-class ClientShow extends React.Component {
+class ClientShow extends Component {
     componentDidMount() {
         this.props.fetchSingleData('/clients', this.props.match.params.id);
+        this.props.setActiveTab('clients');
     }
 
     componentDidUpdate() {
@@ -17,7 +18,7 @@ class ClientShow extends React.Component {
         return (
             <div>
                 <Table type="client" client={this.props.client} />
-                <OrderList orders={this.props.client} />
+                <OrderList ordersToShow={this.props.client} />
             </div>
         );
     }
@@ -29,4 +30,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { fetchSingleData })(ClientShow);
+export default connect(mapStateToProps, { fetchSingleData, setActiveTab })(ClientShow);

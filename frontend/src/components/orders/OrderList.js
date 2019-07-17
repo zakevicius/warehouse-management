@@ -6,12 +6,15 @@ import Table from '../elements/Table';
 class OrderList extends Component {
     componentDidMount() {
         this.props.setActiveTab('orders');
-        this.props.fetchData('/orders');
+        if (!this.props.ordersToShow) {
+            this.props.fetchData('/orders');
+        }
     }
 
     render() {
+        const orders = this.props.ordersToShow || this.props.orders;
         return (
-            <Table type="orders" orders={this.props.orders} />
+            <Table type="orders" orders={orders} />
         );
     }
 }

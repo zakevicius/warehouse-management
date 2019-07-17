@@ -60,19 +60,20 @@ for (let i = 0; i < 10; i++) {
 }
 
 class Loading {
-    constructor(id, date, truck, trailer, orders) {
+    constructor(id, date, truck, trailer, totalQnt, totalBruto, client) {
         this.id = id;
         this.date = date;
         this.truck = truck;
         this.trailer = trailer;
-        this.orders = orders;
+        this.totalQnt = totalQnt;
+        this.totalBruto = totalBruto;
+        this.client = client;
     }
 }
 
 const loadings = [];
 
 for (let i = 0; i < 3; i++) {
-    let orders = [];
     let id = i;
     let randomDate = faker.date.past(1, '2019-07-13');
     let month = randomDate.getMonth() + 1;
@@ -80,11 +81,10 @@ for (let i = 0; i < 3; i++) {
     let date = `${randomDate.getFullYear()}-${month < 10 ? "0" + month : month}-${day < 10 ? "0" + day : day}`;
     let truck = `ABC ${i}${i}${i}`;
     let trailer = `DE ${i} ${i} `;
-    for (let j = 0; j < 5; j++) {
-        let order = faker.random.number({ min: 1, max: 20 });
-        orders.push(order);
-    }
-    loadings.push(new Loading(id, date, truck, trailer, orders));
+    let totalQnt = faker.random.number({ min: 20, max: 33 });
+    let totalBruto = faker.random.number({ min: 15000, max: 20000, precision: 1 });
+    let client = clients[faker.random.number({ min: 0, max: 9 })].firstName;
+    loadings.push(new Loading(id, date, truck, trailer, totalQnt, totalBruto, client));
 }
 
 module.exports = [orders, clients, loadings];

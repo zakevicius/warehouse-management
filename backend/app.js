@@ -7,7 +7,7 @@ const data = require('./fakeData.js');
 app.use(cors());
 app.options('*', cors());
 
-const [orders, clients] = data;
+const [orders, clients, loadings] = data;
 
 // ORDERS
 
@@ -37,6 +37,21 @@ app.get(`/clients/:id`, (req, res) => {
 app.post('/clients', (req, res) => {
     res.send('Client Created');
 });
+
+//LOADINGS 
+
+app.get('/loadings', (req, res) => {
+    res.send(loadings);
+});
+
+app.get(`/loadings/:id`, (req, res) => {
+    res.send(loadings[req.params.id]);
+});
+
+app.post('/loadings', (req, res) => {
+    res.send('loading Created');
+});
+
 
 // LISTEN
 

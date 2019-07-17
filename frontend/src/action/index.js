@@ -100,6 +100,19 @@ function setRequestType(data, type) {
                 default:
                     return null;
             }
+        case '/loadings':
+            switch (type) {
+                case 'fetchAll':
+                    return types.FETCH_LOADINGS;
+                case 'fetchSingle':
+                    return types.FETCH_LOADING;
+                case 'create':
+                    return types.CREATE_LOADING;
+                case 'nextId':
+                    return types.FETCH_LOADING_ID;
+                default:
+                    return null;
+            }
         default:
             return null;
     }
