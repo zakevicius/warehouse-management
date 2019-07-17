@@ -14,7 +14,11 @@ class OrderList extends Component {
     render() {
         const orders = this.props.ordersToShow || this.props.orders;
         return (
-            <Table type="orders" orders={orders} />
+            <Table
+                type="orders"
+                orders={orders}
+                page={this.props.match ? this.props.match.params.no : null}
+            />
         );
     }
 }

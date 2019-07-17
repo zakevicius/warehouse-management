@@ -18,7 +18,7 @@ class Order {
 
 const orders = [];
 
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 40; i++) {
     let id = i;
     let randomDate = faker.date.past(1, '2019-07-13');
     let month = randomDate.getMonth() + 1;

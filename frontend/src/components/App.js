@@ -3,6 +3,7 @@ import { Router, Route, Switch } from 'react-router-dom';
 import { history } from './history';
 
 import Home from './Home';
+import OrderList from './orders/OrderList';
 import OrderShow from './orders/OrderShow';
 import OrderCreate from './orders/OrderCreate';
 import OrderEdit from './orders/OrderEdit';
@@ -26,6 +27,8 @@ class App extends React.Component {
                         <Header handleClick={this.handleClick} />
                         <Switch>
                             <Route path="/" exact component={Home} />
+                            <Route path="/orders" exact component={OrderList} />
+                            <Route path="/orders/page/:no" exact component={OrderList} />
                             <Route path="/clients" exact component={ClientList} />
                             <Route path="/clients/new" exact component={ClientCreate} />
                             <Route path="/clients/:id" exact component={ClientShow} />

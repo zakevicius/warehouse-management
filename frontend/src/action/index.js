@@ -1,7 +1,6 @@
 import api from '../apis/api';
-import { createBrowserHistory } from 'history';
+import { history } from '../components/history';
 import * as types from './types';
-
 
 // FETCHING ALL DATA
 
@@ -43,6 +42,9 @@ export const createData = data => async dispatch => {
     await api.post(`${data}`)
         .then((response) => {
             dispatch({ type: requestType, payload: response.data });
+            setTimeout(() => {
+                history.push(data)
+            }, 1000);
         })
         .catch(error => {
             if (error.message === 'Network Error') {
@@ -51,7 +53,6 @@ export const createData = data => async dispatch => {
         })
 
 }
-
 
 // GETTING ID FOR NEW DATA
 

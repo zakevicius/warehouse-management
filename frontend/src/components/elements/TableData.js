@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import Button from './Button';
 
@@ -35,7 +35,8 @@ class TableData extends Component {
 
   renderOrders() {
     const { orders } = this.props.orders;
-    return orders.map(order => {
+    const dataOnPage = this.showDataByPageNumber(orders, this.props.page);
+    return dataOnPage.map(order => {
       return (
         <tr key={order.id}>
           <td className="center aligned">
@@ -121,7 +122,54 @@ class TableData extends Component {
     });
   }
 
-  // WHICH DATA TO SHOW IN TABLE
+  // DISPLAY DATA BY PAGE NUMBER AND PAGINATION
+
+  showDataByPageNumber(data, page) {
+    if (data.length <= 10) {
+      return data;
+    } else {
+      if (page) {
+        return data.slice((page - 1) * 10, page * 10);
+      } else {
+        return data.slice(0, 10);
+      }
+    }
+  }
+
+  renderPagination(totalData, page) {
+    if (totalData.length <= 10) {
+      return null;
+    } else if (page) {
+      return (
+        <tr>
+          <td colSpan="3">
+            {this.renderPageButtons(totalData, page)}
+          </td>
+        </tr>
+      )
+    }
+  }
+
+  renderPageButtons(data, page) {
+    const p = parseInt(page)
+    if (data.length / 10 > 1) {
+      if (p > 1 && p < data.length / 10) {
+        return (
+          <Fragment>
+            <Link className="ui secondary button" to={`/orders/page/${p - 1}`}> Prev </Link>
+            <Link className="ui secondary button" to={`/orders/page/${p + 1}`}> Next </Link>
+          </Fragment>
+        )
+      } else if (p === 1) {
+        return <Link className="ui secondary button" to={`/orders/page/${p + 1}`}> Next </Link>;
+      } else {
+        console.log('asd');
+        return <Link className="ui secondary button" to={`/orders/page/${p - 1}`}> Prev </Link>;
+      }
+    }
+  }
+
+  // WHICH DATA TO SHOW IN TABLE (CLIENTS, ORDERS, LOADINGS)
 
   renderTableData() {
     if (!this.props) {
@@ -151,6 +199,7 @@ class TableData extends Component {
     return (
       <tbody>
         {this.renderTableData()}
+        {this.renderPagination(this.props.orders.orders, this.props.page)}
       </tbody>
     );
   };
