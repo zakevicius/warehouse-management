@@ -11,7 +11,11 @@ class LoadingdList extends Component {
 
   render() {
     return (
-      <Table type="loadings" loadings={this.props.loadings} />
+      <Table
+        type="loadings"
+        loadings={this.props.loadings}
+        page={this.props.match ? this.props.match.params.no : null}
+      />
     )
   }
 }

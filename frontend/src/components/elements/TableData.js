@@ -81,7 +81,8 @@ class TableData extends Component {
 
   renderClients() {
     const { clients } = this.props.clients;
-    return clients.map(client => {
+    const dataOnPage = this.showDataByPageNumber(clients, this.props.page);
+    return dataOnPage.map(client => {
       return (
         <tr key={client.id}>
           <td className="center aligned">
@@ -102,7 +103,8 @@ class TableData extends Component {
 
   renderLoadings() {
     const { loadings } = this.props.loadings;
-    return loadings.map(loading => {
+    const dataOnPage = this.showDataByPageNumber(loadings, this.props.page);
+    return dataOnPage.map(loading => {
       return (
         <tr key={loading.id}>
           <td className="center aligned">
@@ -136,35 +138,45 @@ class TableData extends Component {
     }
   }
 
-  renderPagination(totalData, page) {
+  renderPagination(type) {
+    let totalData;
+    const page = this.props.page || 0;
+    if (!this.props) {
+      return null;
+    } else if (this.props.clients) {
+      totalData = this.props.clients.clients;
+    } else if (this.props.orders) {
+      totalData = this.props.orders.orders;
+    } else if (this.props.loadings) {
+      totalData = this.props.loadings.loadings;
+    }
     if (totalData.length <= 10) {
       return null;
-    } else if (page) {
+    } else if (page && page <= totalData.length / 10) {
       return (
         <tr>
           <td colSpan="3">
-            {this.renderPageButtons(totalData, page)}
+            {this.renderPageButtons(type, totalData, page)}
           </td>
         </tr>
       )
     }
   }
 
-  renderPageButtons(data, page) {
+  renderPageButtons(type, data, page) {
     const p = parseInt(page)
     if (data.length / 10 > 1) {
       if (p > 1 && p < data.length / 10) {
         return (
           <Fragment>
-            <Link className="ui secondary button" to={`/orders/page/${p - 1}`}> Prev </Link>
-            <Link className="ui secondary button" to={`/orders/page/${p + 1}`}> Next </Link>
+            <Link className="ui secondary button" to={`/${type}/page/${p - 1}`}> Prev </Link>
+            <Link className="ui secondary button" to={`/${type}/page/${p + 1}`}> Next </Link>
           </Fragment>
         )
       } else if (p === 1) {
-        return <Link className="ui secondary button" to={`/orders/page/${p + 1}`}> Next </Link>;
+        return <Link className="ui secondary button" to={`/${type}/page/${p + 1}`}> Next </Link>;
       } else {
-        console.log('asd');
-        return <Link className="ui secondary button" to={`/orders/page/${p - 1}`}> Prev </Link>;
+        return <Link className="ui secondary button" to={`/${type}/page/${p - 1}`}> Prev </Link>;
       }
     }
   }
@@ -185,13 +197,28 @@ class TableData extends Component {
     } else if (this.props.client) {
       return this.renderClient();
     } else if (this.props.clients) {
-      return this.renderClients();
+      return (
+        <Fragment>
+          {this.renderClients()}
+          {this.renderPagination('clients')}
+        </Fragment>
+      )
     } else if (this.props.order) {
       return this.renderOrder();
     } else if (this.props.orders) {
-      return this.renderOrders();
+      return (
+        <Fragment>
+          {this.renderOrders()}
+          {this.renderPagination('orders')}
+        </Fragment>
+      )
     } else if (this.props.loadings) {
-      return this.renderLoadings();
+      return (
+        <Fragment>
+          {this.renderLoadings()}
+          {this.renderPagination('loadings')}
+        </Fragment>
+      )
     }
   }
 
@@ -199,7 +226,6 @@ class TableData extends Component {
     return (
       <tbody>
         {this.renderTableData()}
-        {this.renderPagination(this.props.orders.orders, this.props.page)}
       </tbody>
     );
   };

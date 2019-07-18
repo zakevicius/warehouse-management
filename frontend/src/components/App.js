@@ -30,6 +30,7 @@ class App extends React.Component {
                             <Route path="/orders" exact component={OrderList} />
                             <Route path="/orders/page/:no" exact component={OrderList} />
                             <Route path="/clients" exact component={ClientList} />
+                            <Route path="/clients/page/:no" exact component={ClientList} />
                             <Route path="/clients/new" exact component={ClientCreate} />
                             <Route path="/clients/:id" exact component={ClientShow} />
                             <Route path="/orders/new" exact component={OrderCreate} />
@@ -37,6 +38,7 @@ class App extends React.Component {
                             <Route path="/orders/delete/:id" exact component={OrderDelete} />
                             <Route path="/orders/:id" exact component={OrderShow} />
                             <Route path="/loadings" exact component={LoadingList} />
+                            <Route path="/loadings/page/:no" exact component={LoadingList} />
                         </Switch>
                         <Footer />
                     </div>

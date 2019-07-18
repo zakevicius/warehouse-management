@@ -18,7 +18,9 @@ class ClientShow extends Component {
         return (
             <div>
                 <Table type="client" client={this.props.client} />
-                <OrderList ordersToShow={this.props.client} />
+                <OrderList
+                    ordersToShow={this.props.client}
+                />
             </div>
         );
     }

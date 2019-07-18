@@ -32,7 +32,7 @@ for (let i = 0; i < 40; i++) {
     let bruto = faker.random.number({ min: 10, max: 20000, precision: 1 });
     let description = faker.lorem.sentence();
     let declarations = "EX";
-    let clientId = faker.random.number({ min: 0, max: 9 });
+    let clientId = faker.random.number({ min: 0, max: 19 });
 
     orders.push(new Order(id, date, sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientId));
 }
@@ -49,7 +49,7 @@ class Client {
 
 const clients = [];
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 20; i++) {
     let id = i;
     let firstName = faker.name.firstName();
     let lastName = faker.name.lastName();
@@ -73,7 +73,7 @@ class Loading {
 
 const loadings = [];
 
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < 20; i++) {
     let id = i;
     let randomDate = faker.date.past(1, '2019-07-13');
     let month = randomDate.getMonth() + 1;
@@ -83,7 +83,7 @@ for (let i = 0; i < 3; i++) {
     let trailer = `DE ${i} ${i} `;
     let totalQnt = faker.random.number({ min: 20, max: 33 });
     let totalBruto = faker.random.number({ min: 15000, max: 20000, precision: 1 });
-    let client = clients[faker.random.number({ min: 0, max: 9 })].firstName;
+    let client = clients[faker.random.number({ min: 0, max: 19 })].firstName;
     loadings.push(new Loading(id, date, truck, trailer, totalQnt, totalBruto, client));
 }
 

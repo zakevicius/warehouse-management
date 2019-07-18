@@ -11,7 +11,11 @@ class ClientList extends React.Component {
 
     render() {
         return (
-            <Table type="clients" clients={this.props.clients} />
+            <Table
+                type="clients"
+                clients={this.props.clients}
+                page={this.props.match ? this.props.match.params.no : null}
+            />
         );
     }
 }
