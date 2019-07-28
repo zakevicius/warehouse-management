@@ -80,6 +80,15 @@ class TableData extends Component {
   }
 
   renderClients() {
+    if (this.props.clients.clients.length === 0) {
+      return (<tr rowSpan="5">
+        <td colSpan="10">
+          <div className="ui active inverted dimmer">
+            <div className="ui text loader">Loading</div>
+          </div>
+        </td>
+      </tr>);
+    }
     const { clients } = this.props.clients;
     const dataOnPage = this.showDataByPageNumber(clients, this.props.page);
     return dataOnPage.map(client => {
@@ -184,6 +193,7 @@ class TableData extends Component {
   // WHICH DATA TO SHOW IN TABLE (CLIENTS, ORDERS, LOADINGS)
 
   renderTableData() {
+    console.log(this.props)
     if (!this.props) {
       return (
         <tr rowSpan="5">
