@@ -12,7 +12,6 @@ const User = require('../models/User');
 // @desc      Get logged in user
 // @access    Private
 router.get('/', auth, async (req, res) => {
-  console.log(req.user)
   try {
     const user = await User.findById(req.user.id).select('-password');
     res.json(user);

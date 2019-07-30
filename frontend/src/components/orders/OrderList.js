@@ -7,7 +7,7 @@ class OrderList extends Component {
     componentDidMount() {
         this.props.setActiveTab('orders');
         if (!this.props.ordersToShow) {
-            this.props.fetchData('/api/orders');
+            this.props.fetchData('/orders');
         }
     }
 

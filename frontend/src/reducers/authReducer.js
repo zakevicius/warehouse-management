@@ -22,7 +22,6 @@ export default (state = { user: {}, isAuthenticated: false }, action) => {
         error: action.payload
       };
     case types.USER_LOADED:
-      console.log(action.payload);
       return { ...state, user: { ...action.payload }, isAuthenticated: true };
     default:
       return state;

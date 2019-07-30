@@ -8,6 +8,7 @@ export const AUTH_ERROR = "AUTH_ERROR"
 
 // ORDERS
 export const CREATE_ORDER = 'CREATE_ORDER';
+export const NEW_ORDER_ID = 'NEW_ORDER_ID';
 export const FETCH_ORDERS = 'FETCH_ORDERS';
 export const FETCH_ORDER = 'FETCH_ORDER';
 export const DELETE_ORDER = 'DELETE_ORDER';

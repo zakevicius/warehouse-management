@@ -20,6 +20,20 @@ router.get('/', auth, async (req, res) => {
     res.json(clients);
   } catch (err) {
     console.error(err.message);
+    res.status(500).json({ msg: 'Server error fetching clients' });
+  }
+});
+
+// @route       GET api/clients/:id
+// @desc        Get client by id
+// @access      Private
+router.get('/:id', auth, async (req, res) => {
+  try {
+    let client = await Client.findById(req.params.id, (err, data) => data);
+    res.json(client);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server error fetching client' });
   }
 });
 

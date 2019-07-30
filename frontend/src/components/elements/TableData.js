@@ -14,10 +14,9 @@ class TableData extends Component {
   // RENDERING ORDERS
 
   renderOrder() {
-    console.log(this.props);
     const order = this.props.order;
     const firstColumn = ['ID', 'date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description', 'Declarations'];
-    const secondColumn = [order.id, order.date, order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description, order.declarations];
+    const secondColumn = [order.orderID, order.date, order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description, order.declarations];
     let i = 0;
     return (
       firstColumn.map(text => {
@@ -38,13 +37,19 @@ class TableData extends Component {
     const dataOnPage = this.showDataByPageNumber(orders, this.props.page);
     return dataOnPage.map(order => {
       return (
-        <tr key={order.id}>
+        <tr key={order._id}>
           <td className="center aligned">
-            <Link to={`/orders/${order.id}`}>
+            <Link to={
+              {
+                pathname: `/orders/${order._id}`,
+                state: {
+                  data: { order }
+                }
+              }} >
               {this.renderButton()}
             </Link>
           </td>
-          <td className="center aligned">{order.id}</td>
+          <td className="center aligned">{order.orderID}</td>
           <td className="center aligned">{order.date}</td>
           <td>{order.sender}</td>
           <td>{order.receiver}</td>
@@ -54,7 +59,7 @@ class TableData extends Component {
           <td className="center aligned">{order.bruto}</td>
           <td>{order.description}</td>
           <td className="center aligned">{order.declarations}</td>
-        </tr>
+        </tr >
       );
     });
   }
@@ -62,6 +67,15 @@ class TableData extends Component {
   // RENDERING CLIENTS
 
   renderClient() {
+    if (this.props.clients.client === 'undefined') {
+      return (<tr rowSpan="5">
+        <td colSpan="10">
+          <div className="ui active inverted dimmer">
+            <div className="ui text loader">Loading</div>
+          </div>
+        </td>
+      </tr>);
+    }
     const { data } = this.props.client;
     const firstColumn = ['First Name', 'Last Name', 'Phone', 'E-mail'];
     const secondColumn = [data.firstName, data.lastName, data.phone, data.email];
@@ -93,9 +107,9 @@ class TableData extends Component {
     const dataOnPage = this.showDataByPageNumber(clients, this.props.page);
     return dataOnPage.map(client => {
       return (
-        <tr key={client.id}>
+        <tr key={client._id}>
           <td className="center aligned">
-            <Link to={`/clients/${client.id}`}>
+            <Link to={`/clients/${client._id}`}>
               {this.renderButton()}
             </Link>
           </td>
@@ -115,13 +129,13 @@ class TableData extends Component {
     const dataOnPage = this.showDataByPageNumber(loadings, this.props.page);
     return dataOnPage.map(loading => {
       return (
-        <tr key={loading.id}>
+        <tr key={loading._id}>
           <td className="center aligned">
-            <Link to={`/loadings/${loading.id}`}>
+            <Link to={`/loadings/${loading._id}`}>
               {this.renderButton()}
             </Link>
           </td>
-          <td className="center aligned">{loading.id}</td>
+          <td className="center aligned">{loading._id}</td>
           <td className="center aligned">{loading.date}</td>
           <td className="center aligned">{loading.truck}</td>
           <td className="center aligned">{loading.trailer}</td>
@@ -136,6 +150,7 @@ class TableData extends Component {
   // DISPLAY DATA BY PAGE NUMBER AND PAGINATION
 
   showDataByPageNumber(data, page) {
+    if (data === 'undefined') return null;
     if (data.length <= 10) {
       return data;
     } else {
@@ -193,7 +208,6 @@ class TableData extends Component {
   // WHICH DATA TO SHOW IN TABLE (CLIENTS, ORDERS, LOADINGS)
 
   renderTableData() {
-    console.log(this.props)
     if (!this.props) {
       return (
         <tr rowSpan="5">

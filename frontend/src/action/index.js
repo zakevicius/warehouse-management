@@ -12,7 +12,7 @@ export const login = (data) => async (dispatch) => {
             setAuthToken(localStorage.token);
         }
 
-        await api.get('/api/auth', config)
+        await api.get('/auth', config)
             .then((response) => {
                 dispatch({ type: types.USER_LOADED, payload: response.data });
             })
@@ -27,7 +27,7 @@ export const login = (data) => async (dispatch) => {
             'Content-type': 'application/json'
         }
     }
-    await api.post('/api/auth', data, config)
+    await api.post('/auth', data, config)
         .then((response) => {
             dispatch({ type: types.LOGIN_SUCCESS, payload: response.data });
             loadUser();
@@ -45,11 +45,10 @@ export const logout = () => {
 
 // FETCHING ALL DATA
 
-export const fetchData = (data) => async (dispatch) => {
-    let requestType = setRequestType(data, 'fetchAll');
-    await api.get(data)
+export const fetchData = (typeOfData) => async (dispatch) => {
+    let requestType = setRequestType(typeOfData, 'fetchAll');
+    await api.get(typeOfData)
         .then((response) => {
-            console.log(response)
             dispatch({ type: requestType, payload: response.data });
         })
         .catch((error) => {
@@ -63,9 +62,9 @@ export const fetchData = (data) => async (dispatch) => {
 
 // FETCHING ONE RECORD OF DATA BY ID
 
-export const fetchSingleData = (data, id) => async dispatch => {
-    let requestType = setRequestType(data, 'fetchSingle');
-    await api.get(`${data}/${id}`)
+export const fetchSingleData = (typeOfData, id) => async dispatch => {
+    let requestType = setRequestType(typeOfData, 'fetchSingle');
+    await api.get(`${typeOfData}/${id}`)
         .then((response) => {
             dispatch({ type: requestType, payload: response.data });
         })
@@ -80,13 +79,13 @@ export const fetchSingleData = (data, id) => async dispatch => {
 
 // CREATING NEW DATA
 
-export const createData = data => async dispatch => {
-    let requestType = setRequestType(data, 'create');
-    await api.post(`${data}`)
+export const createData = (typeOfData, data) => async dispatch => {
+    let requestType = setRequestType(typeOfData, 'create');
+    await api.post(`${typeOfData}`, data)
         .then((response) => {
             dispatch({ type: requestType, payload: response.data });
             setTimeout(() => {
-                history.push(data)
+                history.push(typeOfData)
             }, 1000);
         })
         .catch(error => {
@@ -99,8 +98,58 @@ export const createData = data => async dispatch => {
 
 // GETTING ID FOR NEW DATA
 
-export const fetchNewId = data => async dispatch => {
-
+export const fetchNewID = (clientID) => async dispatch => {
+    // Fetching client by ID and selecting letter for new order ID
+    await api.get('/clients')
+        .then(async (response) => {
+            const client = response.data.filter(data => data._id === clientID)[0];
+            // Fetching last order's number
+            await api.get('/orders')
+                .then((response) => {
+                    if (response.data.length === 0) {
+                        dispatch({
+                            type: types.NEW_ORDER_ID,
+                            payload: '0'
+                        });
+                    } else {
+                        const orders = response.data.filter(order => order.clientID === clientID);
+                        let result = {};
+                        if (orders.length !== 0) {
+                            // if there are already orders for this client take last orders number ant increase value by 1
+                            result = {
+                                let: client.orderLetter,
+                                num: parseInt(orders[0].orderID) + 1
+                            }
+                            dispatch({
+                                type: types.NEW_ORDER_ID,
+                                payload: result
+                            });
+                        } else {
+                            // if there are no orders for this client return number 1
+                            result = {
+                                let: client.orderLetter,
+                                num: 1
+                            }
+                            dispatch({
+                                type: types.NEW_ORDER_ID,
+                                payload: result
+                            });
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.log(error.message)
+                    if (error.message === 'Network Error') {
+                        dispatch({ type: types.NETWORK_ERROR, payload: "Network error encountered. Contact your network administrator." });
+                    }
+                });
+        })
+        .catch((error) => {
+            console.log(error.message)
+            if (error.message === 'Network Error') {
+                dispatch({ type: types.NETWORK_ERROR, payload: "Network error encountered. Contact your network administrator." });
+            }
+        });
 }
 
 
@@ -134,10 +183,10 @@ const setErrorType = type => {
     }
 }
 
-const setRequestType = (data, type) => {
-    switch (data) {
-        case '/api/orders':
-            switch (type) {
+const setRequestType = (typeOfData, requestType) => {
+    switch (typeOfData) {
+        case '/orders':
+            switch (requestType) {
                 case 'fetchAll':
                     return types.FETCH_ORDERS;
                 case 'fetchSingle':
@@ -149,8 +198,8 @@ const setRequestType = (data, type) => {
                 default:
                     return null;
             }
-        case '/api/clients':
-            switch (type) {
+        case '/clients':
+            switch (requestType) {
                 case 'fetchAll':
                     return types.FETCH_CLIENTS;
                 case 'fetchSingle':
@@ -162,8 +211,8 @@ const setRequestType = (data, type) => {
                 default:
                     return null;
             }
-        case '/api/loadings':
-            switch (type) {
+        case '/loadings':
+            switch (requestType) {
                 case 'fetchAll':
                     return types.FETCH_LOADINGS;
                 case 'fetchSingle':

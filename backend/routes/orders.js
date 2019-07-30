@@ -14,14 +14,27 @@ router.get('/', auth, async (req, res) => {
   try {
     let orders;
     if (req.user.type === 'admin') {
-      orders = await Order.find();
+      orders = await Order.find().sort({ orderID: -1 });
     } else {
-      orders = await Order.find({ user: req.user.id }.sort({ orderID: -1 }))
+      orders = await Order.find({ user: req.user.id }).sort({ orderID: -1 });
     }
     res.json(orders);
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Server error getting orders' });
+  }
+});
+
+// @route       GET api/orders/id
+// @desc        Get single order
+// @access      Private
+router.get('/:id', auth, async (req, res) => {
+  try {
+    let order = await Order.findById(req.params.id, (err, res) => res);
+    res.json(order);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server error getting order' });
   }
 });
 
@@ -41,8 +54,10 @@ router.post('/', [
   ]
 ],
   async (req, res) => {
+    console.log(req.body)
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log(errors.array())
       return res.status(400).json({ errors: errors.array() });
     }
 

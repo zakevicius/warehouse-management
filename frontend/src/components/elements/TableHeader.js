@@ -4,6 +4,19 @@ import { history } from '../history';
 import Button from './Button';
 
 const TableHeader = (props) => {
+    const goBack = (type) => {
+        switch (type) {
+            case 'client':
+                history.push('/clients');
+                break;
+            case 'order':
+                history.push('/orders');
+                break;
+            default:
+                history.push('/');
+        }
+    }
+
     switch (props.type) {
         case 'orders':
             return (
@@ -35,7 +48,7 @@ const TableHeader = (props) => {
                         <th className="one wide center aligned">
                             <Button
                                 button={{ type: "secondary", text: "Back" }}
-                                onClick={() => props.type === "client" ? history.push('/clients') : history.push('/')}
+                                onClick={() => goBack(props.type)}
                             />
                         </th>
                         <th className="six wide">

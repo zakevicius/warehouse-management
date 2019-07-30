@@ -5,6 +5,10 @@ const ClientSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users'
   },
+  orderLetter: {
+    type: String,
+    required: true
+  },
   firstName: {
     type: String,
     required: true
