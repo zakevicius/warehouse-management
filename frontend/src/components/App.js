@@ -16,6 +16,9 @@ import ClientCreate from './clients/ClientCreate';
 import LoadingList from './loadings/LoadingList';
 import Header from './Header';
 import Footer from './Footer';
+import Register from './auth/Register';
+import Login from './auth/Login';
+import PrivateRoute from '../routing/PrivateRoute';
 
 class App extends React.Component {
 
@@ -26,7 +29,7 @@ class App extends React.Component {
                     <div>
                         <Header handleClick={this.handleClick} />
                         <Switch>
-                            <Route path="/" exact component={Home} />
+                            <PrivateRoute path="/" exact component={Home} />
                             <Route path="/orders" exact component={OrderList} />
                             <Route path="/orders/page/:no" exact component={OrderList} />
                             <Route path="/clients" exact component={ClientList} />
@@ -39,6 +42,8 @@ class App extends React.Component {
                             <Route path="/orders/:id" exact component={OrderShow} />
                             <Route path="/loadings" exact component={LoadingList} />
                             <Route path="/loadings/page/:no" exact component={LoadingList} />
+                            <Route path="/login" exact component={Login} />
+                            <Route path="/register" exact component={Register} />
                         </Switch>
                         <Footer />
                     </div>

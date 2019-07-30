@@ -5,7 +5,7 @@ import Table from '../elements/Table';
 
 class OrderShow extends Component {
     componentDidMount() {
-        this.props.fetchSingleData('/orders', this.props.match.params.id);
+        this.props.fetchSingleData('/api/orders', this.props.match.params.id);
     }
 
     render() {

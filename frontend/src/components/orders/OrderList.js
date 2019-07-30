@@ -7,7 +7,7 @@ class OrderList extends Component {
     componentDidMount() {
         this.props.setActiveTab('orders');
         if (!this.props.ordersToShow) {
-            this.props.fetchData('/orders');
+            this.props.fetchData('/api/orders');
         }
     }
 
@@ -26,6 +26,7 @@ class OrderList extends Component {
 const mapStateToProps = state => {
     return {
         orders: state.ordersData,
+        user: state.user
     };
 }
 

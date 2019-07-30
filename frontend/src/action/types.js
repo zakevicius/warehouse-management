@@ -1,6 +1,10 @@
 // AUTHORIZATION
-export const SIGN_IN = 'SIGN_IN';
-export const SIGN_OUT = 'SIGN_OUT';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const LOG_OUT = 'LOG_OUT';
+export const SIGN_UP = 'SIGN_UP';
+export const USER_LOADED = "USER_LOADED";
+export const AUTH_ERROR = "AUTH_ERROR"
 
 // ORDERS
 export const CREATE_ORDER = 'CREATE_ORDER';
@@ -31,3 +35,4 @@ export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
 
 // ERROR
 export const NETWORK_ERROR = 'NETWORK_ERROR';
+export const SET_ERROR = 'SET_ERROR';

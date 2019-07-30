@@ -1,6 +1,47 @@
 import api from '../apis/api';
 import { history } from '../components/history';
 import * as types from './types';
+import setAuthToken from '../utils/setAuthToken';
+
+// LOGIN, LOGOUT, SIGNUP
+
+export const login = (data) => async (dispatch) => {
+    //Get user data after login
+    const loadUser = async () => {
+        if (localStorage.token) {
+            setAuthToken(localStorage.token);
+        }
+
+        await api.get('/api/auth', config)
+            .then((response) => {
+                dispatch({ type: types.USER_LOADED, payload: response.data });
+            })
+            .catch((err) => {
+                dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
+            })
+    };
+
+    //Login user
+    const config = {
+        headers: {
+            'Content-type': 'application/json'
+        }
+    }
+    await api.post('/api/auth', data, config)
+        .then((response) => {
+            dispatch({ type: types.LOGIN_SUCCESS, payload: response.data });
+            loadUser();
+        })
+        .catch((err) => {
+            console.log(err.response.data.msg);
+            dispatch({ type: types.LOGIN_FAIL, payload: err.response.data.msg });
+        })
+};
+
+export const logout = () => {
+    history.push('/login');
+    return { type: types.LOG_OUT };
+}
 
 // FETCHING ALL DATA
 
@@ -8,9 +49,11 @@ export const fetchData = (data) => async (dispatch) => {
     let requestType = setRequestType(data, 'fetchAll');
     await api.get(data)
         .then((response) => {
+            console.log(response)
             dispatch({ type: requestType, payload: response.data });
         })
         .catch((error) => {
+            console.log(error.message)
             if (error.message === 'Network Error') {
                 dispatch({ type: types.NETWORK_ERROR, payload: "Network error encountered. Contact your network administrator." });
             }
@@ -70,12 +113,30 @@ export const setActiveTab = (tab) => {
     };
 };
 
+// ERRORS HANDLER
+export const setError = (msg, type) => {
+    const newType = setErrorType(type);
+    return {
+        type: newType,
+        payload: msg
+    };
+};
+
 
 // PRIVATE FUNCTIONS
 
-function setRequestType(data, type) {
+const setErrorType = type => {
+    switch (type) {
+        case 'AUTH':
+            return types.AUTH_ERROR;
+        default:
+            return null;
+    }
+}
+
+const setRequestType = (data, type) => {
     switch (data) {
-        case '/orders':
+        case '/api/orders':
             switch (type) {
                 case 'fetchAll':
                     return types.FETCH_ORDERS;
@@ -88,7 +149,7 @@ function setRequestType(data, type) {
                 default:
                     return null;
             }
-        case '/clients':
+        case '/api/clients':
             switch (type) {
                 case 'fetchAll':
                     return types.FETCH_CLIENTS;
@@ -101,7 +162,7 @@ function setRequestType(data, type) {
                 default:
                     return null;
             }
-        case '/loadings':
+        case '/api/loadings':
             switch (type) {
                 case 'fetchAll':
                     return types.FETCH_LOADINGS;
@@ -113,7 +174,7 @@ function setRequestType(data, type) {
                     return types.FETCH_LOADING_ID;
                 default:
                     return null;
-            }
+            };
         default:
             return null;
     }

@@ -19,7 +19,7 @@ router.get('/', auth, async (req, res) => {
       orders = await Order.find({ user: req.user.id }.sort({ orderID: -1 }))
     }
     res.json(orders);
-  } catch {
+  } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Server error getting orders' });
   }

@@ -12,6 +12,7 @@ const User = require('../models/User');
 // @desc      Get logged in user
 // @access    Private
 router.get('/', auth, async (req, res) => {
+  console.log(req.user)
   try {
     const user = await User.findById(req.user.id).select('-password');
     res.json(user);
@@ -40,13 +41,13 @@ router.post('/', [
       let user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(400).json({ msg: 'Invalid credentials' });
+        return res.status(400).json({ msg: 'Invalid email or password' });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        return res.status(400).json({ msg: 'Invalid credentials' });
+        return res.status(400).json({ msg: 'Invalid email or password' });
       }
 
       const payload = {
@@ -63,7 +64,7 @@ router.post('/', [
         },
         (err, token) => {
           if (err) throw err;
-          res.json({ token });
+          res.json({ token, id: user.id, type: user.type });
         }
       );
     } catch (err) {
