@@ -93,56 +93,39 @@ export const createData = (typeOfData, data) => async dispatch => {
                 dispatch({ type: types.NETWORK_ERROR, payload: "Network error encountered. Contact your network administrator." });
             }
         })
-
 }
 
 // GETTING ID FOR NEW DATA
 
 export const fetchNewID = (clientID) => async dispatch => {
-    // Fetching client by ID and selecting letter for new order ID
-    await api.get('/clients')
-        .then(async (response) => {
-            const client = response.data.filter(data => data._id === clientID)[0];
-            // Fetching last order's number
-            await api.get('/orders')
-                .then((response) => {
-                    if (response.data.length === 0) {
-                        dispatch({
-                            type: types.NEW_ORDER_ID,
-                            payload: '0'
-                        });
-                    } else {
-                        const orders = response.data.filter(order => order.clientID === clientID);
-                        let result = {};
-                        if (orders.length !== 0) {
-                            // if there are already orders for this client take last orders number ant increase value by 1
-                            result = {
-                                let: client.orderLetter,
-                                num: parseInt(orders[0].orderID) + 1
-                            }
-                            dispatch({
-                                type: types.NEW_ORDER_ID,
-                                payload: result
-                            });
-                        } else {
-                            // if there are no orders for this client return number 1
-                            result = {
-                                let: client.orderLetter,
-                                num: 1
-                            }
-                            dispatch({
-                                type: types.NEW_ORDER_ID,
-                                payload: result
-                            });
-                        }
-                    }
-                })
-                .catch((error) => {
-                    console.log(error.message)
-                    if (error.message === 'Network Error') {
-                        dispatch({ type: types.NETWORK_ERROR, payload: "Network error encountered. Contact your network administrator." });
-                    }
+    // Fetching last order's number
+    await api.get('/orders')
+        .then((response) => {
+            if (response.data.length === 0) {
+                dispatch({
+                    type: types.NEW_ORDER_ID,
+                    payload: 1
                 });
+            } else {
+                console.log(response.data)
+                const orders = response.data.filter(order => order.clientID === clientID);
+                console.log(orders, clientID);
+                let result = {};
+                if (orders.length !== 0) {
+                    // if there are already orders for this client take last orders number ant increase value by 1
+                    result = parseInt(orders[0].orderID.slice(1)) + 1;
+                    dispatch({
+                        type: types.NEW_ORDER_ID,
+                        payload: result
+                    });
+                } else {
+                    // if there are no orders for this client return number 1
+                    dispatch({
+                        type: types.NEW_ORDER_ID,
+                        payload: 1
+                    });
+                }
+            }
         })
         .catch((error) => {
             console.log(error.message)
@@ -150,6 +133,11 @@ export const fetchNewID = (clientID) => async dispatch => {
                 dispatch({ type: types.NETWORK_ERROR, payload: "Network error encountered. Contact your network administrator." });
             }
         });
+}
+
+// Fetching selected client
+export const selectClient = () => {
+
 }
 
 

@@ -16,7 +16,7 @@ class TableData extends Component {
   renderOrder() {
     const order = this.props.order;
     const firstColumn = ['ID', 'date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description', 'Declarations'];
-    const secondColumn = [order.orderID, order.date, order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description, order.declarations];
+    const secondColumn = [order.orderID, order.date.split('T')[0], order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description, order.declarations];
     let i = 0;
     return (
       firstColumn.map(text => {
@@ -50,7 +50,7 @@ class TableData extends Component {
             </Link>
           </td>
           <td className="center aligned">{order.orderID}</td>
-          <td className="center aligned">{order.date}</td>
+          <td className="center aligned">{order.date.split('T')[0]}</td>
           <td>{order.sender}</td>
           <td>{order.receiver}</td>
           <td className="center aligned">{order.truck}</td>

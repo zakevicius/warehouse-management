@@ -13,6 +13,10 @@ const OrderSchema = mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  dateCreated: {
+    type: Date,
+    default: Date.now
+  },
   sender: {
     type: String,
     required: true

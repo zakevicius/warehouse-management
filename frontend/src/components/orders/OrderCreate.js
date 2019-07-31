@@ -6,7 +6,7 @@ import Button from '../elements/Button';
 class OrderCreate extends Component {
     state = {
         orderID: '',
-        date: new Date(),
+        date: new Date().toISOString(),
         sender: '',
         receiver: '',
         truck: '',
@@ -15,41 +15,48 @@ class OrderCreate extends Component {
         bruto: '',
         description: '',
         declarations: '',
-        client: '',
-        clientID: '',
+        client: 'Select a client',
+        clientID: ''
     }
 
-    onChange = e => {
+    componentDidMount() {
+        this.props.fetchData('/clients');
+    }
+
+    renderClientList = () => {
+        if (this.props.clients.length === 0) return null;
+
+        return this.props.clients.map(client => (
+            <option key={client._id} value={client.firstName}>
+                {client.firstName}
+            </option>));
+    }
+
+    onChange = async e => {
         this.setState({
             ...this.state,
             [e.target.name]: e.target.value
-        })
-    }
-
-    // PATIKRINT AR TIKRAI REIKIA PAPILDOMAI IESKOTI KLIENTO ID JEI JIS JAU GAUNAMAS CIA
-
-    onBlur = async (e) => {
-        //Fetch client ID by selected client name
+        });
         if (e.target.name === 'client') {
-            await this.props.fetchData('/clients')
-                .then(async (response) => {
-                    const client = this.props.clients.filter(client => client.firstName === this.state.client)[0];
+            if (e.target.value === '') {
+                this.setState({ orderID: '' })
+                return null;
+            }
+            const client = this.props.clients.filter(client => client.firstName === e.target.value)[0];
+            console.log(client);
+            const letter = client.orderLetter;
+            // Fetch new ID for new order based on client selected
+            await this.props.fetchNewID(client._id)
+                .then((response) => {
+                    const newID = letter + this.props.id;
                     this.setState({
                         ...this.state,
-                        clientID: client._id
+                        orderID: newID,
                     });
-                    // Fetch new ID for new order based on client selected
-                    await this.props.fetchNewID(this.state.clientID)
-                        .then((response) => {
-                            const newID = this.props.id.let + this.props.id.num;
-                            this.setState({
-                                ...this.state,
-                                orderID: newID,
-                            });
-                        })
                 })
                 .catch((error) => console.log(error))
         }
+        console.log(this.state)
     }
 
     onSubmit = e => {
@@ -67,11 +74,20 @@ class OrderCreate extends Component {
                     </div>
                     <div className="field">
                         <label htmlFor="client">Client</label>
-                        <input type="text" name="client" value={this.state.client} onChange={this.onChange} onBlur={this.onBlur} />
+                        <select
+                            className="ui fluid dropdown"
+                            name="client"
+                            value={this.state.client}
+                            onChange={this.onChange}
+                            required
+                        >
+                            <option value=''>Select a client...</option>
+                            {this.renderClientList()}
+                        </select>
                     </div>
                     <div className="field">
                         <label htmlFor="date">Date</label>
-                        <input type="text" name="date" value={this.state.date} onChange={this.onChange} />
+                        <input type="date" name="date" value={this.state.date.split('T')[0]} onChange={this.onChange} />
                     </div>
                     <div className="field">
                         <label htmlFor="sender">Sender</label>
@@ -119,4 +135,9 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { createData, fetchNewID, fetchData })(OrderCreate);
+export default connect(mapStateToProps,
+    {
+        createData,
+        fetchNewID,
+        fetchData,
+    })(OrderCreate);
