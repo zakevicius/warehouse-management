@@ -7,10 +7,10 @@ const TableHeader = (props) => {
     const goBack = (type) => {
         switch (type) {
             case 'client':
-                history.push('/clients');
+                history.push('/clients/page/1');
                 break;
             case 'order':
-                history.push('/orders');
+                history.push('/orders/page/1');
                 break;
             default:
                 history.push('/');
@@ -52,6 +52,7 @@ const TableHeader = (props) => {
                             />
                         </th>
                         <th className="six wide">
+                            <Button button={{ type: 'primary left floated', text: 'Edit' }} />
                             <Button button={{ type: 'negative right floated', text: 'Delete' }} />
                         </th>
                         {props.type === "order" && <th className="three wide">Files</th>}
@@ -67,8 +68,7 @@ const TableHeader = (props) => {
                                 <Button button={{ type: 'primary basic', text: 'New client' }} />
                             </Link>
                         </th>
-                        <th className="two wide center aligned">First Name</th>
-                        <th className="two wide center aligned">Last Name</th>
+                        <th className="two wide center aligned">Name</th>
                         <th className="two wide center aligned">Phone</th>
                         <th className="two wide center aligned">E-mail</th>
                     </tr>

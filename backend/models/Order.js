@@ -54,8 +54,8 @@ const OrderSchema = mongoose.Schema({
     default: []
   },
   clientID: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'clients'
   },
 });
 

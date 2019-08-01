@@ -10,16 +10,20 @@ class ClientShow extends Component {
         this.props.setActiveTab('clients');
     }
 
-    componentDidUpdate() {
-        this.render();
-    }
+    // componentDidUpdate() {
+    //     this.render();
+    // }
 
     render() {
+        if (!this.props.client) {
+            return <div>Loading</div>
+        }
         return (
             <div>
                 <Table type="client" client={this.props.client} />
                 <OrderList
                     ordersToShow={this.props.client}
+                    page={this.props.match ? this.props.match.params.no : null}
                 />
             </div>
         );

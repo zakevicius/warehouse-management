@@ -5,6 +5,7 @@ const { check, validationResult } = require('express-validator');
 
 const User = require('../models/User');
 const Client = require('../models/Client');
+const Order = require('../models/Order');
 
 // @route       GET api/clients
 // @desc        Get all users clients
@@ -30,7 +31,8 @@ router.get('/', auth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
   try {
     let client = await Client.findById(req.params.id, (err, data) => data);
-    res.json(client);
+    let orders = await Order.find({ clientID: req.params.id });
+    res.json({ data: client, orders });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Server error fetching client' });
@@ -45,8 +47,8 @@ router.post(
   [
     auth,
     [
-      check('firstName', 'First name is required').not().isEmpty(),
-      check('lastName', 'Last name is required').not().isEmpty(),
+      check('name', 'First name is required').not().isEmpty(),
+      check('orderLetter', 'Last name is required').not().isEmpty(),
       check('email', 'Email is required').isEmail(),
     ]
   ],
@@ -56,7 +58,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { firstName, lastName, email, phone } = req.body;
+    const { name, email, phone, orderLetter } = req.body;
 
     //Checking if client exists 
     try {
@@ -68,10 +70,10 @@ router.post(
 
         // Creating new Client
         client = new Client({
-          firstName,
-          lastName,
+          name,
           email,
           phone,
+          orderLetter,
           user: req.user.id
         });
 

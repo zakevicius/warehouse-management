@@ -80,7 +80,8 @@ export const fetchSingleData = (typeOfData, id) => async dispatch => {
 // CREATING NEW DATA
 
 export const createData = (typeOfData, data) => async dispatch => {
-    let requestType = setRequestType(typeOfData, 'create');
+    const requestType = setRequestType(typeOfData, 'create');
+    const errorType = setRequestType(typeOfData, 'error');
     await api.post(`${typeOfData}`, data)
         .then((response) => {
             dispatch({ type: requestType, payload: response.data });
@@ -88,10 +89,8 @@ export const createData = (typeOfData, data) => async dispatch => {
                 history.push(typeOfData)
             }, 1000);
         })
-        .catch(error => {
-            if (error.message === 'Network Error') {
-                dispatch({ type: types.NETWORK_ERROR, payload: "Network error encountered. Contact your network administrator." });
-            }
+        .catch(err => {
+            dispatch({ type: errorType, payload: err.response.data.msg });
         })
 }
 
@@ -113,7 +112,8 @@ export const fetchNewID = (clientID) => async dispatch => {
                 let result = {};
                 if (orders.length !== 0) {
                     // if there are already orders for this client take last orders number ant increase value by 1
-                    result = parseInt(orders[0].orderID.slice(1)) + 1;
+                    // result = (orders[0].orderID.slice(1)) + 1;
+                    result = parseInt(orders.map(order => order.orderID.slice(1)).sort((a, b) => a - b).slice(-1)) + 1;
                     dispatch({
                         type: types.NEW_ORDER_ID,
                         payload: result
@@ -134,13 +134,6 @@ export const fetchNewID = (clientID) => async dispatch => {
             }
         });
 }
-
-// Fetching selected client
-export const selectClient = () => {
-
-}
-
-
 
 // EVENT HANDLERS
 export const setActiveTab = (tab) => {
@@ -183,6 +176,8 @@ const setRequestType = (typeOfData, requestType) => {
                     return types.CREATE_ORDER;
                 case 'nextId':
                     return types.FETCH_ORDER_ID;
+                case 'error':
+                    return types.ORDER_ERROR;
                 default:
                     return null;
             }
@@ -196,6 +191,8 @@ const setRequestType = (typeOfData, requestType) => {
                     return types.CREATE_CLIENT;
                 case 'nextId':
                     return types.FETCH_CLIENT_ID;
+                case 'error':
+                    return types.CLIENT_ERROR;
                 default:
                     return null;
             }

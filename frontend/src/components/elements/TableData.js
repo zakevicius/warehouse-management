@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import Button from './Button';
 
 class TableData extends Component {
-  componentDidUpdate() {
-    this.render();
-  }
+  // componentDidUpdate() {
+  //   this.render();
+  // }
 
   renderButton() {
     return <Button button={{ type: "secondary", text: 'More' }} />
@@ -16,7 +16,7 @@ class TableData extends Component {
   renderOrder() {
     const order = this.props.order;
     const firstColumn = ['ID', 'date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description', 'Declarations'];
-    const secondColumn = [order.orderID, order.date.split('T')[0], order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description, order.declarations];
+    const secondColumn = [order.orderID, order.date.split('T')[0], order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description, order.declarations.join(', ')];
     let i = 0;
     return (
       firstColumn.map(text => {
@@ -33,6 +33,16 @@ class TableData extends Component {
   }
 
   renderOrders() {
+    console.log(this.props)
+    if (this.props.orders === 'undefined') {
+      return (<tr rowSpan="5">
+        <td colSpan="10">
+          <div className="ui active inverted dimmer">
+            <div className="ui text loader">Loading</div>
+          </div>
+        </td>
+      </tr>);
+    }
     const { orders } = this.props.orders;
     const dataOnPage = this.showDataByPageNumber(orders, this.props.page);
     return dataOnPage.map(order => {
@@ -58,7 +68,7 @@ class TableData extends Component {
           <td className="center aligned">{order.qnt}</td>
           <td className="center aligned">{order.bruto}</td>
           <td>{order.description}</td>
-          <td className="center aligned">{order.declarations}</td>
+          <td className="center aligned">{order.declarations.join(', ')}</td>
         </tr >
       );
     });
@@ -67,7 +77,7 @@ class TableData extends Component {
   // RENDERING CLIENTS
 
   renderClient() {
-    if (this.props.clients.client === 'undefined') {
+    if (this.props.client === 'undefined') {
       return (<tr rowSpan="5">
         <td colSpan="10">
           <div className="ui active inverted dimmer">
@@ -77,8 +87,8 @@ class TableData extends Component {
       </tr>);
     }
     const { data } = this.props.client;
-    const firstColumn = ['First Name', 'Last Name', 'Phone', 'E-mail'];
-    const secondColumn = [data.firstName, data.lastName, data.phone, data.email];
+    const firstColumn = ['Name', 'Phone', 'E-mail'];
+    const secondColumn = [data.name, data.phone, data.email];
     let i = 0;
     return (
       firstColumn.map(text => {
@@ -109,12 +119,11 @@ class TableData extends Component {
       return (
         <tr key={client._id}>
           <td className="center aligned">
-            <Link to={`/clients/${client._id}`}>
+            <Link to={`/clients/${client._id}/page/1`}>
               {this.renderButton()}
             </Link>
           </td>
-          <td className="center aligned">{client.firstName}</td>
-          <td className="center aligned">{client.lastName}</td>
+          <td className="center aligned">{client.name}</td>
           <td>{client.phone}</td>
           <td>{client.email}</td>
         </tr>
@@ -165,6 +174,7 @@ class TableData extends Component {
   renderPagination(type) {
     let totalData;
     const page = this.props.page || 0;
+    console.log(page);
     if (!this.props) {
       return null;
     } else if (this.props.clients) {
@@ -174,9 +184,9 @@ class TableData extends Component {
     } else if (this.props.loadings) {
       totalData = this.props.loadings.loadings;
     }
-    if (totalData.length <= 10) {
+    if (totalData.length <= 10 || page === 0) {
       return null;
-    } else if (page && page <= totalData.length / 10) {
+    } else {
       return (
         <tr>
           <td colSpan="3">
@@ -189,6 +199,7 @@ class TableData extends Component {
 
   renderPageButtons(type, data, page) {
     const p = parseInt(page)
+    console.log(p);
     if (data.length / 10 > 1) {
       if (p > 1 && p < data.length / 10) {
         return (

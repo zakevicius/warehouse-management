@@ -14,6 +14,7 @@ export const FETCH_ORDER = 'FETCH_ORDER';
 export const DELETE_ORDER = 'DELETE_ORDER';
 export const EDIT_ORDER = 'EDIT_ORDER';
 export const FETCH_ORDER_ID = 'FETCH_ORDER_ID';
+export const ORDER_ERROR = 'ORDER_ERROR';
 
 //CLIENTS
 export const CREATE_CLIENT = 'CREATE_CLIENT';
@@ -22,6 +23,7 @@ export const FETCH_CLIENT = "FETCH_CLIENT";
 export const DELETE_CLIENT = 'DELETE_CLIENT';
 export const EDIT_CLIENT = 'EDIT_CLIENT';
 export const FETCH_CLIENT_ID = 'FETCH_CLIENT_ID';
+export const CLIENT_ERROR = 'CLIENT_ERROR';
 
 //LOADINGS 
 export const CREATE_LOADING = 'CREATE_LOADING';

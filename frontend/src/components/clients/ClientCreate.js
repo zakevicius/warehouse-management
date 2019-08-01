@@ -1,55 +1,58 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchNewId, createData } from '../../action';
+import { createData } from '../../action';
+import Button from '../elements/Button';
 
-class ClientCreate extends React.Component {
-    // componentWillMount() {
-    //     this.props.fetchNewId();
-    // }
+class ClientCreate extends Component {
+    state = {
+        orderLetter: '',
+        name: '',
+        email: '',
+        phone: ''
+    }
 
-    handleForm = e => {
+    componentDidMount() {
+    }
+
+    onChange = async e => {
+        this.setState({
+            ...this.state,
+            [e.target.name]: e.target.value
+        });
+    }
+
+    onSubmit = e => {
         e.preventDefault();
-        this.props.createData('/clients');
-    };
-
-    renderResponse() {
-        if (!this.props.response) {
-            return null;
-        }
-        return (
-            <div className="ui form success">
-                <div className="ui success message six wide field">
-                    <p>{this.props.response}</p>
-                </div>
-            </div>
-        );
-
+        this.props.createData('/clients', this.state);
     }
 
     render() {
         return (
             <div className="ui container">
-                <form className="ui form">
-                    <h4 className="ui dividing header">New Client</h4>
-                    <div className="six wide field">
-                        <label>First Name</label>
-                        <input type="text" name="first-name" autoComplete="off" />
+                <form onSubmit={this.onSubmit} className="ui form">
+                    <div className="field">
+                        <label htmlFor="name">Name</label>
+                        <input type="text" name="name" value={this.state.name} onChange={this.onChange} />
                     </div>
-                    <div className="six wide field">
-                        <label>Last Name</label>
-                        <input type="text" name="last-name" autoComplete="off" />
+                    <div className="field">
+                        <label htmlFor="email">Email</label>
+                        <input type="email" name="email" value={this.state.email} onChange={this.onChange} />
                     </div>
-                    <div className="six wide field">
-                        <label>Phone</label>
-                        <input type="text" name="phone" autoComplete="off" />
+                    <div className="field">
+                        <label htmlFor="phone">Phone</label>
+                        <input type="text" name="phone" value={this.state.phone} onChange={this.onChange} />
                     </div>
-                    <div className="six wide field">
-                        <label>Email</label>
-                        <input type="email" name="email" autoComplete="off" />
+                    <div className="field">
+                        <label htmlFor="orderLetter">Letter for orders</label>
+                        <input type="text" name="orderLetter" value={this.state.orderLetter} onChange={this.onChange} />
                     </div>
-                    <button onClick={this.handleForm} className="ui button" type="submit">Submit</button>
-                    {this.renderResponse()}
+                    <Button button={{ type: 'primary ', text: 'Submit' }} />
                 </form>
+                {this.props.errors &&
+                    <div className="ui red segment" style={{ color: "#e25353" }}>
+                        <i className="times icon"></i>{this.props.errors}
+                    </div>
+                }
             </div>
         );
     }
@@ -57,8 +60,11 @@ class ClientCreate extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        response: state.responses.apiResponse
-    };
+        errors: state.clientsData.errors
+    }
 }
 
-export default connect(mapStateToProps, { createData })(ClientCreate);
+export default connect(mapStateToProps,
+    {
+        createData,
+    })(ClientCreate);

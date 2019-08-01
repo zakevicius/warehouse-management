@@ -10,8 +10,8 @@ export default (state = { clients: [] }, action) => {
             return { ...state, newClientId: action.payload };
         case types.CREATE_CLIENT:
             return state;
-        case types.NETWORK_ERROR:
-            return { ...state, error: action.payload };
+        case types.CLIENT_ERROR:
+            return { ...state, errors: action.payload };
         default:
             return state;
     }

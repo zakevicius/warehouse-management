@@ -14,7 +14,7 @@ class OrderCreate extends Component {
         qnt: '',
         bruto: '',
         description: '',
-        declarations: '',
+        declarations: [],
         client: 'Select a client',
         clientID: ''
     }
@@ -27,23 +27,28 @@ class OrderCreate extends Component {
         if (this.props.clients.length === 0) return null;
 
         return this.props.clients.map(client => (
-            <option key={client._id} value={client.firstName}>
-                {client.firstName}
+            <option key={client._id} value={client.name}>
+                {client.name}
             </option>));
     }
 
     onChange = async e => {
-        this.setState({
-            ...this.state,
-            [e.target.name]: e.target.value
-        });
+        if (e.target.name === 'declarations') {
+            this.setState({
+                declarations: e.target.value.split(/[\s,;.]+/)
+            })
+        } else {
+            this.setState({
+                ...this.state,
+                [e.target.name]: e.target.value
+            });
+        }
         if (e.target.name === 'client') {
             if (e.target.value === '') {
                 this.setState({ orderID: '' })
                 return null;
             }
-            const client = this.props.clients.filter(client => client.firstName === e.target.value)[0];
-            console.log(client);
+            const client = this.props.clients.filter(client => client.name === e.target.value)[0];
             const letter = client.orderLetter;
             // Fetch new ID for new order based on client selected
             await this.props.fetchNewID(client._id)
@@ -52,11 +57,11 @@ class OrderCreate extends Component {
                     this.setState({
                         ...this.state,
                         orderID: newID,
+                        clientID: client._id
                     });
                 })
                 .catch((error) => console.log(error))
         }
-        console.log(this.state)
     }
 
     onSubmit = e => {

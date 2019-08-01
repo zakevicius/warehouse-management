@@ -12,12 +12,18 @@ class OrderList extends Component {
     }
 
     render() {
-        const orders = this.props.ordersToShow || this.props.orders;
+        let orders;
+        console.log(this.props)
+        if (!this.props.ordersToShow) {
+            orders = this.props.orders;
+        } else {
+            orders = this.props.ordersToShow;
+        }
         return (
             <Table
                 type="orders"
                 orders={orders}
-                page={this.props.match ? this.props.match.params.no : null}
+                page={this.props.match ? this.props.match.params.no : this.props.page || null}
             />
         );
     }
@@ -26,7 +32,7 @@ class OrderList extends Component {
 const mapStateToProps = state => {
     return {
         orders: state.ordersData,
-        user: state.user
+        user: state.user,
     };
 }
 
