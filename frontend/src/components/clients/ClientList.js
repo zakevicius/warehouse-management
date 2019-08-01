@@ -15,6 +15,7 @@ class ClientList extends React.Component {
                 type="clients"
                 clients={this.props.clients}
                 page={this.props.match ? this.props.match.params.no : null}
+                url={this.props.url ? this.props.url : '/clients/'}
             />
         );
     }

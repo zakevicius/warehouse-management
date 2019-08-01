@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import Button from './Button';
 
 class TableData extends Component {
-  // componentDidUpdate() {
-  //   this.render();
-  // }
+  constructor(props) {
+    super(props);
+    this.itemsPerPage = 10
+  }
+
 
   renderButton() {
     return <Button button={{ type: "secondary", text: 'More' }} />
@@ -33,7 +35,6 @@ class TableData extends Component {
   }
 
   renderOrders() {
-    console.log(this.props)
     if (this.props.orders === 'undefined') {
       return (<tr rowSpan="5">
         <td colSpan="10">
@@ -160,21 +161,20 @@ class TableData extends Component {
 
   showDataByPageNumber(data, page) {
     if (data === 'undefined') return null;
-    if (data.length <= 10) {
+    if (data.length <= this.itemsPerPage) {
       return data;
     } else {
       if (page) {
-        return data.slice((page - 1) * 10, page * 10);
+        return data.slice((page - 1) * this.itemsPerPage, page * this.itemsPerPage);
       } else {
-        return data.slice(0, 10);
+        return data.slice(0, this.itemsPerPage);
       }
     }
   }
 
-  renderPagination(type) {
+  renderPagination() {
     let totalData;
     const page = this.props.page || 0;
-    console.log(page);
     if (!this.props) {
       return null;
     } else if (this.props.clients) {
@@ -184,34 +184,33 @@ class TableData extends Component {
     } else if (this.props.loadings) {
       totalData = this.props.loadings.loadings;
     }
-    if (totalData.length <= 10 || page === 0) {
+    if (totalData.length <= this.itemsPerPage || page === 0) {
       return null;
     } else {
       return (
         <tr>
           <td colSpan="3">
-            {this.renderPageButtons(type, totalData, page)}
+            {this.renderPageButtons(totalData, page, this.props.url)}
           </td>
         </tr>
       )
     }
   }
 
-  renderPageButtons(type, data, page) {
-    const p = parseInt(page)
-    console.log(p);
-    if (data.length / 10 > 1) {
-      if (p > 1 && p < data.length / 10) {
+  renderPageButtons(data, page, url) {
+    const p = parseInt(page);
+    if (data.length / this.itemsPerPage > 1) {
+      if (p > 1 && p < data.length / this.itemsPerPage) {
         return (
           <Fragment>
-            <Link className="ui secondary button" to={`/${type}/page/${p - 1}`}> Prev </Link>
-            <Link className="ui secondary button" to={`/${type}/page/${p + 1}`}> Next </Link>
+            <Link className="ui secondary button" to={`${url}page/${p - 1}`}> Prev </Link>
+            <Link className="ui secondary button" to={`${url}page/${p + 1}`}> Next </Link>
           </Fragment>
         )
       } else if (p === 1) {
-        return <Link className="ui secondary button" to={`/${type}/page/${p + 1}`}> Next </Link>;
+        return <Link className="ui secondary button" to={`${url}page/${p + 1}`}> Next </Link>;
       } else {
-        return <Link className="ui secondary button" to={`/${type}/page/${p - 1}`}> Prev </Link>;
+        return <Link className="ui secondary button" to={`${url}page/${p - 1}`}> Prev </Link>;
       }
     }
   }
@@ -235,7 +234,7 @@ class TableData extends Component {
       return (
         <Fragment>
           {this.renderClients()}
-          {this.renderPagination('clients')}
+          {this.renderPagination()}
         </Fragment>
       )
     } else if (this.props.order) {
@@ -244,14 +243,14 @@ class TableData extends Component {
       return (
         <Fragment>
           {this.renderOrders()}
-          {this.renderPagination('orders')}
+          {this.renderPagination()}
         </Fragment>
       )
     } else if (this.props.loadings) {
       return (
         <Fragment>
           {this.renderLoadings()}
-          {this.renderPagination('loadings')}
+          {this.renderPagination()}
         </Fragment>
       )
     }

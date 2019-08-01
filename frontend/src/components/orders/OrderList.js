@@ -13,7 +13,6 @@ class OrderList extends Component {
 
     render() {
         let orders;
-        console.log(this.props)
         if (!this.props.ordersToShow) {
             orders = this.props.orders;
         } else {
@@ -24,6 +23,7 @@ class OrderList extends Component {
                 type="orders"
                 orders={orders}
                 page={this.props.match ? this.props.match.params.no : this.props.page || null}
+                url={this.props.url ? this.props.url : '/orders/'}
             />
         );
     }

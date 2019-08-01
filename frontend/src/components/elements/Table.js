@@ -15,6 +15,7 @@ const Table = (props) => {
           orders={props.orders}
           loadings={props.loadings}
           page={props.page}
+          url={props.url}
         />
       </table>
     </Fragment>

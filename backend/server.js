@@ -20,8 +20,6 @@ app.use('/api/users', require('./routes/users'));
 app.use('/api/clients', require('./routes/clients'));
 app.use('/api/orders', require('./routes/orders'));
 
-const HEROKU_PORT = process.env.PORT;
-const LOCAL_PORT = '8000';
-const PORT = LOCAL_PORT;
+const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => console.log(`server started on port ${PORT}`));

@@ -15,6 +15,7 @@ class ClientShow extends Component {
     // }
 
     render() {
+        console.log(this.props.match)
         if (!this.props.client) {
             return <div>Loading</div>
         }
@@ -24,6 +25,7 @@ class ClientShow extends Component {
                 <OrderList
                     ordersToShow={this.props.client}
                     page={this.props.match ? this.props.match.params.no : null}
+                    url={this.props.match.url.split('page')[0]}
                 />
             </div>
         );
