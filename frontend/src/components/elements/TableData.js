@@ -149,12 +149,32 @@ class TableData extends Component {
           <td className="center aligned">{loading.date}</td>
           <td className="center aligned">{loading.truck}</td>
           <td className="center aligned">{loading.trailer}</td>
-          <td className="center aligned">{loading.totalQnt}</td>
-          <td className="center aligned">{loading.totalBruto}</td>
-          <td className="center aligned">{loading.client}</td>
+          <td className="center aligned"></td>
+          <td className="center aligned"></td>
         </tr>
       );
     });
+  }
+
+  renderLoadingOrdersList() {
+    const { orders } = this.props.orders;
+    if (orders && orders.length > 0) {
+      return orders.map(order => {
+        return (
+          <tr key={order._id}>
+            <td className="center aligned">
+              <i className="plus icon" onClick={() => this.props.additional.addOrderToLoading(order._id)} />
+            </td>
+            <td className="center aligned">{order.orderID}</td>
+            <td className="center aligned">{order.date}</td>
+            <td className="center aligned">{order.truck}</td>
+            <td className="center aligned">{order.trailer}</td>
+            <td className="center aligned">{order.qnt}</td>
+            <td className="center aligned">{order.bruto}</td>
+          </tr>
+        );
+      });
+    }
   }
 
   // DISPLAY DATA BY PAGE NUMBER AND PAGINATION
@@ -228,41 +248,48 @@ class TableData extends Component {
           </td>
         </tr>
       );
-    } else if (this.props.client) {
-      return this.renderClient();
-    } else if (this.props.clients) {
-      return (
-        <Fragment>
-          {this.renderClients()}
-          {this.renderPagination()}
-        </Fragment>
-      )
-    } else if (this.props.order) {
-      return this.renderOrder();
-    } else if (this.props.orders) {
-      return (
-        <Fragment>
-          {this.renderOrders()}
-          {this.renderPagination()}
-        </Fragment>
-      )
-    } else if (this.props.loadings) {
-      return (
-        <Fragment>
-          {this.renderLoadings()}
-          {this.renderPagination()}
-        </Fragment>
-      )
+    } else {
+      switch (this.props.type) {
+        case 'orders':
+          return (
+            <Fragment>
+              {this.renderOrders()}
+              {this.renderPagination()}
+            </Fragment>
+          );
+        case 'order':
+          return this.renderOrder();
+        case 'clients':
+          return (
+            <Fragment>
+              {this.renderClients()}
+              {this.renderPagination()}
+            </Fragment>
+          );
+        case 'client':
+          return this.renderClient();
+        case 'loadings':
+          return (
+            <Fragment>
+              {this.renderLoadings()}
+              {this.renderPagination()}
+            </Fragment>
+          );
+        case 'loadingOrdersList':
+          return this.renderLoadingOrdersList();
+        default:
+          return null;
+      }
     }
   }
-
   render() {
     return (
       <tbody>
         {this.renderTableData()}
       </tbody>
     );
-  };
+  }
 }
+
 
 export default TableData;

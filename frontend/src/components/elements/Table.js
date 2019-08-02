@@ -13,9 +13,11 @@ const Table = (props) => {
           clients={props.clients}
           order={props.order}
           orders={props.orders}
+          loading={props.loading}
           loadings={props.loadings}
           page={props.page}
           url={props.url}
+          additional={props.additional}
         />
       </table>
     </Fragment>

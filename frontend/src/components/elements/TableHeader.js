@@ -6,11 +6,8 @@ import Button from './Button';
 const TableHeader = (props) => {
     const goBack = (type) => {
         switch (type) {
-            case 'client':
-                history.push('/clients/page/1');
-                break;
-            case 'order':
-                history.push('/orders/page/1');
+            case true:
+                history.push(`/${type}s/page/1`);
                 break;
             default:
                 history.push('/');
@@ -42,6 +39,7 @@ const TableHeader = (props) => {
             );
         case 'order':
         case 'client':
+        case 'loading':
             return (
                 <thead>
                     <tr>
@@ -89,7 +87,6 @@ const TableHeader = (props) => {
                         <th>Trailer</th>
                         <th>Total CLL</th>
                         <th>Total Bruto</th>
-                        <th>Client</th>
                     </tr>
                 </thead>
             );
@@ -102,6 +99,20 @@ const TableHeader = (props) => {
                         <th className="two wide center aligned">Sender</th>
                         <th className="two wide center aligned">Receiver</th>
                         <th className="two wide center aligned">Auto</th>
+                        <th className="two wide center aligned">CLL</th>
+                        <th className="two wide center aligned">Bruto</th>
+                    </tr>
+                </thead>
+            );
+        case 'loadingOrdersList':
+            return (
+                <thead>
+                    <tr>
+                        <th className="two wide center aligned"></th>
+                        <th className="two wide center aligned">Cargo ID</th>
+                        <th className="two wide center aligned">Date</th>
+                        <th className="two wide center aligned">Sender</th>
+                        <th className="two wide center aligned">Receiver</th>
                         <th className="two wide center aligned">CLL</th>
                         <th className="two wide center aligned">Bruto</th>
                     </tr>

@@ -48,6 +48,7 @@ class Login extends Component {
       <div className="ui raised very padded container segment">
         <form className="ui form" onSubmit={this.onSubmit}>
           <h4 className="ui dividing header">Please Login to continue</h4>
+          <p>demo@demo.lt 12345678</p>
           <div className="six wide field">
             <input
               type="text"

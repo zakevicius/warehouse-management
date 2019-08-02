@@ -4,7 +4,6 @@ import { fetchSingleData } from '../../action'
 import Table from '../elements/Table';
 
 class OrderShow extends Component {
-
     data = this.props.location.state.data;
 
     componentDidMount() {

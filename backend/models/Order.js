@@ -48,10 +48,23 @@ const OrderSchema = mongoose.Schema({
     required: false,
     default: ''
   },
-  declarations: {
+  declarationsEX: {
     type: Array,
     required: false,
     default: []
+  },
+  status: {
+    type: String  // waiting, in, loading, out
+  },
+  loadingID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'loadings'
+  },
+  documents: {
+    type: Array,
+  },
+  photos: {
+    type: Array,
   },
   clientID: {
     type: mongoose.Schema.Types.ObjectId,

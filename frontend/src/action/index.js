@@ -106,9 +106,7 @@ export const fetchNewID = (clientID) => async dispatch => {
                     payload: 1
                 });
             } else {
-                console.log(response.data)
                 const orders = response.data.filter(order => order.clientID === clientID);
-                console.log(orders, clientID);
                 let result = {};
                 if (orders.length !== 0) {
                     // if there are already orders for this client take last orders number ant increase value by 1

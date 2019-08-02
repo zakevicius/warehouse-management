@@ -15,7 +15,6 @@ class ClientShow extends Component {
     // }
 
     render() {
-        console.log(this.props.match)
         if (!this.props.client) {
             return <div>Loading</div>
         }
