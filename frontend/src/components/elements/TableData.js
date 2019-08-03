@@ -168,6 +168,28 @@ class TableData extends Component {
     });
   }
 
+  renderLoading() {
+    if (!this.props.loading) {
+      return this.renderSpinner();
+    }
+    const data = this.props.loading;
+    console.log(data)
+    const firstColumn = ['ID', 'Truck', 'Trailer', 'Client'];
+    const secondColumn = [data.loadingID, data.truck, data.trailer, data.clientID];
+    let i = 0;
+    return (
+      firstColumn.map(text => {
+        i++;
+        return (
+          <tr key={i}>
+            <td>{text}</td>
+            <td className="left aligned">{secondColumn[i - 1]}</td>
+          </tr>
+        );
+      })
+    );
+  }
+
   renderAddRemove(id) {
     const { addOrderToLoading, removeOrderFromLoading, action } = this.props.additional
     if (action === 'add') {
@@ -205,6 +227,19 @@ class TableData extends Component {
         );
       });
     }
+  }
+
+  // SPINNER
+  renderSpinner() {
+    return (
+      <tr rowSpan="5">
+        <td colSpan="10">
+          <div className="ui active inverted dimmer">
+            <div className="ui text loader">Loading</div>
+          </div>
+        </td>
+      </tr>
+    );
   }
 
   // DISPLAY DATA BY PAGE NUMBER AND PAGINATION
@@ -305,6 +340,8 @@ class TableData extends Component {
               {this.renderPagination()}
             </Fragment>
           );
+        case 'loading':
+          return this.renderLoading();
         case 'loadingOrdersList':
           return this.renderLoadingOrdersList();
         default:

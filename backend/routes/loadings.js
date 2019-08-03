@@ -26,14 +26,13 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
-// @route       GET api/loadings
+// @route       GET api/loadings/id
 // @desc        Get loading by id
 // @access      Private
 router.get('/:id', auth, async (req, res) => {
     try {
-        let client = await Client.findById(req.params.id, (err, data) => data);
-        let loading = await Loading.find({ _id: req.params.id });
-        res.json({ data: client, loading });
+        let loading = await Loading.findById(req.params.id, (err, res) => res);
+        res.json(loading);
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ msg: 'Server error fetching loading' });
@@ -81,7 +80,7 @@ router.post(
     }
 );
 
-// @route       PUT api/loadings/
+// @route       PUT api/loadings/id
 // @desc        Update client
 // @access      Private
 router.put('/:id', auth, async (req, res) => {
@@ -127,8 +126,8 @@ router.put('/:id', auth, async (req, res) => {
     }
 });
 
-// @route       DELETE api/clients
-// @desc        Delete client
+// @route       DELETE api/loadings/id
+// @desc        Delete loading
 // @access      Private
 router.delete('/:id', auth, async (req, res) => {
     try {
@@ -139,10 +138,10 @@ router.delete('/:id', auth, async (req, res) => {
             return res.status(404).json({ msg: 'Loading not found' });
         }
 
-        // Check if user is authorized to delete client
+        // Check if user is authorized to delete loading
         const user = await User.findById(req.user.id);
 
-        if (client.user.toString() !== req.user.id) {
+        if (loading.user.toString() !== req.user.id) {
             if (user.type !== 'admin') {
                 return res.status(401).json({ msg: 'Not authorized ' });
             } else {
@@ -152,7 +151,7 @@ router.delete('/:id', auth, async (req, res) => {
             await Loading.findByIdAndRemove(req.params.id);
         }
 
-        res.json({ msg: 'Client succesfully removed' });
+        res.json({ msg: 'Loading succesfully removed' });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ msg: 'Server error deleting loading' });

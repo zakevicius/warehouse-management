@@ -1,17 +1,22 @@
 // Orders fetch      - done
 // One order fetch   - done
-// Order create      - in progress
+// Order create      - done
 // Order update
-// Order delete
+// Order delete      - done
 
-// clients fetch
-// one client fetch
-// client create
-// client update
-// client delete
+// clients fetch     - done
+// one client fetch  - done
+// client create     - done
+// client update     - 
+// client delete     -
 
-// loadings fetch
-// One loading fetch
-// loading create
+// loadings fetch    - done
+// One loading fetch - in progress
+// loading create    - in progress (need to update order status and generate ID)
 // loading update
 // loading delete
+
+// Update status of orders when confirming or deleting order
+// Update loading status
+// Show orders only in warehouse or only dispatched
+// Add files and photos

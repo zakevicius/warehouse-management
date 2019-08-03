@@ -8,8 +8,9 @@ import Button from './Button';
 class TableHeader extends Component {
 
     goBack = (type) => {
+        console.log(`/${type}s/page/1`)
         switch (type) {
-            case true:
+            case type:
                 history.push(`/${type}s/page/1`);
                 break;
             default:

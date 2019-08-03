@@ -5,7 +5,6 @@ export default (state = { clients: [] }, action) => {
         case types.FETCH_CLIENTS:
             return { ...state, clients: action.payload };
         case types.FETCH_CLIENT:
-            console.log(action.payload)
             return { ...state, client: action.payload };
         case types.FETCH_CLIENT_ID:
             return { ...state, newClientId: action.payload };
