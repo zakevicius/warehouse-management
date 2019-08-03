@@ -12,13 +12,13 @@ class OrderList extends Component {
     }
 
     render() {
-        console.log(this.props);
         let orders;
         if (!this.props.ordersToShow) {
             orders = this.props.orders;
         } else {
             orders = this.props.ordersToShow;
         }
+        console.log(orders);
         return (
             <Table
                 type="orders"

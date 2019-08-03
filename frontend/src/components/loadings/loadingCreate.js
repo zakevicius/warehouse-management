@@ -13,8 +13,9 @@ class LoadingCreate extends Component {
         clientID: '',
         client: 'Select a client',
         date: new Date().toISOString(),
-        ordersToLoad: [],
+        ordersToLoad: []
     }
+
     componentDidMount() {
         this.props.fetchData('/clients');
     }
@@ -24,9 +25,20 @@ class LoadingCreate extends Component {
             ...this.state,
             ordersToLoad: [
                 ...this.state.ordersToLoad,
-                order
+                ...this.state.ordersList.filter(item => item._id === order)
             ],
-            ordersList: this.state.ordersList.filter(item => item._id !== order._id)
+            ordersList: this.state.ordersList.filter(item => item._id !== order)
+        });
+    };
+
+    removeOrderFromLoading = (order) => {
+        this.setState({
+            ...this.state,
+            ordersToLoad: this.state.ordersToLoad.filter(item => item._id !== order),
+            ordersList: [
+                ...this.state.ordersList,
+                ...this.state.ordersToLoad.filter(item => item._id === order)
+            ]
         });
     };
 
@@ -37,7 +49,7 @@ class LoadingCreate extends Component {
             <option key={client._id} value={client.name}>
                 {client.name}
             </option>));
-    }
+    };
 
     onChange = async e => {
         this.setState({
@@ -46,9 +58,19 @@ class LoadingCreate extends Component {
         });
         if (e.target.name === 'client') {
             if (e.target.value === '') {
-                this.setState({ loadingID: '' })
+                this.setState(
+                    {
+                        loadingID: '',
+                    }
+                )
                 return null;
             }
+            this.setState(
+                {
+                    ordersToLoad: [],
+                    ordersList: []
+                }
+            )
             const client = this.props.clients.filter(client => client.name === e.target.value)[0];
             const letter = client.orderLetter;
             // Fetch new ID for new order based on client selected
@@ -75,12 +97,19 @@ class LoadingCreate extends Component {
                 })
                 .catch((error) => console.log(error));
         }
-    }
+    };
 
     onSubmit = e => {
         e.preventDefault();
-        this.props.createData('/loadings', this.state);
-    }
+        this.props.createData('/loadings', {
+            loadingID: this.state.loadingID,
+            clientID: this.state.clientID,
+            truck: this.state.truck,
+            trailer: this.state.trailer,
+            orders: this.state.ordersToLoad.map(order => order._id),
+            status: 'waiting'
+        });
+    };
 
     render() {
         return (
@@ -122,13 +151,15 @@ class LoadingCreate extends Component {
                         <div className="ui segment">
                             <LoadingOrdersList
                                 orders={this.state.ordersToLoad}
-                                addOrderToLoading={this.addOrderToLoading}
+                                removeOrderFromLoading={this.removeOrderFromLoading}
+                                action='remove'
                             />
                         </div>
                         <div className="ui segment">
                             <LoadingOrdersList
                                 orders={this.state.ordersList}
                                 addOrderToLoading={this.addOrderToLoading}
+                                action='add'
                             />
                         </div>
                     </div>

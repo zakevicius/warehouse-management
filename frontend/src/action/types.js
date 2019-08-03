@@ -12,7 +12,7 @@ export const NEW_ORDER_ID = 'NEW_ORDER_ID';
 export const FETCH_ORDERS = 'FETCH_ORDERS';
 export const FETCH_ORDER = 'FETCH_ORDER';
 export const DELETE_ORDER = 'DELETE_ORDER';
-export const EDIT_ORDER = 'EDIT_ORDER';
+export const UPDATE_ORDER = 'UPDATE_ORDER';
 export const FETCH_ORDER_ID = 'FETCH_ORDER_ID';
 export const ORDER_ERROR = 'ORDER_ERROR';
 
@@ -21,7 +21,7 @@ export const CREATE_CLIENT = 'CREATE_CLIENT';
 export const FETCH_CLIENTS = 'FETCH_CLIENTS';
 export const FETCH_CLIENT = "FETCH_CLIENT";
 export const DELETE_CLIENT = 'DELETE_CLIENT';
-export const EDIT_CLIENT = 'EDIT_CLIENT';
+export const UPDATE_CLIENT = 'UPDATE_CLIENT';
 export const FETCH_CLIENT_ID = 'FETCH_CLIENT_ID';
 export const CLIENT_ERROR = 'CLIENT_ERROR';
 
@@ -30,7 +30,7 @@ export const CREATE_LOADING = 'CREATE_LOADING';
 export const FETCH_LOADINGS = 'FETCH_LOADINGS';
 export const FETCH_LOADING = "FETCH_LOADING";
 export const DELETE_LOADING = 'DELETE_LOADING';
-export const EDIT_LOADING = 'EDIT_LOADING';
+export const UPDATE_LOADING = 'UPDATE_LOADING';
 export const FETCH_LOADING_ID = 'FETCH_LOADING_ID';
 
 //EVENTS

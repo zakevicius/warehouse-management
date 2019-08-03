@@ -11,6 +11,16 @@ export default (state = { clients: [] }, action) => {
             return { ...state, newClientId: action.payload };
         case types.CREATE_CLIENT:
             return state;
+        case types.UPDATE_CLIENT:
+            return {
+                ...state,
+                clients: state.clients.map(client => client._id === action.payload._id ? action.payload : client)
+            };
+        case types.DELETE_CLIENT:
+            return {
+                ...state,
+                clients: state.clients.filter(client => client._id !== action.payload)
+            };
         case types.CLIENT_ERROR:
             return { ...state, errors: action.payload };
         default:

@@ -16,6 +16,15 @@ class TableData extends Component {
   // RENDERING ORDERS
 
   renderOrder() {
+    if (!this.props.order) {
+      return (<tr rowSpan="5">
+        <td colSpan="10">
+          <div className="ui active inverted dimmer">
+            <div className="ui text loader">Loading</div>
+          </div>
+        </td>
+      </tr>);
+    }
     const order = this.props.order;
     const firstColumn = ['ID', 'date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description', 'Declarations'];
     const secondColumn = [order.orderID, order.date.split('T')[0], order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description, order.declarations.join(', ')];
@@ -35,7 +44,7 @@ class TableData extends Component {
   }
 
   renderOrders() {
-    if (this.props.orders === 'undefined') {
+    if (!this.props.orders) {
       return (<tr rowSpan="5">
         <td colSpan="10">
           <div className="ui active inverted dimmer">
@@ -50,13 +59,7 @@ class TableData extends Component {
       return (
         <tr key={order._id}>
           <td className="center aligned">
-            <Link to={
-              {
-                pathname: `/orders/${order._id}`,
-                state: {
-                  data: { order }
-                }
-              }} >
+            <Link to={`/orders/${order._id}`} >
               {this.renderButton()}
             </Link>
           </td>
@@ -78,7 +81,7 @@ class TableData extends Component {
   // RENDERING CLIENTS
 
   renderClient() {
-    if (this.props.client === 'undefined') {
+    if (!this.props.client) {
       return (<tr rowSpan="5">
         <td colSpan="10">
           <div className="ui active inverted dimmer">
@@ -105,7 +108,7 @@ class TableData extends Component {
   }
 
   renderClients() {
-    if (this.props.clients.clients.length === 0) {
+    if (!this.props.clients) {
       return (<tr rowSpan="5">
         <td colSpan="10">
           <div className="ui active inverted dimmer">
@@ -135,6 +138,15 @@ class TableData extends Component {
   // RENDERING LOADINGS
 
   renderLoadings() {
+    if (!this.props.loadings) {
+      return (<tr rowSpan="5">
+        <td colSpan="10">
+          <div className="ui active inverted dimmer">
+            <div className="ui text loader">Loading</div>
+          </div>
+        </td>
+      </tr>);
+    }
     const { loadings } = this.props.loadings;
     const dataOnPage = this.showDataByPageNumber(loadings, this.props.page);
     return dataOnPage.map(loading => {
@@ -145,25 +157,43 @@ class TableData extends Component {
               {this.renderButton()}
             </Link>
           </td>
-          <td className="center aligned">{loading._id}</td>
-          <td className="center aligned">{loading.date}</td>
+          <td className="center aligned">{loading.loadingID}</td>
+          <td className="center aligned">{loading.date.split('T')[0]}</td>
           <td className="center aligned">{loading.truck}</td>
           <td className="center aligned">{loading.trailer}</td>
           <td className="center aligned"></td>
-          <td className="center aligned"></td>
+          <td className="center aligned">{loading.status}</td>
         </tr>
       );
     });
   }
 
+  renderAddRemove(id) {
+    const { addOrderToLoading, removeOrderFromLoading, action } = this.props.additional
+    if (action === 'add') {
+      return (
+        <i
+          className="plus icon"
+          onClick={() => addOrderToLoading(id)}
+        />
+      );
+    } else if (action === 'remove') {
+      return (
+        <i
+          className="minus icon"
+          onClick={() => removeOrderFromLoading(id)}
+        />
+      );
+    }
+  }
   renderLoadingOrdersList() {
-    const { orders } = this.props.orders;
-    if (orders && orders.length > 0) {
+    const orders = this.props.orders;
+    if (orders) {
       return orders.map(order => {
         return (
           <tr key={order._id}>
             <td className="center aligned">
-              <i className="plus icon" onClick={() => this.props.additional.addOrderToLoading(order._id)} />
+              {this.renderAddRemove(order._id)}
             </td>
             <td className="center aligned">{order.orderID}</td>
             <td className="center aligned">{order.date}</td>

@@ -48,7 +48,7 @@ const OrderSchema = mongoose.Schema({
     required: false,
     default: ''
   },
-  declarationsEX: {
+  declarations: {
     type: Array,
     required: false,
     default: []

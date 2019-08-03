@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const LoadingSchema = mongoose.Schema({
-    id: {
+    loadingID: {
         type: String,
         required: true
     },

@@ -4,7 +4,6 @@ import * as types from './types';
 import setAuthToken from '../utils/setAuthToken';
 
 // LOGIN, LOGOUT, SIGNUP
-
 export const login = (data) => async (dispatch) => {
     //Get user data after login
     const loadUser = async () => {
@@ -44,7 +43,6 @@ export const logout = () => {
 }
 
 // FETCHING ALL DATA
-
 export const fetchData = (typeOfData) => async (dispatch) => {
     let requestType = setRequestType(typeOfData, 'fetchAll');
     await api.get(typeOfData)
@@ -59,9 +57,7 @@ export const fetchData = (typeOfData) => async (dispatch) => {
         });
 };
 
-
 // FETCHING ONE RECORD OF DATA BY ID
-
 export const fetchSingleData = (typeOfData, id) => async dispatch => {
     let requestType = setRequestType(typeOfData, 'fetchSingle');
     await api.get(`${typeOfData}/${id}`)
@@ -76,17 +72,16 @@ export const fetchSingleData = (typeOfData, id) => async dispatch => {
 
 }
 
-
 // CREATING NEW DATA
-
 export const createData = (typeOfData, data) => async dispatch => {
+    console.log(typeOfData, data);
     const requestType = setRequestType(typeOfData, 'create');
     const errorType = setRequestType(typeOfData, 'error');
     await api.post(`${typeOfData}`, data)
         .then((response) => {
             dispatch({ type: requestType, payload: response.data });
             setTimeout(() => {
-                history.push(typeOfData)
+                history.push(`${typeOfData}/page/1`);
             }, 1000);
         })
         .catch(err => {
@@ -95,7 +90,6 @@ export const createData = (typeOfData, data) => async dispatch => {
 }
 
 // GETTING ID FOR NEW DATA
-
 export const fetchNewID = (clientID) => async dispatch => {
     // Fetching last order's number
     await api.get('/orders')
@@ -131,6 +125,27 @@ export const fetchNewID = (clientID) => async dispatch => {
                 dispatch({ type: types.NETWORK_ERROR, payload: "Network error encountered. Contact your network administrator." });
             }
         });
+}
+
+// UPDATING DATA
+export const updateData = (typeOfData, data) => {
+
+}
+
+// DELETING DATA
+export const removeData = (typeOfData, id) => async dispatch => {
+    const requestType = setRequestType(typeOfData, 'remove');
+    await api.delete(`${typeOfData}/${id}`)
+        .then((response) => {
+            dispatch({ type: requestType, payload: response.data });
+            setTimeout(() => {
+                history.push(`${typeOfData}/page/1`);
+            }, 1000);
+        })
+        .catch(err => {
+            console.error(err.message);
+            err.status(500).json({ msg: err.message });
+        })
 }
 
 // EVENT HANDLERS
@@ -176,6 +191,8 @@ const setRequestType = (typeOfData, requestType) => {
                     return types.FETCH_ORDER_ID;
                 case 'error':
                     return types.ORDER_ERROR;
+                case 'remove':
+                    return types.DELETE_ORDER;
                 default:
                     return null;
             }
@@ -191,6 +208,8 @@ const setRequestType = (typeOfData, requestType) => {
                     return types.FETCH_CLIENT_ID;
                 case 'error':
                     return types.CLIENT_ERROR;
+                case 'remove':
+                    return types.DELETE_CLIENT;
                 default:
                     return null;
             }
@@ -204,6 +223,8 @@ const setRequestType = (typeOfData, requestType) => {
                     return types.CREATE_LOADING;
                 case 'nextId':
                     return types.FETCH_LOADING_ID;
+                case 'remove':
+                    return types.DELETE_LOADING;
                 default:
                     return null;
             };

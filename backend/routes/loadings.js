@@ -57,10 +57,13 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { truck } = req.body;
+        console.log(req.body)
+
+        const { loadingID, truck, trailer, orders, status, clientID } = req.body;
         try {
             // Creating new Loading
             loading = new Loading({
+                loadingID,
                 truck,
                 trailer,
                 orders,
