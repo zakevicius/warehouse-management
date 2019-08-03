@@ -14,9 +14,9 @@ router.get('/', auth, async (req, res) => {
   try {
     let orders;
     if (req.user.type === 'admin') {
-      orders = await Order.find().sort({ orderID: -1 });
+      orders = await Order.find().sort({ date: -1 });
     } else {
-      orders = await Order.find({ user: req.user.id }).sort({ orderID: -1 });
+      orders = await Order.find({ user: req.user.id }).sort({ date: -1 });
     }
     res.json(orders);
   } catch (err) {
@@ -90,7 +90,7 @@ router.post('/', [
   }
 );
 
-// @route       PUT api/orders
+// @route       PUT api/orders/id
 // @desc        Update order
 // @access      Private
 router.put('/:id', auth, async (req, res) => {
@@ -132,7 +132,7 @@ router.put('/:id', auth, async (req, res) => {
   }
 });
 
-// @route       DELETE api/orders
+// @route       DELETE api/orders/id
 // @desc        Delete order
 // @access      Private
 router.delete('/:id', auth, async (req, res) => {

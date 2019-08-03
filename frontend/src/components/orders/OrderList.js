@@ -18,7 +18,6 @@ class OrderList extends Component {
         } else {
             orders = this.props.ordersToShow;
         }
-        console.log(orders);
         return (
             <Table
                 type="orders"

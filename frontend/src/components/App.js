@@ -11,6 +11,7 @@ import OrderDelete from './orders/OrderDelete';
 import ClientList from './clients/ClientList';
 import ClientShow from './clients/ClientShow';
 import ClientCreate from './clients/ClientCreate';
+import ClientEdit from './clients/ClientEdit';
 // import ClientEdit from './clients/ClientEdit';
 // import ClientDelete from './clients/ClientDelete';
 import LoadingList from './loadings/LoadingList';
@@ -41,9 +42,10 @@ class App extends React.Component {
                             <PrivateRoute path="/orders/delete/:id" exact component={OrderDelete} />
 
                             {/* Clients */}
-                            <PrivateRoute path="/clients/page/:no" exact component={ClientList} />
                             <PrivateRoute path="/clients/new" exact component={ClientCreate} />
                             <PrivateRoute path="/clients/:id/page/:no" exact component={ClientShow} />
+                            <PrivateRoute path="/clients/page/:no" exact component={ClientList} />
+                            <PrivateRoute path="/clients/edit/:id" exact component={ClientEdit} />
 
                             {/* Loadings */}
                             <PrivateRoute path="/loadings/new" exact component={LoadingCreate} />

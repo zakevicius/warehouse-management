@@ -65,18 +65,49 @@ class TableHeader extends Component {
             case 'order':
             case 'client':
             case 'loading':
+            case 'clientEdit':
+                let id, link;
+                switch (this.props.type) {
+                    case 'order':
+                        id = this.props.order && this.props.order._id;
+                        link = 'orders';
+                        break;
+                    case 'client':
+                    case 'clientEdit':
+                        id = this.props.client && this.props.client.data._id;
+                        link = 'clients';
+                        break;
+                    case 'loading':
+                        id = this.props.loading && this.props.loading._id;
+                        link = 'loadings';
+                        break;
+                }
                 return (
                     <thead>
                         <tr>
                             <th className="one wide center aligned">
                                 <Button
                                     button={{ type: "secondary", text: "Back" }}
-                                    onClick={() => this.goBack(this.props.type)}
+                                    onClick={() => history.push(`/${link}/${id}/page/1`)}
                                 />
                             </th>
                             <th className="six wide">
-                                <Button button={{ type: 'primary left floated', text: 'Edit' }} onClick={() => this.update(this.props.type)} />
-                                <Button button={{ type: 'negative right floated', text: 'Delete' }} onClick={() => this.remove(this.props.type)} />
+                                {
+                                    this.props.type !== 'clientEdit' &&
+                                        this.props.type !== 'orderEdit' &&
+                                        this.props.type !== 'loadingEdit' ?
+                                        (
+                                            <Link to={`/${this.props.type}s/edit/${id}`}>
+                                                <Button
+                                                    button={{ type: 'primary left floated', text: 'Edit' }}
+                                                />
+                                            </Link>
+                                        ) : null
+                                }
+                                <Button
+                                    button={{ type: 'negative right floated', text: 'Delete' }}
+                                    onClick={() => this.remove(this.props.type)}
+                                />
                             </th>
                             {this.props.type === "order" && <th className="three wide">Files</th>}
                         </tr>

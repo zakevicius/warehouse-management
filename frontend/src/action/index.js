@@ -59,7 +59,6 @@ export const fetchData = (typeOfData) => async (dispatch) => {
 
 // FETCHING ONE RECORD OF DATA BY ID
 export const fetchSingleData = (typeOfData, id) => async dispatch => {
-    console.log(typeOfData, id);
     let requestType = setRequestType(typeOfData, 'fetchSingle');
     await api.get(`${typeOfData}/${id}`)
         .then((response) => {

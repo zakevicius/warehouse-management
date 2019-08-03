@@ -173,7 +173,6 @@ class TableData extends Component {
       return this.renderSpinner();
     }
     const data = this.props.loading;
-    console.log(data)
     const firstColumn = ['ID', 'Truck', 'Trailer', 'Client'];
     const secondColumn = [data.loadingID, data.truck, data.trailer, data.clientID];
     let i = 0;
