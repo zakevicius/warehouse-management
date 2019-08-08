@@ -1,6 +1,14 @@
 import * as types from '../action/types';
 
-export default (state = { user: {}, isAuthenticated: false }, action) => {
+const initialState = {
+  user: {},
+  isAuthenticated: false,
+  loading: false,
+  error: null,
+  token: null
+}
+
+export default (state = initialState, action) => {
   switch (action.type) {
     case types.LOGIN_SUCCESS:
       localStorage.setItem('token', action.payload.token);
@@ -8,7 +16,8 @@ export default (state = { user: {}, isAuthenticated: false }, action) => {
         ...state,
         isAuthenticated: true,
         user: action.payload,
-        error: null
+        error: null,
+        loading: false
       };
     case types.LOGIN_FAIL:
     case types.AUTH_ERROR:
@@ -19,11 +28,22 @@ export default (state = { user: {}, isAuthenticated: false }, action) => {
         token: null,
         isAuthenticated: false,
         user: null,
-        error: action.payload
+        error: action.payload,
+        loading: false
       };
     case types.USER_LOADED:
-      return { ...state, user: { ...action.payload }, isAuthenticated: true };
+      return {
+        ...state,
+        user: { ...action.payload },
+        isAuthenticated: true,
+        loading: false
+      };
+    case types.SET_LOADING:
+      return {
+        ...state,
+        loading: true
+      }
     default:
       return state;
-  }
-} 
+  };
+};

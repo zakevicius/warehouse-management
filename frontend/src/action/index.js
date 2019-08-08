@@ -26,6 +26,9 @@ export const login = (data) => async (dispatch) => {
             'Content-type': 'application/json'
         }
     }
+
+    setLoading();
+
     await api.post('/auth', data, config)
         .then((response) => {
             dispatch({ type: types.LOGIN_SUCCESS, payload: response.data });
@@ -156,6 +159,12 @@ export const setActiveTab = (tab) => {
     };
 };
 
+export const setLoading = () => {
+    return {
+        type: types.SET_LOADING
+    };
+};
+
 // ERRORS HANDLER
 export const setError = (msg, type) => {
     const newType = setErrorType(type);
@@ -174,8 +183,8 @@ const setErrorType = type => {
             return types.AUTH_ERROR;
         default:
             return null;
-    }
-}
+    };
+};
 
 const setRequestType = (typeOfData, requestType) => {
     switch (typeOfData) {

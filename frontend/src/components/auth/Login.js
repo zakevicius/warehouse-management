@@ -21,6 +21,9 @@ class Login extends Component {
   }
 
   componentDidUpdate() {
+    if (this.props.auth.loading) {
+      return <h1>LOADING</h1>
+    }
     if (this.props.auth.isAuthenticated) {
       history.push('/');
     }

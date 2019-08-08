@@ -66,21 +66,26 @@ class TableHeader extends Component {
             case 'client':
             case 'loading':
             case 'clientEdit':
-                let id, link;
+                let id, link, page;
                 switch (this.props.type) {
                     case 'order':
                         id = this.props.order && this.props.order._id;
                         link = 'orders';
+                        page = '';
                         break;
                     case 'client':
                     case 'clientEdit':
                         id = this.props.client && this.props.client.data._id;
                         link = 'clients';
+                        page = 'page/1';
                         break;
                     case 'loading':
                         id = this.props.loading && this.props.loading._id;
                         link = 'loadings';
+                        page = '';
                         break;
+                    default:
+                        return null;
                 }
                 return (
                     <thead>
@@ -88,7 +93,7 @@ class TableHeader extends Component {
                             <th className="one wide center aligned">
                                 <Button
                                     button={{ type: "secondary", text: "Back" }}
-                                    onClick={() => history.push(`/${link}/${id}/page/1`)}
+                                    onClick={() => history.push(`/${link}/${id}`)}
                                 />
                             </th>
                             <th className="six wide">
@@ -97,7 +102,7 @@ class TableHeader extends Component {
                                         this.props.type !== 'orderEdit' &&
                                         this.props.type !== 'loadingEdit' ?
                                         (
-                                            <Link to={`/${this.props.type}s/edit/${id}`}>
+                                            <Link to={`/${link}/edit/${id}`}>
                                                 <Button
                                                     button={{ type: 'primary left floated', text: 'Edit' }}
                                                 />
@@ -143,20 +148,6 @@ class TableHeader extends Component {
                             <th>Trailer</th>
                             <th>Total CLL</th>
                             <th>Total Bruto</th>
-                        </tr>
-                    </thead>
-                );
-            case 'loading':
-                return (
-                    <thead>
-                        <tr>
-                            <th className="two wide center aligned">Cargo ID</th>
-                            <th className="two wide center aligned">Date</th>
-                            <th className="two wide center aligned">Sender</th>
-                            <th className="two wide center aligned">Receiver</th>
-                            <th className="two wide center aligned">Auto</th>
-                            <th className="two wide center aligned">CLL</th>
-                            <th className="two wide center aligned">Bruto</th>
                         </tr>
                     </thead>
                 );

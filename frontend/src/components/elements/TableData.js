@@ -135,6 +135,35 @@ class TableData extends Component {
     });
   }
 
+  renderClientEdit() {
+    {
+      if (!this.props.client) {
+        return (<tr rowSpan="5">
+          <td colSpan="10">
+            <div className="ui active inverted dimmer">
+              <div className="ui text loader">Loading</div>
+            </div>
+          </td>
+        </tr>);
+      }
+      const { data } = this.props.client;
+      const firstColumn = ['Name', 'Phone', 'E-mail'];
+      const secondColumn = [data.name, data.phone, data.email];
+      let i = 0;
+      return (
+        firstColumn.map(text => {
+          i++;
+          return (
+            <tr key={i}>
+              <td>{text}</td>
+              <td className="left aligned">{secondColumn[i - 1]}</td>
+            </tr>
+          );
+        })
+      );
+    }
+  }
+
   // RENDERING LOADINGS
 
   renderLoadings() {
@@ -332,6 +361,8 @@ class TableData extends Component {
           );
         case 'client':
           return this.renderClient();
+        case 'clientEdit':
+          return this.renderClientEdit();
         case 'loadings':
           return (
             <Fragment>
