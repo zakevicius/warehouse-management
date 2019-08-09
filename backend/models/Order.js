@@ -54,7 +54,8 @@ const OrderSchema = mongoose.Schema({
     default: []
   },
   status: {
-    type: String  // waiting, in, loading, out
+    type: String,  // waiting, in, loading, out
+    required: true
   },
   loadingID: {
     type: mongoose.Schema.Types.ObjectId,

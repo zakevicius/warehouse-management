@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { history } from '../history';
-import { updateData, removeData } from '../../action';
+import { removeData } from '../../action';
 import Button from './Button';
 
 class TableHeader extends Component {
@@ -18,10 +18,6 @@ class TableHeader extends Component {
         }
     };
 
-    update = (type) => {
-
-    }
-
     remove = (type) => {
         switch (type) {
             case 'client':
@@ -31,7 +27,7 @@ class TableHeader extends Component {
                 this.props.removeData('/orders', this.props.order._id);
                 break;
             case 'loading':
-                this.props.removeData('/loadings', this.props.loading._id);
+                this.props.removeData('/loadings', this.props.loading.data._id);
                 break;
             default:
                 return null;
@@ -49,6 +45,7 @@ class TableHeader extends Component {
                                     <Button button={{ type: 'primary basic', text: 'New order' }} />
                                 </Link>
                             </th>
+                            <th className="one wide center aligned">Status</th>
                             <th className="one wide center aligned">Order</th>
                             <th className="one wide center aligned">Date</th>
                             <th className="two wide center aligned">Sender</th>
@@ -65,7 +62,6 @@ class TableHeader extends Component {
             case 'order':
             case 'client':
             case 'loading':
-            case 'clientEdit':
                 let id, link, page;
                 switch (this.props.type) {
                     case 'order':
@@ -74,13 +70,12 @@ class TableHeader extends Component {
                         page = '';
                         break;
                     case 'client':
-                    case 'clientEdit':
                         id = this.props.client && this.props.client.data._id;
                         link = 'clients';
                         page = 'page/1';
                         break;
                     case 'loading':
-                        id = this.props.loading && this.props.loading._id;
+                        id = this.props.loading && this.props.loading.data._id;
                         link = 'loadings';
                         page = '';
                         break;
@@ -185,4 +180,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { updateData, removeData })(TableHeader);
+export default connect(mapStateToProps, { removeData })(TableHeader);

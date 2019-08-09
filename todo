@@ -1,22 +1,31 @@
 // Orders fetch      - done
 // One order fetch   - done
 // Order create      - done
-// Order update
+// Order update      - done
 // Order delete      - done
 
 // clients fetch     - done
 // one client fetch  - done
 // client create     - done
-// client update     - 
-// client delete     -
+// client update     - done
+// client delete     - done
 
 // loadings fetch    - done
 // One loading fetch - done
-// loading create    - in progress (need to update order status and generate ID)
+// loading create    - done // need to add ID 
 // loading update
-// loading delete
+// loading delete    - done // need to reset orders status
 
-// Update status of orders when confirming or deleting order
-// Update loading status
+
+// Back buttons need to work
+// 
+// Loader animations
+
+// Home screen:
+    - Active or pending loadings
+    - Cargos on way
+    - Cargos in warehouse
+    
+// Update loading status 
 // Show orders only in warehouse or only dispatched
 // Add files and photos

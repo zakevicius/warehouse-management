@@ -31,8 +31,13 @@ router.get('/', auth, async (req, res) => {
 // @access      Private
 router.get('/:id', auth, async (req, res) => {
     try {
-        let loading = await Loading.findById(req.params.id, (err, res) => res);
-        res.json(loading);
+        let loading = await Loading.findById(req.params.id);
+
+        let orders = await Promise.all(loading.orders.map(async id => await Order.findById(id)));
+
+        let client = await Client.findById(loading.clientID);
+
+        res.json({ data: loading, client: { name: client.name, email: client.email }, orders });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ msg: 'Server error fetching loading' });
@@ -72,6 +77,22 @@ router.post(
             });
 
             await loading.save();
+
+            // Udating order status
+            try {
+                orders.forEach(async id => {
+                    const status = { status: 'loading' };
+                    order = await Order.findByIdAndUpdate(id,
+                        { $set: status },
+                        { new: true }
+                    );
+                })
+            } catch (err) {
+                console.error(err.message);
+                res.status(500).json({ msg: 'Server error updating order status' });
+            }
+
+
             res.json(loading);
         } catch (err) {
             console.error(err.message);
@@ -130,6 +151,7 @@ router.put('/:id', auth, async (req, res) => {
 // @desc        Delete loading
 // @access      Private
 router.delete('/:id', auth, async (req, res) => {
+    console.log(req.params)
     try {
         // Find Loading to delete
         const loading = await Loading.findById(req.params.id);
@@ -144,12 +166,25 @@ router.delete('/:id', auth, async (req, res) => {
         if (loading.user.toString() !== req.user.id) {
             if (user.type !== 'admin') {
                 return res.status(401).json({ msg: 'Not authorized ' });
-            } else {
-                await Loading.findByIdAndRemove(req.params.id);
             }
-        } else {
-            await Loading.findByIdAndRemove(req.params.id);
         }
+
+        // Update orders status back from 'loading' to 'in'
+        try {
+            loading.orders.forEach(async id => {
+                const status = { status: 'in' };
+                order = await Order.findByIdAndUpdate(id,
+                    { $set: status },
+                    { new: true }
+                );
+            })
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).json({ msg: 'Server error updating order status' });
+        }
+
+        // Remove loading
+        await Loading.findByIdAndRemove(req.params.id);
 
         res.json({ msg: 'Loading succesfully removed' });
     } catch (err) {

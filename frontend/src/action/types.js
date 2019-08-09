@@ -1,5 +1,3 @@
-export const SET_LOADING = 'SET_LOADING';
-
 // AUTHORIZATION
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
@@ -39,6 +37,8 @@ export const FETCH_LOADING_ID = 'FETCH_LOADING_ID';
 
 //EVENTS
 export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
+export const SET_LOADING = 'SET_LOADING';
+export const UNSET_LOADING = 'UNSET_LOADING';
 
 // ERROR
 export const NETWORK_ERROR = 'NETWORK_ERROR';

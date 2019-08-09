@@ -1,16 +1,19 @@
-import * as types from '../action/types';
+import {
+  FETCH_LOADINGS,
+  FETCH_LOADING,
+  CREATE_LOADING,
+  NETWORK_ERROR
+} from '../action/types';
 
 export default (state = { loadings: [] }, action) => {
   switch (action.type) {
-    case types.FETCH_LOADINGS:
+    case FETCH_LOADINGS:
       return { ...state, loadings: action.payload };
-    case types.FETCH_LOADING:
+    case FETCH_LOADING:
       return { ...state, loading: action.payload };
-    case types.FETCH_LOADING_ID:
-      return { ...state, newLoadingId: action.payload };
-    case types.CREATE_LOADING:
-      return state;
-    case types.NETWORK_ERROR:
+    case CREATE_LOADING:
+      return { ...state, loadings: [...state.loadings, action.payload] };
+    case NETWORK_ERROR:
       return { ...state, error: action.payload };
     default:
       return state;

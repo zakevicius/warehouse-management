@@ -16,7 +16,8 @@ class OrderCreate extends Component {
         description: '',
         declarations: [],
         client: 'Select a client',
-        clientID: ''
+        clientID: '',
+        status: 'Select status',
     }
 
     componentDidMount() {
@@ -88,6 +89,22 @@ class OrderCreate extends Component {
                         >
                             <option value=''>Select a client...</option>
                             {this.renderClientList()}
+                        </select>
+                    </div>
+                    <div className="field">
+                        <label htmlFor="status">Status</label>
+                        <select
+                            className="ui fluid dropdown"
+                            name="status"
+                            value={this.state.status}
+                            onChange={this.onChange}
+                            required
+                        >
+                            <option value=''>Select status...</option>
+                            <option value='waiting'>Waiting</option>
+                            <option value='in'>In</option>
+                            <option value='loading'>Loading</option>
+                            <option value='out'>out</option>
                         </select>
                     </div>
                     <div className="field">

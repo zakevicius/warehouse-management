@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchSingleData, setActiveTab } from '../../action'
+import { fetchSingleData, setActiveTab, unsetLoading } from '../../action'
 import Table from '../elements/Table';
+import LoadingOrderList from './LoadingOrderList';
 
 class LoadingShow extends Component {
 
@@ -17,15 +18,18 @@ class LoadingShow extends Component {
         return (
             <div>
                 <Table type="loading" loading={this.props.loading} />
+                <LoadingOrderList orders={this.props.loading.orders} />
             </div>
         );
     }
 };
 
 const mapStateToProps = state => {
+    console.log(state.eventsData.load)
     return {
+
         loading: state.loadingsData.loading
     }
 }
 
-export default connect(mapStateToProps, { fetchSingleData, setActiveTab })(LoadingShow);
+export default connect(mapStateToProps, { fetchSingleData, setActiveTab, unsetLoading })(LoadingShow);

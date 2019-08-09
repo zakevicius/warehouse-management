@@ -50,7 +50,8 @@ router.post('/', [
     check('trailer', 'Trailer is required').not().isEmpty(),
     check('qnt', 'Quantity is required').not().isEmpty(),
     check('bruto', 'Bruto is required').not().isEmpty(),
-    check('clientID', 'Client is required').not().isEmpty()
+    check('clientID', 'Client is required').not().isEmpty(),
+    check('status', 'Status is required').not().isEmpty()
   ]
 ],
   async (req, res) => {
@@ -61,7 +62,7 @@ router.post('/', [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID } = req.body;
+    const { sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status } = req.body;
 
     try {
       let order = await Order.findOne({ orderID });
@@ -78,7 +79,8 @@ router.post('/', [
         bruto,
         description,
         declarations,
-        clientID
+        clientID,
+        status
       });
       order = await newOrder.save();
       res.json(order);
@@ -94,7 +96,8 @@ router.post('/', [
 // @desc        Update order
 // @access      Private
 router.put('/:id', auth, async (req, res) => {
-  const { sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID } = req.body;
+  console.log(req.body);
+  const { sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status } = req.body;
 
   // Creating updated order object
   const newOrderInformation = {};
@@ -108,15 +111,20 @@ router.put('/:id', auth, async (req, res) => {
   if (declarations) newOrderInformation.declarations = declarations;
   if (clientID) newOrderInformation.clientID = clientID;
   if (orderID) newOrderInformation.orderID = orderID;
+  if (status) newOrderInformation.status = status;
 
   try {
     let order = await Order.findById(req.params.id);
+
+    console.log(req.user)
 
     if (!order) res.status(404).json({ msg: 'Order not found' });
 
     // Check if user authorized
     if (order.user.toString() !== req.user.id) {
-      return res.status(401).json({ msg: 'not authorized' });
+      if (req.user.type !== 'admin') {
+        return res.status(401).json({ msg: 'not authorized' });
+      }
     }
 
     // Updating order

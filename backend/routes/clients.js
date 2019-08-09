@@ -52,6 +52,7 @@ router.post(
       check('email', 'Email is required').isEmail(),
     ]
   ],
+
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -91,12 +92,12 @@ router.post(
 // @desc        Update client
 // @access      Private
 router.put('/:id', auth, async (req, res) => {
-  const { firstName, lastName, email, phone } = req.body;
+  const { name, orderLetter, email, phone } = req.body;
 
   // Build Client object, which contains new information
   const newClientInformation = {}
-  if (firstName) newClientInformation.firstName = firstName;
-  if (lastName) newClientInformation.lastName = lastName;
+  if (name) newClientInformation.name = name;
+  if (orderLetter) newClientInformation.orderLetter = orderLetter;
   if (email) newClientInformation.email = email;
   if (phone) newClientInformation.phone = phone;
 
@@ -114,7 +115,7 @@ router.put('/:id', auth, async (req, res) => {
     // }
 
     if (client.user.toString() !== req.user.id) {
-      if (user.type !== 'admin') {
+      if (req.user.type !== 'admin') {
         res.status(401).json({ msg: 'Not authorized ' });
       }
     }
@@ -149,7 +150,7 @@ router.delete('/:id', auth, async (req, res) => {
     const user = await User.findById(req.user.id);
 
     if (client.user.toString() !== req.user.id) {
-      if (user.type !== 'admin') {
+      if (req.user.type !== 'admin') {
         res.status(401).json({ msg: 'Not authorized ' });
       } else {
         await Client.findByIdAndRemove(req.params.id);

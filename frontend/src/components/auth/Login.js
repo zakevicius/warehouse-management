@@ -38,12 +38,13 @@ class Login extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-    if (this.state.user.email === '' || this.state.user.password === '') {
-      this.props.setError('Please fill in all fields', 'AUTH')
-    } else {
-      const { email, password } = this.state.user;
-      this.props.login({ email, password });
-    }
+    // if (this.state.user.email === '' || this.state.user.password === '') {
+    //   this.props.setError('Please fill in all fields', 'AUTH')
+    // } else {
+    //   const { email, password } = this.state.user;
+    //   this.props.login({ email, password });
+    // }
+    this.props.login({ email: 'demo@demo.lt', password: "12345678" });
   }
 
   render() {

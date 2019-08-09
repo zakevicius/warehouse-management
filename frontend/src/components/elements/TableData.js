@@ -26,8 +26,8 @@ class TableData extends Component {
       </tr>);
     }
     const order = this.props.order;
-    const firstColumn = ['ID', 'date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description', 'Declarations'];
-    const secondColumn = [order.orderID, order.date.split('T')[0], order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description, order.declarations.join(', ')];
+    const firstColumn = ['ID', 'Status', 'Date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description', 'Declarations'];
+    const secondColumn = [order.orderID, order.status, order.date.split('T')[0], order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description, order.declarations.join(', ')];
     let i = 0;
     return (
       firstColumn.map(text => {
@@ -63,6 +63,7 @@ class TableData extends Component {
               {this.renderButton()}
             </Link>
           </td>
+          <td className="center aligned">{order.status}</td>
           <td className="center aligned">{order.orderID}</td>
           <td className="center aligned">{order.date.split('T')[0]}</td>
           <td>{order.sender}</td>
@@ -135,35 +136,6 @@ class TableData extends Component {
     });
   }
 
-  renderClientEdit() {
-    {
-      if (!this.props.client) {
-        return (<tr rowSpan="5">
-          <td colSpan="10">
-            <div className="ui active inverted dimmer">
-              <div className="ui text loader">Loading</div>
-            </div>
-          </td>
-        </tr>);
-      }
-      const { data } = this.props.client;
-      const firstColumn = ['Name', 'Phone', 'E-mail'];
-      const secondColumn = [data.name, data.phone, data.email];
-      let i = 0;
-      return (
-        firstColumn.map(text => {
-          i++;
-          return (
-            <tr key={i}>
-              <td>{text}</td>
-              <td className="left aligned">{secondColumn[i - 1]}</td>
-            </tr>
-          );
-        })
-      );
-    }
-  }
-
   // RENDERING LOADINGS
 
   renderLoadings() {
@@ -201,9 +173,9 @@ class TableData extends Component {
     if (!this.props.loading) {
       return this.renderSpinner();
     }
-    const data = this.props.loading;
+    const { data, client } = this.props.loading;
     const firstColumn = ['ID', 'Truck', 'Trailer', 'Client'];
-    const secondColumn = [data.loadingID, data.truck, data.trailer, data.clientID];
+    const secondColumn = [data.loadingID, data.truck, data.trailer, client.name];
     let i = 0;
     return (
       firstColumn.map(text => {
@@ -361,8 +333,6 @@ class TableData extends Component {
           );
         case 'client':
           return this.renderClient();
-        case 'clientEdit':
-          return this.renderClientEdit();
         case 'loadings':
           return (
             <Fragment>

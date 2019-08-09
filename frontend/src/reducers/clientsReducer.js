@@ -1,26 +1,31 @@
-import * as types from '../action/types';
+import {
+    FETCH_CLIENTS,
+    FETCH_CLIENT,
+    CREATE_CLIENT,
+    UPDATE_CLIENT,
+    DELETE_CLIENT,
+    CLIENT_ERROR
+} from '../action/types';
 
 export default (state = { clients: [] }, action) => {
     switch (action.type) {
-        case types.FETCH_CLIENTS:
+        case FETCH_CLIENTS:
             return { ...state, clients: action.payload };
-        case types.FETCH_CLIENT:
+        case FETCH_CLIENT:
             return { ...state, client: action.payload };
-        case types.FETCH_CLIENT_ID:
-            return { ...state, newClientId: action.payload };
-        case types.CREATE_CLIENT:
+        case CREATE_CLIENT:
             return state;
-        case types.UPDATE_CLIENT:
+        case UPDATE_CLIENT:
             return {
                 ...state,
                 clients: state.clients.map(client => client._id === action.payload._id ? action.payload : client)
             };
-        case types.DELETE_CLIENT:
+        case DELETE_CLIENT:
             return {
                 ...state,
                 clients: state.clients.filter(client => client._id !== action.payload)
             };
-        case types.CLIENT_ERROR:
+        case CLIENT_ERROR:
             return { ...state, errors: action.payload };
         default:
             return state;
