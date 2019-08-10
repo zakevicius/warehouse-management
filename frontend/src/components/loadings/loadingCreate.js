@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createData, fetchData, fetchSingleData, fetchNewID } from '../../action';
-import LoadingOrdersListCreate from './LoadingOrdersListCreate';
+import LoadingOrderListCreate from './LoadingOrderListCreate';
 import Button from '../elements/Button';
 
 class LoadingCreate extends Component {
@@ -149,14 +149,14 @@ class LoadingCreate extends Component {
                 {(this.state.client !== 'Select a client' && this.props.client) ? (
                     <div className="ui container">
                         <div className="ui segment">
-                            <LoadingOrdersListCreate
+                            <LoadingOrderListCreate
                                 orders={this.state.ordersToLoad}
                                 removeOrderFromLoading={this.removeOrderFromLoading}
                                 action='remove'
                             />
                         </div>
                         <div className="ui segment">
-                            <LoadingOrdersListCreate
+                            <LoadingOrderListCreate
                                 orders={this.state.ordersList}
                                 addOrderToLoading={this.addOrderToLoading}
                                 action='add'

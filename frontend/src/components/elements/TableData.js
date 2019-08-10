@@ -82,6 +82,7 @@ class TableData extends Component {
   // RENDERING CLIENTS
 
   renderClient() {
+    console.log(this.props)
     if (!this.props.client) {
       return (<tr rowSpan="5">
         <td colSpan="10">
@@ -208,7 +209,8 @@ class TableData extends Component {
       );
     }
   }
-  renderLoadingOrdersList() {
+
+  renderLoadingOrderListCreate() {
     const orders = this.props.orders;
     if (orders) {
       return orders.map(order => {
@@ -227,6 +229,35 @@ class TableData extends Component {
         );
       });
     }
+  }
+
+  renderLoadingOrderList() {
+    console.log(this.props);
+    if (!this.props.loadingOrderList) {
+      return this.renderSpinner();
+    }
+    console.log(this.props.loadingOrderList)
+    const orders = this.props.loadingOrderList;
+    console.log(orders);
+    const dataOnPage = this.showDataByPageNumber(orders, this.props.page);
+    return dataOnPage.map(order => {
+      return (
+        <tr key={order._id}>
+          <td className="center aligned">
+            {order.orderID}
+          </td>
+          <td className="center aligned">{order.date.split('T')[0]}</td>
+          <td className="center aligned">{order.sender}</td>
+          <td className="center aligned">{order.receiver}</td>
+          <td>{order.truck}</td>
+          <td>{order.trailer}</td>
+          <td className="center aligned">{order.qnt}</td>
+          <td className="center aligned">{order.bruto}</td>
+          <td className="center aligned">{order.description}</td>
+          <td className="center aligned">{order.declarations.join(', ')}</td>
+        </tr >
+      );
+    });
   }
 
   // SPINNER
@@ -342,8 +373,10 @@ class TableData extends Component {
           );
         case 'loading':
           return this.renderLoading();
-        case 'loadingOrdersList':
-          return this.renderLoadingOrdersList();
+        case 'loadingOrderList':
+          return this.renderLoadingOrderList();
+        case 'loadingOrderListCreate':
+          return this.renderLoadingOrderListCreate();
         default:
           return null;
       }

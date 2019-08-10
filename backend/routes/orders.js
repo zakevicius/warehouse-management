@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const { check, validationResult } = require('express-validator');
+const transporter = require('../config/email');
 
 const User = require('../models/User');
 const Client = require('../models/Client');
@@ -55,7 +56,6 @@ router.post('/', [
   ]
 ],
   async (req, res) => {
-    console.log(req.body)
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       console.log(errors.array())
@@ -83,6 +83,9 @@ router.post('/', [
         status
       });
       order = await newOrder.save();
+
+      sendMail('m.zakevicius@gmail.com', `Order ${orderID} has arrived to warehouse`, `Order ${orderID} from ${sender} arrived to warehouse`);
+
       res.json(order);
     } catch (err) {
       if (err.exists) return res.status(400).json({ msg: err.exists });
@@ -115,8 +118,6 @@ router.put('/:id', auth, async (req, res) => {
 
   try {
     let order = await Order.findById(req.params.id);
-
-    console.log(req.user)
 
     if (!order) res.status(404).json({ msg: 'Order not found' });
 
@@ -166,5 +167,26 @@ router.delete('/:id', auth, async (req, res) => {
     res.status(500).json({ msg: 'Server error deleting order ' });
   }
 });
+
+// Email settings
+
+const sendMail = (to, subject, text) => {
+  const mailOptions = {
+    from: 'm.zakevicius@gmail.com',
+    to,
+    subject,
+    text
+  }
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log('Email sent');
+    }
+  })
+}
+
+
 
 module.exports = router;

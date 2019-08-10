@@ -81,9 +81,9 @@ router.post(
             // Udating order status
             try {
                 orders.forEach(async id => {
-                    const status = { status: 'loading' };
+                    const newInfo = { status: 'loading', loadingID: loading._id };
                     order = await Order.findByIdAndUpdate(id,
-                        { $set: status },
+                        { $set: newInfo },
                         { new: true }
                     );
                 })
@@ -172,9 +172,9 @@ router.delete('/:id', auth, async (req, res) => {
         // Update orders status back from 'loading' to 'in'
         try {
             loading.orders.forEach(async id => {
-                const status = { status: 'in' };
+                const newInfo = { status: 'in', loadingID: null };
                 order = await Order.findByIdAndUpdate(id,
-                    { $set: status },
+                    { $set: newInfo },
                     { new: true }
                 );
             })

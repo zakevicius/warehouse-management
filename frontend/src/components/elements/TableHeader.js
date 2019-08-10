@@ -67,7 +67,7 @@ class TableHeader extends Component {
                     case 'order':
                         id = this.props.order && this.props.order._id;
                         link = 'orders';
-                        page = '';
+                        page = 'page/1';
                         break;
                     case 'client':
                         id = this.props.client && this.props.client.data._id;
@@ -77,7 +77,7 @@ class TableHeader extends Component {
                     case 'loading':
                         id = this.props.loading && this.props.loading.data._id;
                         link = 'loadings';
-                        page = '';
+                        page = 'page/1';
                         break;
                     default:
                         return null;
@@ -88,7 +88,7 @@ class TableHeader extends Component {
                             <th className="one wide center aligned">
                                 <Button
                                     button={{ type: "secondary", text: "Back" }}
-                                    onClick={() => history.push(`/${link}/${id}`)}
+                                    onClick={() => history.push(`/${link}/${page}`)}
                                 />
                             </th>
                             <th className="six wide">
@@ -146,7 +146,7 @@ class TableHeader extends Component {
                         </tr>
                     </thead>
                 );
-            case 'loadingOrdersList':
+            case 'loadingOrderListCreate':
                 return (
                     <thead>
                         <tr>
@@ -157,6 +157,23 @@ class TableHeader extends Component {
                             <th className="two wide center aligned">Receiver</th>
                             <th className="two wide center aligned">CLL</th>
                             <th className="two wide center aligned">Bruto</th>
+                        </tr>
+                    </thead>
+                );
+            case 'loadingOrderList':
+                return (
+                    <thead>
+                        <tr>
+                            <th className="one wide center aligned">Order</th>
+                            <th className="one wide center aligned">Date</th>
+                            <th className="two wide center aligned">Sender</th>
+                            <th className="two wide center aligned">Receiver</th>
+                            <th className="one wide center aligned">Truck</th>
+                            <th className="one wide center aligned">Trailer</th>
+                            <th className="one wide center aligned">CLL</th>
+                            <th className="one wide center aligned">Bruto</th>
+                            <th className="three wide center aligned">Description</th>
+                            <th className="two wide center aligned">Declarations</th>
                         </tr>
                     </thead>
                 );

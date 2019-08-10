@@ -15,6 +15,7 @@ const Table = (props) => {
           orders={props.orders}
           loading={props.loading}
           loadings={props.loadings}
+          loadingOrderList={props.loadingOrderList}
           page={props.page}
           url={props.url}
           additional={props.additional}

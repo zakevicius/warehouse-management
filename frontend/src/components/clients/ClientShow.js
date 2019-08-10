@@ -15,7 +15,7 @@ class ClientShow extends Component {
     // }
 
     render() {
-        if (this.props.load) {
+        if (!this.props.client) {
             return <div>Loading</div>
         }
         return (
@@ -34,7 +34,6 @@ class ClientShow extends Component {
 const mapStateToProps = state => {
     return {
         client: state.clientsData.client,
-        load: state.eventsData.load
     };
 };
 

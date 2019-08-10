@@ -1,12 +1,11 @@
 import React from 'react';
 import Table from '../elements/Table';
 
-const LoadingOrdersListCreate = (props) => {
-    console.log(props)
+const LoadingOrderListCreate = (props) => {
     if (props.orders) {
         return (
             <Table
-                type="loadingOrdersList"
+                type="loadingOrderListCreate"
                 orders={props.orders.filter(order => order.status === 'in')}
                 action={props.action}
                 additional={
@@ -22,4 +21,4 @@ const LoadingOrdersListCreate = (props) => {
     return null;
 }
 
-export default LoadingOrdersListCreate;
+export default LoadingOrderListCreate;
