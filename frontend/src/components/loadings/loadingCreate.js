@@ -73,10 +73,11 @@ class LoadingCreate extends Component {
             )
             const client = this.props.clients.filter(client => client.name === e.target.value)[0];
             const letter = client.orderLetter;
+
             // Fetch new ID for new order based on client selected
             await this.props.fetchNewID(client._id)
                 .then((response) => {
-                    const newID = `LOAD-${letter}${this.props.id}`;
+                    const newID = `LD-${letter}${this.props.id}`;
                     this.setState({
                         ...this.state,
                         loadingID: newID,
@@ -101,13 +102,22 @@ class LoadingCreate extends Component {
 
     onSubmit = e => {
         e.preventDefault();
+        let totalQnt = 0;
+        let totalBruto = 0;
+        this.state.ordersToLoad.forEach(order => {
+            console.log(order);
+            totalQnt += order.qnt;
+            totalBruto += order.bruto;
+        });
         this.props.createData('/loadings', {
             loadingID: this.state.loadingID,
             clientID: this.state.clientID,
             truck: this.state.truck,
             trailer: this.state.trailer,
             orders: this.state.ordersToLoad.map(order => order._id),
-            status: 'waiting'
+            status: 'waiting',
+            totalQnt,
+            totalBruto
         });
     };
 

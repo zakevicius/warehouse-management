@@ -137,6 +137,7 @@ class TableHeader extends Component {
                                     <Button button={{ type: 'primary basic', text: 'New loading' }} />
                                 </Link>
                             </th>
+                            <th>Status</th>
                             <th>ID</th>
                             <th>Date</th>
                             <th>Truck</th>

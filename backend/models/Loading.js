@@ -18,10 +18,17 @@ const LoadingSchema = mongoose.Schema({
         required: true
     },
     trailer: {
-        type: String
+        type: String,
+        default: '-'
     },
     orders: {
         type: Array
+    },
+    totalQnt: {
+        type: Number
+    },
+    totalBruto: {
+        type: Number
     },
     status: {
         type: String // waiting, loading, loaded

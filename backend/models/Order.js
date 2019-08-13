@@ -31,7 +31,7 @@ const OrderSchema = mongoose.Schema({
   },
   trailer: {
     type: String,
-    required: true
+    default: '-'
   },
   qnt: {
     type: Number,

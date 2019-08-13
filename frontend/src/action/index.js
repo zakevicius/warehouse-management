@@ -94,7 +94,6 @@ export const createData = (typeOfData, data) => async dispatch => {
 export const fetchNewID = (clientID) => async dispatch => {
     // Fetching last order's number
     try {
-
         const res = await api.get('/orders');
         if (res.data.length === 0) {
             dispatch({

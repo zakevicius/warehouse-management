@@ -63,7 +63,7 @@ router.post(
 
         console.log(req.body)
 
-        const { loadingID, truck, trailer, orders, status, clientID } = req.body;
+        const { loadingID, truck, trailer, orders, status, clientID, totalQnt, totalBruto } = req.body;
         try {
             // Creating new Loading
             loading = new Loading({
@@ -73,6 +73,8 @@ router.post(
                 orders,
                 status,
                 clientID,
+                totalQnt,
+                totalBruto,
                 user: req.user.id
             });
 
@@ -105,14 +107,16 @@ router.post(
 // @desc        Update client
 // @access      Private
 router.put('/:id', auth, async (req, res) => {
-    const { truck, trailer, orders, status } = req.body;
+    const { truck, trailer, orders, status, totalQnt, totalBruto } = req.body;
 
     // Build Loading object, which contains new information
-    const newLoadingInformation = {}
+    const newLoadingInformation = {};
     if (truck) newClientInformation.truck = truck;
     if (trailer) newClientInformation.trailer = trailer;
     if (orders) newClientInformation.orders = orders;
     if (status) newClientInformation.status = status;
+    if (totalQnt) newClientInformation.totalQnt = totalQnt;
+    if (totalBruto) newClientInformation.totalBruto = totalBruto;
 
     // Find Loading to update
     try {

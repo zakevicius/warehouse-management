@@ -159,12 +159,13 @@ class TableData extends Component {
               {this.renderButton()}
             </Link>
           </td>
+          <td className="center aligned">{loading.status}</td>
           <td className="center aligned">{loading.loadingID}</td>
           <td className="center aligned">{loading.date.split('T')[0]}</td>
           <td className="center aligned">{loading.truck}</td>
           <td className="center aligned">{loading.trailer}</td>
-          <td className="center aligned"></td>
-          <td className="center aligned">{loading.status}</td>
+          <td className="center aligned">{loading.totalQnt}</td>
+          <td className="center aligned">{loading.totalBruto}</td>
         </tr>
       );
     });
@@ -220,9 +221,9 @@ class TableData extends Component {
               {this.renderAddRemove(order._id)}
             </td>
             <td className="center aligned">{order.orderID}</td>
-            <td className="center aligned">{order.date}</td>
-            <td className="center aligned">{order.truck}</td>
-            <td className="center aligned">{order.trailer}</td>
+            <td className="center aligned">{order.date.split('T')[0]}</td>
+            <td className="center aligned">{order.sender}</td>
+            <td className="center aligned">{order.receiver}</td>
             <td className="center aligned">{order.qnt}</td>
             <td className="center aligned">{order.bruto}</td>
           </tr>

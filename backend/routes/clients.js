@@ -95,7 +95,7 @@ router.put('/:id', auth, async (req, res) => {
   const { name, orderLetter, email, phone } = req.body;
 
   // Build Client object, which contains new information
-  const newClientInformation = {}
+  const newClientInformation = {};
   if (name) newClientInformation.name = name;
   if (orderLetter) newClientInformation.orderLetter = orderLetter;
   if (email) newClientInformation.email = email;
