@@ -6,7 +6,7 @@ const LoadingOrderListCreate = (props) => {
         return (
             <Table
                 type="loadingOrderListCreate"
-                orders={props.orders.filter(order => order.status === 'in')}
+                orders={props.orders}
                 action={props.action}
                 additional={
                     {

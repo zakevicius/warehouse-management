@@ -82,7 +82,6 @@ class TableData extends Component {
   // RENDERING CLIENTS
 
   renderClient() {
-    console.log(this.props)
     if (!this.props.client) {
       return (<tr rowSpan="5">
         <td colSpan="10">
@@ -233,13 +232,10 @@ class TableData extends Component {
   }
 
   renderLoadingOrderList() {
-    console.log(this.props);
     if (!this.props.loadingOrderList) {
       return this.renderSpinner();
     }
-    console.log(this.props.loadingOrderList)
     const orders = this.props.loadingOrderList;
-    console.log(orders);
     const dataOnPage = this.showDataByPageNumber(orders, this.props.page);
     return dataOnPage.map(order => {
       return (

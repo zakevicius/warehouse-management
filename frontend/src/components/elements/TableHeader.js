@@ -7,17 +7,6 @@ import Button from './Button';
 
 class TableHeader extends Component {
 
-    goBack = (type) => {
-        console.log(`/${type}s/page/1`)
-        switch (type) {
-            case type:
-                history.push(`/${type}s/page/1`);
-                break;
-            default:
-                history.push('/');
-        }
-    };
-
     remove = (type) => {
         switch (type) {
             case 'client':
@@ -88,7 +77,7 @@ class TableHeader extends Component {
                             <th className="one wide center aligned">
                                 <Button
                                     button={{ type: "secondary", text: "Back" }}
-                                    onClick={() => history.push(`/${link}/${page}`)}
+                                    onClick={() => history.goBack()}
                                 />
                             </th>
                             <th className="six wide">

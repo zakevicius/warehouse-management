@@ -12,11 +12,10 @@ import ClientList from './clients/ClientList';
 import ClientShow from './clients/ClientShow';
 import ClientCreate from './clients/ClientCreate';
 import ClientEdit from './clients/ClientEdit';
-// import ClientEdit from './clients/ClientEdit';
-// import ClientDelete from './clients/ClientDelete';
 import LoadingList from './loadings/LoadingList';
 import LoadingShow from './loadings/LoadingShow';
 import LoadingCreate from './loadings/LoadingCreate';
+import LoadingEdit from './loadings/LoadingEdit';
 import Header from './Header';
 import Footer from './Footer';
 import Register from './auth/Register';
@@ -51,6 +50,7 @@ class App extends React.Component {
                             <PrivateRoute path="/loadings/new" exact component={LoadingCreate} />
                             <PrivateRoute path="/loadings/:id" exact component={LoadingShow} />
                             <PrivateRoute path="/loadings/page/:no" exact component={LoadingList} />
+                            <PrivateRoute path="/loadings/edit/:id" exact component={LoadingEdit} />
 
 
                             {/* Auth */}

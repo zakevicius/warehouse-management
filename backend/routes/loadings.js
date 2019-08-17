@@ -61,8 +61,6 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        console.log(req.body)
-
         const { loadingID, truck, trailer, orders, status, clientID, totalQnt, totalBruto } = req.body;
         try {
             // Creating new Loading
@@ -111,12 +109,12 @@ router.put('/:id', auth, async (req, res) => {
 
     // Build Loading object, which contains new information
     const newLoadingInformation = {};
-    if (truck) newClientInformation.truck = truck;
-    if (trailer) newClientInformation.trailer = trailer;
-    if (orders) newClientInformation.orders = orders;
-    if (status) newClientInformation.status = status;
-    if (totalQnt) newClientInformation.totalQnt = totalQnt;
-    if (totalBruto) newClientInformation.totalBruto = totalBruto;
+    if (truck) newLoadingInformation.truck = truck;
+    if (trailer) newLoadingInformation.trailer = trailer;
+    if (orders) newLoadingInformation.orders = orders;
+    if (status) newLoadingInformation.status = status;
+    if (totalQnt) newLoadingInformation.totalQnt = totalQnt;
+    if (totalBruto) newLoadingInformation.totalBruto = totalBruto;
 
     // Find Loading to update
     try {
@@ -131,7 +129,7 @@ router.put('/:id', auth, async (req, res) => {
         //   res.status(500).json({ msg: 'Server error. User not found'});
         // }
 
-        if (client.user.toString() !== req.user.id) {
+        if (loading.user.toString() !== req.user.id) {
             if (user.type !== 'admin') {
                 return res.status(401).json({ msg: 'Not authorized ' });
             }
@@ -142,12 +140,27 @@ router.put('/:id', auth, async (req, res) => {
             req.params.id,
             { $set: newLoadingInformation },
             { new: true }
-        )
+        );
+
+        // Udating order status
+        await Order.updateMany(
+            { loadingID: loading._id },
+            { $set: { status: 'in', loadingID: null } },
+            { multi: true }
+        );
+
+        orders.forEach(async id => {
+            const newInfo = { status: 'loading', loadingID: loading._id };
+            order = await Order.findByIdAndUpdate(id,
+                { $set: newInfo },
+                { new: true }
+            );
+        });
 
         res.json(loading);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: 'Server error updating loading' });
+        res.status(500).json({ msg: 'Server error updating order status' });
     }
 });
 
@@ -155,7 +168,6 @@ router.put('/:id', auth, async (req, res) => {
 // @desc        Delete loading
 // @access      Private
 router.delete('/:id', auth, async (req, res) => {
-    console.log(req.params)
     try {
         // Find Loading to delete
         const loading = await Loading.findById(req.params.id);

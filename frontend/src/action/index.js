@@ -29,7 +29,6 @@ export const login = (user) => async (dispatch) => {
     try {
 
         const res = await api.post('/auth', user, config);
-        console.log(res.data);
         dispatch({ type: types.LOGIN_SUCCESS, payload: res.data });
         loadUser();
 

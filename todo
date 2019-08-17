@@ -13,8 +13,8 @@
 // loadings fetch    - done
 // One loading fetch - done
 // loading create    - done // need to add ID 
-// loading update
-// loading delete    - done // need to reset orders status
+// loading update    - done
+// loading delete    - done
 
 
 // Back buttons need to work

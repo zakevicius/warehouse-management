@@ -89,10 +89,11 @@ class LoadingCreate extends Component {
             // get orders for selected client
             await this.props.fetchSingleData('/clients', client._id)
                 .then(() => {
+                    const availableOrders = this.props.client.orders.filter(order => order.status === 'in');
                     this.setState({
                         ordersList: [
                             ...this.state.ordersList,
-                            ...this.props.client.orders
+                            ...availableOrders
                         ]
                     });
                 })

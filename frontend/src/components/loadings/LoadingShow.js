@@ -25,7 +25,6 @@ class LoadingShow extends Component {
 };
 
 const mapStateToProps = state => {
-    console.log(state.eventsData.load)
     return {
 
         loading: state.loadingsData.loading
