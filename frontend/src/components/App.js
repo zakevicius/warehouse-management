@@ -2,7 +2,7 @@ import React from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import { history } from './history';
 
-import Home from './Home';
+import Home from './home/Home';
 import OrderList from './orders/OrderList';
 import OrderShow from './orders/OrderShow';
 import OrderCreate from './orders/OrderCreate';
@@ -18,7 +18,7 @@ import LoadingCreate from './loadings/LoadingCreate';
 import LoadingEdit from './loadings/LoadingEdit';
 import Header from './Header';
 import Footer from './Footer';
-import Register from './auth/Register';
+// import Register from './auth/Register';
 import Login from './auth/Login';
 import PrivateRoute from '../routing/PrivateRoute';
 

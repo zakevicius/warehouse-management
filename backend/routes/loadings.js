@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const { check, validationResult } = require('express-validator');
+const transporter = require('../config/email');
 
 const User = require('../models/User');
 const Client = require('../models/Client');
@@ -61,7 +62,7 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { loadingID, truck, trailer, orders, status, clientID, totalQnt, totalBruto } = req.body;
+        const { loadingID, truck, trailer, orders, status, clientID, totalQnt, totalBruto, client } = req.body;
         try {
             // Creating new Loading
             loading = new Loading({
@@ -92,7 +93,7 @@ router.post(
                 res.status(500).json({ msg: 'Server error updating order status' });
             }
 
-
+            sendMail('m.zakevicius@gmail.com', `${client} created new loading`, `New loading ID:${loadingID} was created by ${client}`);
             res.json(loading);
         } catch (err) {
             console.error(err.message);
@@ -208,5 +209,22 @@ router.delete('/:id', auth, async (req, res) => {
         res.status(500).json({ msg: 'Server error deleting loading' });
     }
 });
+
+const sendMail = (to, subject, text) => {
+    const mailOptions = {
+        from: 'm.zakevicius@gmail.com',
+        to,
+        subject,
+        text
+    }
+
+    transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+            console.error(err);
+        } else {
+            console.log('Email sent');
+        }
+    })
+}
 
 module.exports = router; 

@@ -4,8 +4,8 @@ const auth = require('../middleware/auth');
 const { check, validationResult } = require('express-validator');
 const transporter = require('../config/email');
 
-const User = require('../models/User');
-const Client = require('../models/Client');
+// const User = require('../models/User');
+// const Client = require('../models/Client');
 const Order = require('../models/Order');
 
 // @route       GET api/orders

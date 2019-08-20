@@ -4,6 +4,10 @@ import { fetchData, setActiveTab } from '../../action';
 import Table from '../elements/Table';
 
 class OrderList extends Component {
+    state = {
+        activeTab: 'all',
+    };
+
     componentDidMount() {
         this.props.setActiveTab('orders');
         if (!this.props.ordersToShow) {
@@ -17,7 +21,6 @@ class OrderList extends Component {
         };
         return (
             <div>
-                {status.toUpperCase()}
                 <Table
                     type="orders"
                     orders={{ orders: orders.filter(order => order.status === status) }}
