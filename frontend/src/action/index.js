@@ -27,13 +27,14 @@ export const login = (user) => async (dispatch) => {
 
     //Login user
     try {
-
+        setLoading();
         const res = await api.post('/auth', user, config);
         dispatch({ type: types.LOGIN_SUCCESS, payload: res.data });
         loadUser();
-
+        unsetLoading();
     } catch (err) {
-        dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
+        console.log(err);
+        dispatch({ type: types.AUTH_ERROR, payload: err });
     }
 };
 
@@ -47,10 +48,10 @@ export const fetchData = (typeOfData) => async (dispatch) => {
     let requestType = setRequestType(typeOfData, 'fetchAll');
 
     try {
-
+        setLoading();
         const res = await api.get(typeOfData);
         dispatch({ type: requestType, payload: res.data });
-
+        unsetLoading();
     } catch (err) {
         dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
     }
@@ -167,18 +168,12 @@ export const setActiveTab = (tab) => {
     };
 };
 
-export const setLoading = () => {
-    console.log('set')
-    return {
-        type: types.SET_LOADING
-    };
+export const setLoading = () => dispatch => {
+    dispatch({ type: types.SET_LOADING });
 };
 
-export const unsetLoading = () => {
-    console.log('unset')
-    return {
-        type: types.UNSET_LOADING
-    };
+export const unsetLoading = () => dispatch => {
+    dispatch({ type: types.UNSET_LOADING });
 };
 
 // ERRORS HANDLER

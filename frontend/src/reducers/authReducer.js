@@ -11,7 +11,7 @@ const initialState = {
   isAuthenticated: false,
   error: null,
   token: localStorage.getItem('token')
-}
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -19,7 +19,6 @@ export default (state = initialState, action) => {
       localStorage.setItem('token', action.payload.token);
       return {
         ...state,
-        isAuthenticated: true,
         user: action.payload,
         error: null,
       };
