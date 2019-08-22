@@ -20,6 +20,7 @@ export const login = (user) => async (dispatch) => {
         try {
             const res = await api.get('/auth', config);
             dispatch({ type: types.USER_LOADED, payload: res.data });
+            dispatch({ type: types.UNSET_LOADING });
         } catch (err) {
             dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
         }
@@ -27,11 +28,10 @@ export const login = (user) => async (dispatch) => {
 
     //Login user
     try {
-        setLoading();
+        dispatch({ type: types.SET_LOADING });
         const res = await api.post('/auth', user, config);
         dispatch({ type: types.LOGIN_SUCCESS, payload: res.data });
         loadUser();
-        unsetLoading();
     } catch (err) {
         console.log(err);
         dispatch({ type: types.AUTH_ERROR, payload: err });
@@ -48,10 +48,10 @@ export const fetchData = (typeOfData) => async (dispatch) => {
     let requestType = setRequestType(typeOfData, 'fetchAll');
 
     try {
-        setLoading();
+        dispatch({ type: types.SET_LOADING });
         const res = await api.get(typeOfData);
         dispatch({ type: requestType, payload: res.data });
-        unsetLoading();
+        dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
         dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
     }
@@ -62,10 +62,10 @@ export const fetchSingleData = (typeOfData, id) => async dispatch => {
     let requestType = setRequestType(typeOfData, 'fetchSingle');
 
     try {
-
+        dispatch({ type: types.SET_LOADING });
         const res = await api.get(`${typeOfData}/${id}`);
         dispatch({ type: requestType, payload: res.data });
-
+        dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
         dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
     }
@@ -91,35 +91,44 @@ export const createData = (typeOfData, data) => async dispatch => {
 }
 
 // GETTING ID FOR NEW DATA
-export const fetchNewID = (clientID) => async dispatch => {
-    // Fetching last order's number
+export const fetchNewID = (clientID, type) => async dispatch => {
+    const requestType = setRequestType(type, 'newID');
+    console.log(type, requestType);
     try {
-        const res = await api.get('/orders');
+        const res = await api.get(type);
         if (res.data.length === 0) {
             dispatch({
-                type: types.NEW_ORDER_ID,
+                type: requestType,
                 payload: 1
             });
         } else {
-            const orders = res.data.filter(order => order.clientID === clientID);
-            let result = {};
-            if (orders.length !== 0) {
-                // if there are already orders for this client take last orders number ant increase value by 1
-                // result = (orders[0].orderID.slice(1)) + 1;
-                result = parseInt(orders.map(order => order.orderID.slice(1)).sort((a, b) => a - b).slice(-1)) + 1;
+            const data = res.data.filter(item => item.clientID === clientID);
+            let arr, result;
+            if (data.length !== 0) {
+                // if there are already orders/loadings for this client take last id ant increase value by 1
+                switch (type) {
+                    case '/orders':
+                        arr = data.map(item => item.orderID.slice(1));
+                        break;
+                    case '/loadings':
+                        arr = data.map(item => item.loadingID.slice(4));
+                        break;
+                    default:
+                        return null;
+                };
+                result = parseInt(arr.sort((a, b) => a - b).slice(-1)) + 1;
                 dispatch({
-                    type: types.NEW_ORDER_ID,
+                    type: requestType,
                     payload: result
                 });
             } else {
                 // if there are no orders for this client return number 1
                 dispatch({
-                    type: types.NEW_ORDER_ID,
+                    type: requestType,
                     payload: 1
                 });
             }
         }
-
     } catch (err) {
         dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
     }
@@ -161,22 +170,16 @@ export const removeData = (typeOfData, id) => async dispatch => {
 }
 
 // EVENT HANDLERS
-export const setActiveTab = (tab) => {
+export const setActiveTab = (type, tab) => {
+    const requestType = setRequestType('tab', type)
     return {
-        type: types.SET_ACTIVE_TAB,
+        type: requestType,
         payload: tab
     };
 };
 
-export const setLoading = () => dispatch => {
-    dispatch({ type: types.SET_LOADING });
-};
-
-export const unsetLoading = () => dispatch => {
-    dispatch({ type: types.UNSET_LOADING });
-};
-
 // ERRORS HANDLER
+
 export const setError = (msg, type) => {
     const newType = setErrorType(type);
     return {
@@ -213,6 +216,8 @@ const setRequestType = (typeOfData, requestType) => {
                     return types.DELETE_ORDER;
                 case 'update':
                     return types.UPDATE_ORDER;
+                case 'newID':
+                    return types.NEW_ORDER_ID;
                 default:
                     return null;
             }
@@ -245,9 +250,20 @@ const setRequestType = (typeOfData, requestType) => {
                     return types.DELETE_LOADING;
                 case 'update':
                     return types.UPDATE_LOADING;
+                case 'newID':
+                    return types.NEW_LOADING_ID;
                 default:
                     return null;
             };
+        case 'tab':
+            switch (requestType) {
+                case 'primary':
+                    return types.SET_ACTIVE_TAB;
+                case 'secondary':
+                    return types.SET_ACTIVE_SUB_TAB;
+                default:
+                    return null;
+            }
         default:
             return null;
     }

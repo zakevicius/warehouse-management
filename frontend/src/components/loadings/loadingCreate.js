@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { createData, fetchData, fetchSingleData, fetchNewID } from '../../action';
 import LoadingOrderListCreate from './LoadingOrderListCreate';
 import Button from '../elements/Button';
+import Spinner from '../elements/Spinner';
 
 class LoadingCreate extends Component {
     state = {
@@ -75,7 +76,7 @@ class LoadingCreate extends Component {
             const letter = client.orderLetter;
 
             // Fetch new ID for new order based on client selected
-            await this.props.fetchNewID(client._id)
+            await this.props.fetchNewID(client._id, '/loadings')
                 .then((response) => {
                     const newID = `LD-${letter}${this.props.id}`;
                     this.setState({
@@ -101,12 +102,36 @@ class LoadingCreate extends Component {
         }
     };
 
+    renderOrderLists() {
+        if (this.props.load) return <Spinner />;
+
+        if (this.state.client !== 'Select a client' && this.props.client) {
+            return (<div className="ui container" >
+                <div className="ui segment">
+                    <LoadingOrderListCreate
+                        orders={this.state.ordersToLoad}
+                        removeOrderFromLoading={this.removeOrderFromLoading}
+                        action='remove'
+                    />
+                </div>
+                <div className="ui segment">
+                    <LoadingOrderListCreate
+                        orders={this.state.ordersList}
+                        addOrderToLoading={this.addOrderToLoading}
+                        action='add'
+                    />
+                </div>
+            </div >)
+        } else {
+            return null
+        }
+    }
+
     onSubmit = e => {
         e.preventDefault();
         let totalQnt = 0;
         let totalBruto = 0;
         this.state.ordersToLoad.forEach(order => {
-            console.log(order);
             totalQnt += order.qnt;
             totalBruto += order.bruto;
         });
@@ -158,24 +183,7 @@ class LoadingCreate extends Component {
                     </div>
                     <Button button={{ type: 'primary ', text: 'Submit' }} />
                 </form>
-                {(this.state.client !== 'Select a client' && this.props.client) ? (
-                    <div className="ui container">
-                        <div className="ui segment">
-                            <LoadingOrderListCreate
-                                orders={this.state.ordersToLoad}
-                                removeOrderFromLoading={this.removeOrderFromLoading}
-                                action='remove'
-                            />
-                        </div>
-                        <div className="ui segment">
-                            <LoadingOrderListCreate
-                                orders={this.state.ordersList}
-                                addOrderToLoading={this.addOrderToLoading}
-                                action='add'
-                            />
-                        </div>
-                    </div>
-                ) : null}
+                {this.renderOrderLists()}
             </div>
         );
     }
@@ -185,7 +193,8 @@ const mapStateToProps = state => {
     return {
         id: state.loadingsData.newLoadingID,
         clients: state.clientsData.clients,
-        client: state.clientsData.client
+        client: state.clientsData.client,
+        load: state.eventsData.load
     }
 }
 

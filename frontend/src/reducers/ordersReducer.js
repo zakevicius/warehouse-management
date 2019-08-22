@@ -13,8 +13,6 @@ export default (state = { orders: [] }, action) => {
             return { ...state, orders: action.payload };
         case FETCH_ORDER:
             return { ...state, order: action.payload };
-        // case FETCH_ORDER_ID:
-        //     return { ...state, newOrderId: action.payload };
         case ORDER_ERROR:
             return { ...state, error: action.payload };
         default:

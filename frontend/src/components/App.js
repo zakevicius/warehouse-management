@@ -9,7 +9,6 @@ import OrderList from "./orders/OrderList";
 import OrderShow from "./orders/OrderShow";
 import OrderCreate from "./orders/OrderCreate";
 import OrderEdit from "./orders/OrderEdit";
-import OrderDelete from "./orders/OrderDelete";
 import ClientList from "./clients/ClientList";
 import ClientShow from "./clients/ClientShow";
 import ClientCreate from "./clients/ClientCreate";
@@ -46,11 +45,6 @@ class App extends React.Component {
                 path="/orders/edit/:id"
                 exact
                 component={OrderEdit}
-              />
-              <PrivateRoute
-                path="/orders/delete/:id"
-                exact
-                component={OrderDelete}
               />
 
               {/* Clients */}

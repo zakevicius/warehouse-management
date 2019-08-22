@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchSingleData, setActiveTab } from '../../action'
 import Table from '../elements/Table';
+import Spinner from '../elements/Spinner';
 import ClientOrderList from './ClientOrderList';
 
 class ClientShow extends Component {
@@ -15,9 +16,7 @@ class ClientShow extends Component {
     // }
 
     render() {
-        if (!this.props.client) {
-            return <div>Loading</div>
-        }
+        if (!this.props.client || this.props.load) return <Spinner />;
         return (
             <div>
                 <Table type="client" client={this.props.client} />
@@ -34,6 +33,7 @@ class ClientShow extends Component {
 const mapStateToProps = state => {
     return {
         client: state.clientsData.client,
+        load: state.eventsData.load
     };
 };
 

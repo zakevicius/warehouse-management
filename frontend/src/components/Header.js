@@ -7,28 +7,28 @@ const Header = props => {
   const authLinks = (
     <Fragment>
       <Link
-        onClick={() => props.setActiveTab("home")}
+        onClick={() => props.setActiveTab("primary", "home")}
         to="/"
         className={props.active === "home" ? "active item" : "item"}
       >
         Home
       </Link>
       <Link
-        onClick={() => props.setActiveTab("orders")}
+        onClick={() => props.setActiveTab("primary", "orders")}
         to="/orders/page/1"
         className={props.active === "orders" ? "active item" : "item"}
       >
         Orders
       </Link>
       <Link
-        onClick={() => props.setActiveTab("clients")}
+        onClick={() => props.setActiveTab("primary", "clients")}
         to="/clients/page/1"
         className={props.active === "clients" ? "active item" : "item"}
       >
         Clients
       </Link>
       <Link
-        onClick={() => props.setActiveTab("loadings")}
+        onClick={() => props.setActiveTab("primary", "loadings")}
         to="/loadings/page/1"
         className={props.active === "loadings" ? "active item" : "item"}
       >

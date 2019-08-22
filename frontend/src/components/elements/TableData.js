@@ -44,15 +44,15 @@ class TableData extends Component {
   }
 
   renderOrders() {
-    if (!this.props.orders) {
-      return (<tr rowSpan="5">
-        <td colSpan="10">
-          <div className="ui active inverted dimmer">
-            <div className="ui text loader">Loading</div>
-          </div>
-        </td>
-      </tr>);
-    }
+    // if (!this.props.orders) {
+    //   return (<tr rowSpan="5">
+    //     <td colSpan="10">
+    //       <div className="ui active inverted dimmer">
+    //         <div className="ui text loader">Loading</div>
+    //       </div>
+    //     </td>
+    //   </tr>);
+    // }
     const { orders } = this.props.orders;
     const dataOnPage = this.showDataByPageNumber(orders, this.props.page);
     return dataOnPage.map(order => {

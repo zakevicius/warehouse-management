@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { fetchData, setActiveTab } from '../../action';
 import Table from '../elements/Table';
+import Spinner from '../elements/Spinner';
 
 class Home extends Component {
   componentDidMount() {
@@ -29,6 +30,7 @@ class Home extends Component {
   };
 
   render() {
+    if (this.props.load) return <Spinner />;
     let ordersData;
     if (!this.props.ordersToShow) {
       ordersData = this.props.ordersData;
@@ -56,6 +58,7 @@ const mapStateToProps = state => {
   return {
     ordersData: state.ordersData,
     user: state.user,
+    load: state.eventsData.load
   };
 }
 

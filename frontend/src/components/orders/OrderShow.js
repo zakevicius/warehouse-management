@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchSingleData } from '../../action'
 import Table from '../elements/Table';
+import Spinner from '../elements/Spinner';
 
 class OrderShow extends Component {
     componentDidMount() {
@@ -9,13 +10,14 @@ class OrderShow extends Component {
     }
 
     render() {
-        return <Table type="order" order={this.props.order} />;
+        return this.props.load ? <Spinner /> : <Table type="order" order={this.props.order} />;
     }
 }
 
 const mapStateToProps = state => {
     return {
-        order: state.ordersData.order
+        order: state.ordersData.order,
+        load: state.eventsData.load
     }
 }
 

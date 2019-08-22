@@ -28,6 +28,7 @@ export const CLIENT_ERROR = 'CLIENT_ERROR';
 
 //LOADINGS 
 export const CREATE_LOADING = 'CREATE_LOADING';
+export const NEW_LOADING_ID = 'NEW_LOADING_ID';
 export const FETCH_LOADINGS = 'FETCH_LOADINGS';
 export const FETCH_LOADING = "FETCH_LOADING";
 export const DELETE_LOADING = 'DELETE_LOADING';
@@ -37,6 +38,7 @@ export const FETCH_LOADING_ID = 'FETCH_LOADING_ID';
 
 //EVENTS
 export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
+export const SET_ACTIVE_SUB_TAB = 'SET_ACTIVE_SUB_TAB';
 export const SET_LOADING = 'SET_LOADING';
 export const UNSET_LOADING = 'UNSET_LOADING';
 

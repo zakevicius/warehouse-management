@@ -1,34 +1,33 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchSingleData, setActiveTab, unsetLoading } from '../../action'
+import { fetchSingleData, setActiveTab } from '../../action'
 import Table from '../elements/Table';
+import Spinner from '../elements/Spinner';
 import LoadingOrderList from './LoadingOrderList';
 
 class LoadingShow extends Component {
 
-    componentDidMount() {
-        this.props.fetchSingleData('/loadings', this.props.match.params.id);
-        this.props.setActiveTab('loadings');
-    }
+  componentDidMount() {
+    this.props.fetchSingleData('/loadings', this.props.match.params.id);
+    this.props.setActiveTab('loadings');
+  }
 
-    render() {
-        if (!this.props.loading) {
-            return <div>Loading</div>
-        }
-        return (
-            <div>
-                <Table type="loading" loading={this.props.loading} />
-                <LoadingOrderList orders={this.props.loading.orders} />
-            </div>
-        );
-    }
+  render() {
+    if (this.props.load || !this.props.loading) return <Spinner />;
+    return (
+      <div>
+        <Table type="loading" loading={this.props.loading} />
+        <LoadingOrderList orders={this.props.loading.orders} />
+      </div>
+    );
+  }
 };
 
 const mapStateToProps = state => {
-    return {
-
-        loading: state.loadingsData.loading
-    }
+  return {
+    loading: state.loadingsData.loading,
+    load: state.eventsData.load
+  }
 }
 
-export default connect(mapStateToProps, { fetchSingleData, setActiveTab, unsetLoading })(LoadingShow);
+export default connect(mapStateToProps, { fetchSingleData, setActiveTab })(LoadingShow);

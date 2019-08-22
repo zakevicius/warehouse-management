@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchData, setActiveTab } from '../../action';
 import Table from '../elements/Table';
+import Spinner from '../elements/Spinner';
 
 class LoadingdList extends Component {
   componentDidMount() {
@@ -10,6 +11,7 @@ class LoadingdList extends Component {
   }
 
   render() {
+    if (this.props.load) return <Spinner />;
     return (
       <Table
         type="loadings"
@@ -23,7 +25,8 @@ class LoadingdList extends Component {
 
 const mapStateToProps = state => {
   return {
-    loadings: state.loadingsData
+    loadings: state.loadingsData,
+    load: state.eventsData.load
   };
 };
 

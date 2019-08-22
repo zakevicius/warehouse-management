@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchData, setActiveTab } from '../../action';
 import Table from '../elements/Table';
+import Spinner from '../elements/Spinner';
 
 class ClientList extends React.Component {
     componentDidMount() {
@@ -10,6 +11,7 @@ class ClientList extends React.Component {
     }
 
     render() {
+        if (this.props.load) return <Spinner />;
         return (
             <Table
                 type="clients"
@@ -23,7 +25,8 @@ class ClientList extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        clients: state.clientsData
+        clients: state.clientsData,
+        load: state.eventsData.load
     };
 }
 

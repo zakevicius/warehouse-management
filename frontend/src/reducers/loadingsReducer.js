@@ -2,7 +2,8 @@ import {
   FETCH_LOADINGS,
   FETCH_LOADING,
   CREATE_LOADING,
-  NETWORK_ERROR
+  NETWORK_ERROR,
+  NEW_LOADING_ID
 } from '../action/types';
 
 export default (state = { loadings: [] }, action) => {
@@ -13,6 +14,8 @@ export default (state = { loadings: [] }, action) => {
       return { ...state, loading: action.payload };
     case CREATE_LOADING:
       return { ...state, loadings: [...state.loadings, action.payload] };
+    case NEW_LOADING_ID:
+      return { ...state, newLoadingID: action.payload };
     case NETWORK_ERROR:
       return { ...state, error: action.payload };
     default:

@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { fetchData, setActiveTab } from "../../action";
 import Table from "../elements/Table";
+import Spinner from '../elements/Spinner';
 import HeaderSecondary from "../elements/HeaderSecondary";
 
 class OrderList extends Component {
@@ -10,8 +11,9 @@ class OrderList extends Component {
   };
 
   componentDidMount() {
-    this.props.setActiveTab("orders");
+    console.log(this.props);
     if (!this.props.ordersToShow) {
+      this.props.setActiveTab("orders");
       this.props.fetchData("/orders");
     }
   }
@@ -20,7 +22,7 @@ class OrderList extends Component {
     if (orders.length === 0) {
       return null;
     }
-    if ((status = "all")) {
+    if (status === "all") {
       return (
         <div>
           <Table
@@ -35,29 +37,31 @@ class OrderList extends Component {
           />
         </div>
       );
-    }
-    return (
-      <Table
-        type="orders"
-        orders={{ orders: orders.filter(order => order.status === status) }}
-        page={
-          this.props.match
-            ? this.props.match.params.no
-            : this.props.page || null
-        }
-        url={this.props.url ? this.props.url : "/orders/"}
-      />
-    );
+    } else {
+      return (
+        <Table
+          type="orders"
+          orders={{ orders: orders.filter(order => order.status === status) }}
+          page={
+            this.props.match
+              ? this.props.match.params.no
+              : this.props.page || null
+          }
+          url={this.props.url ? this.props.url : "/orders/"}
+        />
+      );
+    };
   };
 
   render() {
+    if (this.props.load) return <Spinner />;
     let ordersData;
     if (!this.props.ordersToShow) {
       ordersData = this.props.ordersData;
       return (
         <Fragment>
           <HeaderSecondary />
-          {this.renderTable(ordersData.orders, "all")}
+          {this.renderTable(ordersData.orders, this.props.activeSubTab)}
           {/* {this.renderTable(ordersData.orders, "waiting")}
           {this.renderTable(ordersData.orders, "loading")}
           {this.renderTable(ordersData.orders, "in")} */}
@@ -81,9 +85,12 @@ class OrderList extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log(state);
   return {
     ordersData: state.ordersData,
-    user: state.user
+    user: state.user,
+    load: state.eventsData.load,
+    activeSubTab: state.eventsData.activeSubTab
   };
 };
 
