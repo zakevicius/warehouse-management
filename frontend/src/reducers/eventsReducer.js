@@ -8,7 +8,7 @@ import {
 const initialState = {
     activeTab: 'home',
     activeSubTab: 'all',
-    load: false
+    load: false,
 }
 
 export default (state = initialState, action) => {

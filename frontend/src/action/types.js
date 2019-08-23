@@ -41,6 +41,8 @@ export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
 export const SET_ACTIVE_SUB_TAB = 'SET_ACTIVE_SUB_TAB';
 export const SET_LOADING = 'SET_LOADING';
 export const UNSET_LOADING = 'UNSET_LOADING';
+export const FILTER_ORDERS = 'FILTER_ORDERS';
+export const CLEAR_FILTER = 'CLEAR_FILTER';
 
 // ERROR
 export const NETWORK_ERROR = 'NETWORK_ERROR';

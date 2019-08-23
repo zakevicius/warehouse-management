@@ -11,6 +11,7 @@ const HeaderSecondary = props => {
     return types.map(type =>
       (
         <Link
+          key={type}
           button={{ type: 'item', text: type }}
           to='/orders/page/1'
           onClick={() => props.setActiveTab("secondary", type)}

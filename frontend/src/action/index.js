@@ -77,14 +77,12 @@ export const createData = (typeOfData, data) => async dispatch => {
     const errorType = setRequestType(typeOfData, 'error');
 
     try {
-
+        dispatch({ type: types.SET_LOADING });
         const res = await api.post(`${typeOfData}`, data);
         dispatch({ type: requestType, payload: res.data });
-
-
         setTimeout(() => {
             history.push(`${typeOfData}/page/1`);
-        }, 1000);
+        }, 500);
     } catch (err) {
         dispatch({ type: errorType, payload: err.response.data.msg });
     }
@@ -157,16 +155,26 @@ export const removeData = (typeOfData, id) => async dispatch => {
     const requestType = setRequestType(typeOfData, 'remove');
 
     try {
-
+        dispatch({ type: types.SET_LOADING });
         const res = await api.delete(`${typeOfData}/${id}`);
         dispatch({ type: requestType, payload: res.data });
-
         setTimeout(() => {
             history.push(`${typeOfData}/page/1`);
-        }, 1000);
+        }, 500);
     } catch (err) {
         dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
     }
+}
+
+// FILTER
+
+export const filterOrders = text => dispatch => {
+    console.log(text);
+    dispatch({ type: types.FILTER_ORDERS, payload: text });
+}
+
+export const clearFilter = () => dispatch => {
+    dispatch({ type: types.CLEAR_FILTER });
 }
 
 // EVENT HANDLERS

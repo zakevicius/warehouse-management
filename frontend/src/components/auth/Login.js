@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { login, setError } from '../../action/index';
 import { history } from '../history';
+import Spinner from '../elements/Spinner';
 
 class Login extends Component {
   constructor(props) {
@@ -48,6 +49,7 @@ class Login extends Component {
   }
 
   render() {
+    if (this.props.load) return <Spinner />;
     return (
       <div className="ui raised very padded container segment">
         <form className="ui form" onSubmit={this.onSubmit}>
@@ -87,7 +89,8 @@ class Login extends Component {
 
 const mapStateToProps = state => {
   return {
-    auth: state.auth
+    auth: state.auth,
+    load: state.eventsData.load
   }
 }
 

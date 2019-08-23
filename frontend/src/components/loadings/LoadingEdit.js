@@ -69,7 +69,6 @@ class LoadingEdit extends Component {
     });
     this.props.updateData('/loadings', {
       loadingID: this.state.loadingID,
-      clientID: this.state.clientID,
       truck: this.state.truck,
       trailer: this.state.trailer,
       orders: this.state.ordersToLoad.map(order => order._id),
@@ -89,15 +88,8 @@ class LoadingEdit extends Component {
           </div>
           <div className="field">
             <label htmlFor="client">Client</label>
-            <select
-              className="ui fluid dropdown"
-              name="client"
-              value={this.state.client}
-              onChange={this.onChange}
-            >
-              <option value=''>{this.state.client}</option>
-              {/* {this.renderClientList()} */}
-            </select>
+            <input type="text" name="client" value={this.state.client} disabled />
+            {/* {this.renderClientList()} */}
           </div>
           <div className="field">
             <label htmlFor="date">Date</label>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createData } from '../../action';
 import Button from '../elements/Button';
+import Spinner from '../elements/Spinner';
 
 class ClientCreate extends Component {
     state = {
@@ -27,6 +28,7 @@ class ClientCreate extends Component {
     }
 
     render() {
+        if (this.props.load) return <Spinner />;
         return (
             <div className="ui container">
                 <form onSubmit={this.onSubmit} className="ui form">
@@ -60,7 +62,8 @@ class ClientCreate extends Component {
 
 const mapStateToProps = state => {
     return {
-        errors: state.clientsData.errors
+        errors: state.clientsData.errors,
+        load: state.eventsData.load
     }
 }
 

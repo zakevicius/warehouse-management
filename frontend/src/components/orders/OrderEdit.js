@@ -55,34 +55,22 @@ class OrderEdit extends Component {
         console.log(e.target.value)
         if (e.target.name === 'declarations') {
             this.setState({
+                ...this.state,
                 declarations: e.target.value.split(/[\s,;.]+/)
             })
+        } else if (e.target.name === 'client') {
+            const client = this.props.clients.filter(client => client.name === e.target.value)[0];
+            this.setState({
+                ...this.state,
+                clientID: client._id,
+                [e.target.name]: e.target.value
+            });
         } else {
             this.setState({
                 ...this.state,
                 [e.target.name]: e.target.value
             });
         }
-        console.log(this.state)
-        // if (e.target.name === 'client') {
-        //     if (e.target.value === '') {
-        //         this.setState({ orderID: '' })
-        //         return null;
-        //     }
-        //     const client = this.props.clients.filter(client => client.name === e.target.value)[0];
-        //     const letter = client.orderLetter;
-        //     // Fetch new ID for new order based on client selected
-        //     await this.props.fetchNewID(client._id)
-        //         .then((response) => {
-        //             const newID = letter + this.props.id;
-        //             this.setState({
-        //                 ...this.state,
-        //                 orderID: newID,
-        //                 clientID: client._id
-        //             });
-        //         })
-        //         .catch((error) => console.log(error))
-        // }
     }
 
     onSubmit = e => {
@@ -107,7 +95,6 @@ class OrderEdit extends Component {
                             onChange={this.onChange}
                             required
                         >
-                            <option value=''>Select a client...</option>
                             {this.renderClientList()}
                         </select>
                     </div>

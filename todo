@@ -12,14 +12,14 @@
 
 // loadings fetch    - done
 // One loading fetch - done
-// loading create    - done // need to add ID 
+// loading create    - done
 // loading update    - done
 // loading delete    - done
 
-
-// Back buttons need to work
-// 
-// Loader animations
+// Filter orders     - done
+// Back buttons need to work      - done
+// Show orders only in warehouse or only dispatched        - done
+// Loader animations - done
 
 // Home screen:
     - Active or pending loadings
@@ -27,5 +27,4 @@
     - Cargos in warehouse
     
 // Update loading status 
-// Show orders only in warehouse or only dispatched
 // Add files and photos

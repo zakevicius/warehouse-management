@@ -2,7 +2,9 @@ import {
     NEW_ORDER_ID,
     FETCH_ORDERS,
     FETCH_ORDER,
-    ORDER_ERROR
+    ORDER_ERROR,
+    FILTER_ORDERS,
+    CLEAR_FILTER
 } from '../action/types';
 
 export default (state = { orders: [] }, action) => {
@@ -15,6 +17,21 @@ export default (state = { orders: [] }, action) => {
             return { ...state, order: action.payload };
         case ORDER_ERROR:
             return { ...state, error: action.payload };
+        case FILTER_ORDERS:
+            return {
+                ...state,
+                filtered: state.orders.filter(order => {
+                    const regex = new RegExp(`${action.payload}`, 'gi');
+                    return order.sender.match(regex) ||
+                        order.receiver.match(regex) ||
+                        order.orderID.match(regex) ||
+                        order.truck.match(regex) ||
+                        order.trailer.match(regex) ||
+                        order.date.match(regex)
+                })
+            };
+        case CLEAR_FILTER:
+            return { ...state, filtered: null };
         default:
             return state;
     }

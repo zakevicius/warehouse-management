@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { fetchData, setActiveTab } from "../../action";
 import Table from "../elements/Table";
 import Spinner from '../elements/Spinner';
+import Filter from '../elements/Filter';
 import HeaderSecondary from "../elements/HeaderSecondary";
 
 class OrderList extends Component {
@@ -61,7 +62,8 @@ class OrderList extends Component {
       return (
         <Fragment>
           <HeaderSecondary />
-          {this.renderTable(ordersData.orders, this.props.activeSubTab)}
+          <Filter />
+          {this.renderTable(ordersData.filtered ? ordersData.filtered : ordersData.orders, this.props.activeSubTab)}
           {/* {this.renderTable(ordersData.orders, "waiting")}
           {this.renderTable(ordersData.orders, "loading")}
           {this.renderTable(ordersData.orders, "in")} */}
@@ -69,23 +71,25 @@ class OrderList extends Component {
       );
     } else {
       return (
-        <Table
-          type="orders"
-          orders={this.props.ordersToShow}
-          page={
-            this.props.match
-              ? this.props.match.params.no
-              : this.props.page || null
-          }
-          url={this.props.url ? this.props.url : "/orders/"}
-        />
+        <Fragment>
+          <Filter />
+          <Table
+            type="orders"
+            orders={this.props.ordersToShow}
+            page={
+              this.props.match
+                ? this.props.match.params.no
+                : this.props.page || null
+            }
+            url={this.props.url ? this.props.url : "/orders/"}
+          />
+        </Fragment>
       );
     }
   }
 }
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     ordersData: state.ordersData,
     user: state.user,
