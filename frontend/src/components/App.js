@@ -19,6 +19,7 @@ import LoadingCreate from "./loadings/LoadingCreate";
 import LoadingEdit from "./loadings/LoadingEdit";
 import Header from "./Header";
 import Footer from "./Footer";
+import FileUpload from "./files/FileUpload";
 // import Register from './auth/Register';
 import Login from "./auth/Login";
 import PrivateRoute from "../routing/PrivateRoute";
@@ -31,6 +32,7 @@ class App extends React.Component {
           <Fragment>
             <Header handleClick={this.handleClick} />
             <Switch>
+              <Route path="/f" component={FileUpload} />
               <PrivateRoute path="/" exact component={Home} />
 
               {/* Orders */}

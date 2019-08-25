@@ -4,6 +4,7 @@ import clientsReducer from './clientsReducer';
 import eventsReducer from './eventsReducer';
 import loadingsReducer from './loadingsReducer';
 import authReducer from './authReducer';
+import filesReducer from './filesReducer';
 
 export default combineReducers(
     {
@@ -11,6 +12,7 @@ export default combineReducers(
         clientsData: clientsReducer,
         eventsData: eventsReducer,
         loadingsData: loadingsReducer,
-        auth: authReducer
+        auth: authReducer,
+        filesData: filesReducer
     }
 );

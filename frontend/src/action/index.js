@@ -177,7 +177,48 @@ export const clearFilter = () => dispatch => {
     dispatch({ type: types.CLEAR_FILTER });
 }
 
+// UPLOADING FILES
+
+export const uploadFiles = (files, id) => async dispatch => {
+    console.log(files);
+    const config = {
+        headers: {
+            "Content-type": "multipart/form-data"
+        }
+    };
+    try {
+        dispatch({ type: types.SET_LOADING });
+        const res = await api.post(`/upload/${id}`, files, config);
+        dispatch({ type: types.UPLOAD_FILES, payload: res.data });
+        dispatch({ type: types.UNSET_LOADING });
+    } catch (err) {
+        dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
+    }
+}
+
+export const addFile = (file) => {
+    return {
+        type: types.ADD_FILE,
+        payload: file
+    };
+};
+
+export const removeFile = (file) => {
+    console.log(file);
+    return {
+        type: types.REMOVE_FILE,
+        payload: file
+    };
+};
+
+export const clearFiles = () => {
+    return {
+        type: types.CLEAR_FILES
+    }
+}
+
 // EVENT HANDLERS
+
 export const setActiveTab = (type, tab) => {
     const requestType = setRequestType('tab', type)
     return {

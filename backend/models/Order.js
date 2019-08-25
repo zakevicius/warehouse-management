@@ -63,14 +63,16 @@ const OrderSchema = mongoose.Schema({
   },
   documents: {
     type: Array,
+    ref: 'files'
   },
   photos: {
     type: Array,
+    ref: 'files'
   },
   clientID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'clients'
-  },
+  }
 });
 
 module.exports = mongoose.model('order', OrderSchema);

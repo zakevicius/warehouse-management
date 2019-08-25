@@ -36,6 +36,13 @@ export const UPDATE_LOADING = 'UPDATE_LOADING';
 export const FETCH_LOADING_ID = 'FETCH_LOADING_ID';
 // export const SET_LOADING_STATUS = 'SET_LOADING_STATUS';
 
+// UPLOADS
+export const UPLOAD_FILES = 'UPLOAD_FILES';
+export const ADD_FILE = 'ADD_FILE';
+export const REMOVE_FILE = 'REMOVE_FILE';
+export const CLEAR_FILES = 'CLEAR_FILES';
+export const DELETE_FILE = 'DELETE_FILE';
+
 //EVENTS
 export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
 export const SET_ACTIVE_SUB_TAB = 'SET_ACTIVE_SUB_TAB';

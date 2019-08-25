@@ -1,9 +1,20 @@
 const express = require('express');
 const connectDB = require('./config/db');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
 
 const app = express();
-app.use(cors());
+app.use(
+  [
+    cors(),
+    fileUpload({
+      useTempFiles: true,
+      safeFileNames: true,
+      preserveExtension: true,
+      tempFileDir: `C:/files/temp`
+    })
+  ]
+);
 app.options('*', cors());
 
 connectDB();
@@ -20,6 +31,7 @@ app.use('/api/users', require('./routes/users'));
 app.use('/api/clients', require('./routes/clients'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/loadings', require('./routes/loadings'));
+app.use('/api/upload', require('./routes/files'));
 
 const PORT = process.env.PORT || 8000;
 

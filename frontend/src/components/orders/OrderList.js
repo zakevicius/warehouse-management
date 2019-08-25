@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { fetchData, setActiveTab } from "../../action";
+import { fetchData, setActiveTab, clearFilter } from "../../action";
 import Table from "../elements/Table";
 import Spinner from '../elements/Spinner';
 import Filter from '../elements/Filter';
@@ -12,7 +12,7 @@ class OrderList extends Component {
   };
 
   componentDidMount() {
-    console.log(this.props);
+    this.props.clearFilter();
     if (!this.props.ordersToShow) {
       this.props.setActiveTab("orders");
       this.props.fetchData("/orders");
@@ -64,9 +64,6 @@ class OrderList extends Component {
           <HeaderSecondary />
           <Filter />
           {this.renderTable(ordersData.filtered ? ordersData.filtered : ordersData.orders, this.props.activeSubTab)}
-          {/* {this.renderTable(ordersData.orders, "waiting")}
-          {this.renderTable(ordersData.orders, "loading")}
-          {this.renderTable(ordersData.orders, "in")} */}
         </Fragment>
       );
     } else {
@@ -100,5 +97,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { fetchData, setActiveTab }
+  { fetchData, setActiveTab, clearFilter }
 )(OrderList);
