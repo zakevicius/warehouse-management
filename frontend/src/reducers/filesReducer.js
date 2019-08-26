@@ -3,26 +3,52 @@ import {
   ADD_FILE,
   REMOVE_FILE,
   CLEAR_FILES,
-  DELETE_FILE
+  DELETE_FILE,
+  FETCH_FILES
 } from '../action/types';
 
 const initialState = {
-  files: [],
+  files: { photos: [], documents: [] },
+  filesToUpload: [],
   status: []
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case FETCH_FILES:
+      console.log(action.payload);
+      return {
+        ...state,
+        files: {
+          photos: action.payload.filter(file => file.type === 'photo'),
+          documents: action.payload.filter(file => file.type === 'document')
+        }
+      };
     case UPLOAD_FILES:
-      return { ...state, status: [...state.status, action.payload] };
+      console.log(action.payload)
+      return {
+        ...state,
+        files: {
+          photos: [...state.files.photos, action.payload.photos],
+          documents: [...state.files.documents, ...action.payload.documents]
+        },
+        status: [...state.status, action.payload]
+      };
     case ADD_FILE:
-      return { ...state, files: [...state.files, action.payload] };
+      return { ...state, filesToUpload: [...state.filesToUpload, action.payload] };
     case REMOVE_FILE:
-      return { ...state, files: [...state.files.filter(file => file.name !== action.payload.name)] };
+      return { ...state, filesToUpload: [state.filesToUpload.filter(file => file.name !== action.payload.name)] };
     case DELETE_FILE:
-      return { ...state, files: [...state.files.filter(file => file.name !== action.payload.name)] };
+      console.log(action.payload)
+      return {
+        ...state,
+        files: {
+          photos: state.files.photos.filter(file => file._id !== action.payload.id),
+          documents: state.files.documents.filter(file => file._id !== action.payload.id)
+        }
+      };
     case CLEAR_FILES:
-      return { ...state, files: [] };
+      return { ...state, filesToUpload: [] };
     default:
       return state;
   }

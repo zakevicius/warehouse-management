@@ -37,6 +37,7 @@ export const FETCH_LOADING_ID = 'FETCH_LOADING_ID';
 // export const SET_LOADING_STATUS = 'SET_LOADING_STATUS';
 
 // UPLOADS
+export const FETCH_FILES = 'FETCH_FILES';
 export const UPLOAD_FILES = 'UPLOAD_FILES';
 export const ADD_FILE = 'ADD_FILE';
 export const REMOVE_FILE = 'REMOVE_FILE';

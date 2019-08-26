@@ -31,7 +31,7 @@ app.use('/api/users', require('./routes/users'));
 app.use('/api/clients', require('./routes/clients'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/loadings', require('./routes/loadings'));
-app.use('/api/upload', require('./routes/files'));
+app.use('/api/files', require('./routes/files'));
 
 const PORT = process.env.PORT || 8000;
 

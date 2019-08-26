@@ -1,31 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
-const { check, validationResult } = require('express-validator');
 const fs = require('fs');
 
-const User = require('../models/User');
-const Client = require('../models/Client');
 const Order = require('../models/Order');
 const File = require('../models/File');
 
 // @route       GET api/files
 // @desc        Get all users clients
 // @access      Private
-// router.get('/', auth, async (req, res) => {
-//   try {
-//     let clients;
-//     if (req.user.type === "admin") {
-//       clients = await Client.find();
-//     } else {
-//       clients = await Client.find({ user: req.user.id });
-//     }
-//     res.json(clients);
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).json({ msg: 'Server error fetching clients' });
-//   }
-// });
+router.get('/:id', auth, async (req, res) => {
+  try {
+    const files = await File.find({ order: req.params.id });
+    res.json(files);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server error fetching files' });
+  }
+});
 
 // @route       GET api/clients/:id
 // @desc        Get client by id
@@ -41,22 +33,25 @@ const File = require('../models/File');
 //   }
 // });
 
-// @route       POST api/upload
+// @route       POST api/files
 // @desc        Add new client
 // @access      Private
 router.post('/:id', auth, async (req, res, next) => {
   console.log(req.params, req.user);
 
+  let photos = [];
+  let documents = [];
+  let errors = [];
+
   const setType = ext => {
-    photos = ['jpeg', 'gif', ' jpg', 'bmp', 'png']
-    if (photos.indexOf(ext) > 0) {
+    const photosTypes = ['jpeg', 'gif', 'jpg', 'bmp', 'png']
+    if (photosTypes.indexOf(ext) > 0) {
+      console.log(photos.indexOf(ext))
       return 'photo';
     } else {
       return 'document';
     }
   };
-
-  let errors = [];
 
   const uploadFile = async file => {
     const name = file.name;
@@ -72,6 +67,7 @@ router.post('/:id', auth, async (req, res, next) => {
 
     file.mv(path, (err) => {
       if (err) {
+        console.error(err);
         errors.push(err);
       }
     });
@@ -80,9 +76,9 @@ router.post('/:id', auth, async (req, res, next) => {
       // Creating new File
       const file = new File({
         type,
-        name,
+        name: saveAs,
         path,
-        orderID: req.params.id,
+        order: req.params.id,
         user: req.user.id
       });
 
@@ -97,15 +93,20 @@ router.post('/:id', auth, async (req, res, next) => {
         }
       }
 
-      const newOrderInformation = {};
-      newOrderInformation.photos = file;
+      let newOrderInformation = {};
+      if (type === 'photo') {
+        newOrderInformation.photos = [...order.photos, file];
+        photos.push(file);
+      } else {
+        newOrderInformation.documents = [...order.documents, file];
+        documents.push(file);
+      }
 
       // Updating order
       order = await Order.findByIdAndUpdate(req.params.id,
         { $set: newOrderInformation },
         { new: true }
       );
-      res.json(file);
     } catch (err) {
       console.error(err.message);
       res.status(500).json({ msg: 'Server error creating new file' });
@@ -115,89 +116,81 @@ router.post('/:id', auth, async (req, res, next) => {
   if (errors.length > 0) {
     return res.status(500).send(errors);
   } else if (req.files.files.length) {
-    req.files.files.forEach(file => {
-      uploadFile(file);
-    });
+    (async () => {
+      await req.files.files.forEach(async file => {
+        await uploadFile(file);
+      });
+      console.log(photos, documents)
+      res.json({ photos, documents });
+    })();
   } else {
-    uploadFile(req.files.files);
+    (async () => {
+      await uploadFile(req.files.files);
+      console.log(photos, documents)
+      res.json({ photos, documents });
+    })();
   }
 });
 
-// @route       PUT api/clients
-// @desc        Update client
-// @access      Private
-// router.put('/:id', auth, async (req, res) => {
-//   const { name, orderLetter, email, phone } = req.body;
-
-//   // Build Client object, which contains new information
-//   const newClientInformation = {};
-//   if (name) newClientInformation.name = name;
-//   if (orderLetter) newClientInformation.orderLetter = orderLetter;
-//   if (email) newClientInformation.email = email;
-//   if (phone) newClientInformation.phone = phone;
-
-//   // Find Client to update
-//   try {
-//     let client = await Client.findById(req.params.id);
-
-//     if (!client) return res.status(404).json({ msg: 'Client not found' });
-
-//     // Make sure user authorized to update client
-//     const user = await User.findById(req.user.id);
-
-//     // if(!user) {
-//     //   res.status(500).json({ msg: 'Server error. User not found'});
-//     // }
-
-//     if (client.user.toString() !== req.user.id) {
-//       if (req.user.type !== 'admin') {
-//         res.status(401).json({ msg: 'Not authorized ' });
-//       }
-//     }
-
-//     // Update client
-//     client = await Client.findByIdAndUpdate(
-//       req.params.id,
-//       { $set: newClientInformation },
-//       { new: true }
-//     )
-
-//     res.json(client);
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).json({ msg: 'Server error updating client' });
-//   }
-// });
-
-// @route       DELETE api/clients
+// @route       DELETE api/files
 // @desc        Delete client
 // @access      Private
-// router.delete('/:id', auth, async (req, res) => {
-//   try {
-//     // Find Client to delete
-//     const client = await Client.findById(req.params.id);
+router.delete('/:id', auth, async (req, res) => {
 
-//     if (!client) {
-//       res.status(404).json({ msg: 'Client not found' });
-//     }
+  const deleteFile = (file, order) => {
+    const name = file.name;
+    const folder = order._id;
+    const path = `C:/files/${folder}`;
 
-//     // Check if user is authorized to delete client
-//     const user = await User.findById(req.user.id);
+    if (fs.existsSync(path)) {
+      fs.unlink(`${path}/${name}`, err => {
+        if (err) {
+          console.error(err);
+        }
+      });
+    } else {
+      console.error('Doeas not exists')
+    }
+  };
 
-//     if (client.user.toString() !== req.user.id) {
-//       if (req.user.type !== 'admin') {
-//         res.status(401).json({ msg: 'Not authorized ' });
-//       } else {
-//         await Client.findByIdAndRemove(req.params.id);
-//       }
-//     } else {
-//       await Client.findByIdAndRemove(req.params.id);
-//     }
+  try {
+    // Find File to delete
+    const file = await File.findById(req.params.id);
 
-//     res.json({ msg: 'Client succesfully removed' });
-//   } catch (err) {
+    // Check if user is authorized to delete client
 
-//   }
-// });
+    if (file.user.toString() !== req.user.id) {
+      if (req.user.type !== 'admin') {
+        res.status(401).json({ msg: 'Not authorized ' });
+        return;
+      } else {
+        await File.findByIdAndRemove(req.params.id);
+      }
+    } else {
+      await File.findByIdAndRemove(req.params.id);
+    }
+
+    // Update Order file list
+    const order = await Order.findById(file.order);
+
+    let newOrderInformation = {};
+    newOrderInformation.photos = order.photos.filter(photo => photo._id !== req.params.id);
+    newOrderInformation.documents = order.documents.filter(document => document._id !== req.params.id);
+
+    // Updating order
+    await Order.findByIdAndUpdate(req.params.orderid,
+      { $set: newOrderInformation },
+      { new: true }
+    );
+
+    // Deleting file from system
+    deleteFile(file, order);
+
+    res.json({ id: req.params.id, msg: 'File succesfully removed' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server error deleting file' });
+  }
+});
 
 module.exports = router; 

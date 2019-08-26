@@ -10,7 +10,6 @@ class TableData extends Component {
     this.itemsPerPage = 10
   }
 
-
   renderButton() {
     return <Button button={{ type: "secondary", text: 'More' }} />
   }
@@ -31,9 +30,6 @@ class TableData extends Component {
     const firstColumn = ['ID', 'Status', 'Date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description', 'Declarations'];
     const secondColumn = [order.orderID, order.status, order.date.split('T')[0], order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description, order.declarations.join(', ')];
     let i = 0;
-
-    const files = [];
-
     return (
       firstColumn.map(text => {
         i++;
@@ -41,7 +37,7 @@ class TableData extends Component {
           <tr key={i}>
             <td className="right aligned" style={{ fontWeight: "bold" }}>{text}</td>
             <td>{secondColumn[i - 1]}</td>
-            {i === 1 && <td rowSpan={secondColumn.length - 3}><FileList files={files} /></td>}
+            {i === 1 && <td rowSpan={secondColumn.length - 3}><FileList id={order._id} type="showFiles" /></td>}
             {i === secondColumn.length - 2 && <td rowSpan="3"><FileUpload id={order._id} /></td>}
           </tr >
         );

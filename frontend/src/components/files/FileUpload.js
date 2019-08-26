@@ -1,5 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import { uploadFiles, addFile, removeFile, clearFiles } from '../../action';
+import {
+  uploadFiles,
+  addFileToUploadList,
+  removeFileFromUploadList,
+  clearFiles
+} from '../../action';
 import { connect } from 'react-redux';
 import Button from '../elements/Button';
 import FileList from './FileList';
@@ -16,6 +21,10 @@ class FileUpload extends Component {
   state = {
     msg: ''
   };
+
+  componentWillMount() {
+    this.props.clearFiles();
+  }
 
   onSubmit = (e) => {
     e.preventDefault();
@@ -35,15 +44,13 @@ class FileUpload extends Component {
 
   onChange = (e) => {
     for (let i = 0; i < e.target.files.length; i++) {
-      this.props.addFile(e.target.files[i]);
+      this.props.addFileToUploadList(e.target.files[i]);
     };
   };
 
   render() {
-    console.log(this.props);
     return (
       <Fragment>
-
         <div className="ui segment">
           <form className="ui form" onSubmit={this.onSubmit} encType="multipart/form-data">
             <div className="ui six wide field">
@@ -59,7 +66,7 @@ class FileUpload extends Component {
                 id="uploadButton"
                 onChange={this.onChange}
               />
-              <FileList files={this.props.files} removeFile={this.props.removeFile} />
+              <FileList files={this.props.files} removeFile={this.props.removeFileFromUploadList} type="addRemoveFiles" />
               <Button button={{ type: 'primary ', text: 'Submit' }} />
             </div>
           </form>
@@ -76,7 +83,7 @@ class FileUpload extends Component {
 
 const mapStateToProps = state => {
   return {
-    files: state.filesData.files
+    files: state.filesData.filesToUpload
   }
 }
 
@@ -84,8 +91,8 @@ export default connect(
   mapStateToProps,
   {
     uploadFiles,
-    addFile,
-    removeFile,
+    addFileToUploadList,
+    removeFileFromUploadList,
     clearFiles
   }
 )(FileUpload);

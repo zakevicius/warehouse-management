@@ -44,15 +44,21 @@ export const logout = () => {
 }
 
 // FETCHING ALL DATA
-export const fetchData = (typeOfData) => async (dispatch) => {
+export const fetchData = (typeOfData, id = null) => async (dispatch) => {
     let requestType = setRequestType(typeOfData, 'fetchAll');
 
     try {
         dispatch({ type: types.SET_LOADING });
-        const res = await api.get(typeOfData);
+        let res;
+        if (typeOfData === '/files') {
+            res = await api.get(`${typeOfData}/${id}`);
+        } else {
+            res = await api.get(typeOfData);
+        }
         dispatch({ type: requestType, payload: res.data });
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
+        console.log(err);
         dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
     }
 };
@@ -158,10 +164,15 @@ export const removeData = (typeOfData, id) => async dispatch => {
         dispatch({ type: types.SET_LOADING });
         const res = await api.delete(`${typeOfData}/${id}`);
         dispatch({ type: requestType, payload: res.data });
-        setTimeout(() => {
-            history.push(`${typeOfData}/page/1`);
-        }, 500);
+        if (typeOfData !== '/files') {
+            setTimeout(() => {
+                history.push(`${typeOfData}/page/1`);
+            }, 500);
+        } else {
+            dispatch({ type: types.UNSET_LOADING });
+        }
     } catch (err) {
+        console.log(err);
         dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
     }
 }
@@ -177,7 +188,7 @@ export const clearFilter = () => dispatch => {
     dispatch({ type: types.CLEAR_FILTER });
 }
 
-// UPLOADING FILES
+// FILES
 
 export const uploadFiles = (files, id) => async dispatch => {
     console.log(files);
@@ -188,22 +199,23 @@ export const uploadFiles = (files, id) => async dispatch => {
     };
     try {
         dispatch({ type: types.SET_LOADING });
-        const res = await api.post(`/upload/${id}`, files, config);
+        const res = await api.post(`/files/${id}`, files, config);
         dispatch({ type: types.UPLOAD_FILES, payload: res.data });
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
+        console.log(err)
         dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
     }
 }
 
-export const addFile = (file) => {
+export const addFileToUploadList = (file) => {
     return {
         type: types.ADD_FILE,
         payload: file
     };
 };
 
-export const removeFile = (file) => {
+export const removeFileFromUploadList = (file) => {
     console.log(file);
     return {
         type: types.REMOVE_FILE,
@@ -310,6 +322,15 @@ const setRequestType = (typeOfData, requestType) => {
                     return types.SET_ACTIVE_TAB;
                 case 'secondary':
                     return types.SET_ACTIVE_SUB_TAB;
+                default:
+                    return null;
+            };
+        case '/files':
+            switch (requestType) {
+                case 'fetchAll':
+                    return types.FETCH_FILES;
+                case 'remove':
+                    return types.DELETE_FILE;
                 default:
                     return null;
             }
