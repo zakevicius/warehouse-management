@@ -34,7 +34,6 @@ export const FETCH_LOADING = "FETCH_LOADING";
 export const DELETE_LOADING = 'DELETE_LOADING';
 export const UPDATE_LOADING = 'UPDATE_LOADING';
 export const FETCH_LOADING_ID = 'FETCH_LOADING_ID';
-// export const SET_LOADING_STATUS = 'SET_LOADING_STATUS';
 
 // UPLOADS
 export const FETCH_FILES = 'FETCH_FILES';
@@ -43,6 +42,7 @@ export const ADD_FILE = 'ADD_FILE';
 export const REMOVE_FILE = 'REMOVE_FILE';
 export const CLEAR_FILES = 'CLEAR_FILES';
 export const DELETE_FILE = 'DELETE_FILE';
+export const DOWNLOAD_FILE = 'DOWNLOAD_FILE';
 
 //EVENTS
 export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';

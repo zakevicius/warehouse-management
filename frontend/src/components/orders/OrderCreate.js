@@ -51,6 +51,7 @@ class OrderCreate extends Component {
             }
             const client = this.props.clients.filter(client => client.name === e.target.value)[0];
             const letter = client.orderLetter;
+
             // Fetch new ID for new order based on client selected
             await this.props.fetchNewID(client._id, '/orders')
                 .then((response) => {

@@ -141,7 +141,7 @@ class LoadingCreate extends Component {
             truck: this.state.truck,
             trailer: this.state.trailer,
             orders: this.state.ordersToLoad.map(order => order._id),
-            status: 'waiting',
+            status: 'waiting to load',
             client: this.state.client,
             totalQnt,
             totalBruto

@@ -19,6 +19,18 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
+router.get('/download/:id', async (req, res) => {
+  const file = await File.findById(req.params.id);
+  try {
+    const { order, type, name } = file;
+    const path = `ftp://192.168.1.178/${order}/${type}/${name}`;
+    res.attachment(path);
+  }
+  catch (err) {
+    console.log(err)
+  }
+})
+
 // @route       GET api/clients/:id
 // @desc        Get client by id
 // @access      Private
@@ -45,8 +57,7 @@ router.post('/:id', auth, async (req, res, next) => {
 
   const setType = ext => {
     const photosTypes = ['jpeg', 'gif', 'jpg', 'bmp', 'png']
-    if (photosTypes.indexOf(ext) > 0) {
-      console.log(photos.indexOf(ext))
+    if (photosTypes.indexOf(ext) >= 0) {
       return 'photo';
     } else {
       return 'document';
@@ -59,11 +70,11 @@ router.post('/:id', auth, async (req, res, next) => {
     const saveAs = `${Date.now()}___${name}`;
     const folder = req.params.id
 
-    if (!fs.existsSync(`C:/files/${folder}`)) {
-      fs.mkdirSync(`C:/files/${folder}`);
+    if (!fs.existsSync(`C:/files/${folder}/${type}`)) {
+      fs.mkdirSync(`C:/files/${folder}/${type}`);
     }
 
-    const path = `C:/files/${folder}/${saveAs}`;
+    const path = `C:/files/${folder}/${type}/${saveAs}`;
 
     file.mv(path, (err) => {
       if (err) {
@@ -140,7 +151,8 @@ router.delete('/:id', auth, async (req, res) => {
   const deleteFile = (file, order) => {
     const name = file.name;
     const folder = order._id;
-    const path = `C:/files/${folder}`;
+    const type = file.type;
+    const path = `C:/files/${folder}/${type}`;
 
     if (fs.existsSync(path)) {
       fs.unlink(`${path}/${name}`, err => {
@@ -149,7 +161,7 @@ router.delete('/:id', auth, async (req, res) => {
         }
       });
     } else {
-      console.error('Doeas not exists')
+      console.error('Does not exist')
     }
   };
 

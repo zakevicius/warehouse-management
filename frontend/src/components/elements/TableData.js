@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Button from './Button';
 import FileUpload from '../files/FileUpload';
 import FileList from '../files/FileList';
+import CommentList from '../comments/CommentList';
 
 class TableData extends Component {
   constructor(props) {
@@ -242,18 +243,13 @@ class TableData extends Component {
     return dataOnPage.map(order => {
       return (
         <tr key={order._id}>
-          <td className="center aligned">
-            {order.orderID}
-          </td>
+          <td className="center aligned">{order.orderID}</td>
           <td className="center aligned">{order.date.split('T')[0]}</td>
           <td className="center aligned">{order.sender}</td>
           <td className="center aligned">{order.receiver}</td>
-          <td>{order.truck}</td>
-          <td>{order.trailer}</td>
           <td className="center aligned">{order.qnt}</td>
           <td className="center aligned">{order.bruto}</td>
-          <td className="center aligned">{order.description}</td>
-          <td className="center aligned">{order.declarations.join(', ')}</td>
+          <td className="center aligned"><CommentList order={order} /></td>
         </tr >
       );
     });

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const HeaderSecondary = props => {
 
-  const types = ['all', 'waiting', 'in', 'loading', 'out'];
+  const types = ['all', 'waiting', 'in', 'waiting to load', 'loading', 'out'];
 
   const renderLinks = () => {
     return types.map(type =>

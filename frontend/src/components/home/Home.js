@@ -18,7 +18,11 @@ class Home extends Component {
     };
     return (
       <div>
-        {`${status[0].toUpperCase()}${status.slice(1)}`}
+        <div className="ui segment">
+          <h4 className="ui header">
+            {`${status[0].toUpperCase()}${status.slice(1)}`}
+          </h4>
+        </div>
         <Table
           type="orders"
           orders={{ orders: orders.filter(order => order.status === status) }}
@@ -37,8 +41,8 @@ class Home extends Component {
       return (
         <Fragment>
           {this.renderTable(ordersData.orders, 'waiting')}
+          {this.renderTable(ordersData.orders, 'waiting to load')}
           {this.renderTable(ordersData.orders, 'loading')}
-          {this.renderTable(ordersData.orders, 'in')}
         </Fragment>
       );
     } else {

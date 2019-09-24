@@ -4,7 +4,8 @@ import {
   REMOVE_FILE,
   CLEAR_FILES,
   DELETE_FILE,
-  FETCH_FILES
+  FETCH_FILES,
+  DOWNLOAD_FILE
 } from '../action/types';
 
 const initialState = {
@@ -24,6 +25,8 @@ export default (state = initialState, action) => {
           documents: action.payload.filter(file => file.type === 'document')
         }
       };
+    case DOWNLOAD_FILE:
+      return state;
     case UPLOAD_FILES:
       console.log(action.payload)
       return {

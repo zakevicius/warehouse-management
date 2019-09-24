@@ -1,17 +1,19 @@
 import React from 'react';
-import { removeData } from '../../action';
+import { removeData, downloadFile } from '../../action';
 import { connect } from 'react-redux';
 
 
 const File = ({ type, file, ...props }) => {
-  console.log(file);
-  const onClick = () => {
+  const onClickRemove = () => {
     props.removeData('/files', file._id);
   };
 
+  const onClickDonwload = () => {
+    downloadFile(file);
+  }
+
   switch (type) {
     case "addRemove":
-      console.log(file);
       return (
         <p key={file._id}>
           <i className="ui large link close red icon" onClick={() => props.removeFile(file)} />
@@ -20,11 +22,10 @@ const File = ({ type, file, ...props }) => {
       );
     case "photo":
     case "document":
-      console.log(file);
       return (
-        <p key={file._id}>
-          <i className="ui large link close red icon" onClick={onClick} />
-          {file.name/*.split('___')[1].join('.')[0]*/}
+        <p key={file._id} >
+          <i className="ui large link close red icon" onClick={onClickRemove} />
+          <a href={`ftp://192.168.1.178/${file.path.split('C:/files/')[1]}`}>{file.name/*.split('___')[1].join('.')[0]*/}</a>
         </p>
       )
     default:
@@ -32,4 +33,4 @@ const File = ({ type, file, ...props }) => {
   }
 };
 
-export default connect(null, { removeData })(File);
+export default connect(null, { removeData, downloadFile })(File);

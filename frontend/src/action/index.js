@@ -99,6 +99,7 @@ export const fetchNewID = (clientID, type) => async dispatch => {
     const requestType = setRequestType(type, 'newID');
     console.log(type, requestType);
     try {
+        const client = await api.get(`/clients/${clientID}`);
         const res = await api.get(type);
         if (res.data.length === 0) {
             dispatch({
@@ -112,7 +113,8 @@ export const fetchNewID = (clientID, type) => async dispatch => {
                 // if there are already orders/loadings for this client take last id ant increase value by 1
                 switch (type) {
                     case '/orders':
-                        arr = data.map(item => item.orderID.slice(1));
+                        arr = data.filter(d => d.orderID.slice(0, 1) === client.data.data.orderLetter).map(item => item.orderID.slice(1));
+                        console.log(arr)
                         break;
                     case '/loadings':
                         arr = data.map(item => item.loadingID.slice(4));
@@ -147,9 +149,8 @@ export const updateData = (typeOfData, data, id) => async dispatch => {
         const res = await api.put(`${typeOfData}/${id}`, data);
         dispatch({ type: requestType, payload: res.data });
 
-
         setTimeout(() => {
-            history.push(`${typeOfData}/page/1`);
+            history.push(`${typeOfData}/${id}`);
         }, 1000);
     } catch (err) {
         dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
@@ -226,6 +227,15 @@ export const removeFileFromUploadList = (file) => {
 export const clearFiles = () => {
     return {
         type: types.CLEAR_FILES
+    }
+}
+
+export const downloadFile = async (file) => {
+    const res = await api.get(`/files/download/${file._id}`);
+    window.open(res)
+    return {
+        type: types.DOWNLOAD_FILE,
+        payload: res
     }
 }
 

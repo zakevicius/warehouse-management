@@ -106,7 +106,8 @@ router.post(
 // @desc        Update client
 // @access      Private
 router.put('/:id', auth, async (req, res) => {
-    const { truck, trailer, orders, status, totalQnt, totalBruto } = req.body;
+    console.log(req.body)
+    let { truck, trailer, orders, status, totalQnt, totalBruto, commentsData } = req.body;
 
     // Build Loading object, which contains new information
     const newLoadingInformation = {};
@@ -116,6 +117,7 @@ router.put('/:id', auth, async (req, res) => {
     if (status) newLoadingInformation.status = status;
     if (totalQnt) newLoadingInformation.totalQnt = totalQnt;
     if (totalBruto) newLoadingInformation.totalBruto = totalBruto;
+    if (commentsData) newLoadingInformation.commentsData = commentsData;
 
     // Find Loading to update
     try {
@@ -144,19 +146,25 @@ router.put('/:id', auth, async (req, res) => {
         );
 
         // Udating order status
-        await Order.updateMany(
-            { loadingID: loading._id },
-            { $set: { status: 'in', loadingID: null } },
-            { multi: true }
-        );
-
-        orders.forEach(async id => {
-            const newInfo = { status: 'loading', loadingID: loading._id };
-            order = await Order.findByIdAndUpdate(id,
-                { $set: newInfo },
-                { new: true }
+        if (orders) {
+            await Order.updateMany(
+                { loadingID: loading._id },
+                { $set: { status: 'in', loadingID: null } },
+                { multi: true }
             );
-        });
+        }
+
+        if (orders) {
+            status = status === 'loaded' ? 'out' : status;
+
+            orders.forEach(async id => {
+                const newInfo = { status: status, loadingID: loading._id };
+                order = await Order.findByIdAndUpdate(id,
+                    { $set: newInfo },
+                    { new: true }
+                );
+            });
+        }
 
         res.json(loading);
     } catch (err) {

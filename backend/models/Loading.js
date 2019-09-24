@@ -33,6 +33,9 @@ const LoadingSchema = mongoose.Schema({
     status: {
         type: String // waiting, loading, loaded
     },
+    commentsData: {
+        type: Array
+    },
     date: {
         type: Date,
         default: Date.now
