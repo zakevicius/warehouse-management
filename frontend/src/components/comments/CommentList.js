@@ -17,7 +17,6 @@ class CommentList extends Component {
   }
 
   onSubmit = (e) => {
-    console.log(this.state.commentsData)
     e.preventDefault();
     if (this.state.comment === "") return;
 
@@ -51,8 +50,6 @@ class CommentList extends Component {
         }
       );
     }
-
-    console.log(newData);
 
     this.setState({
       comment: "",

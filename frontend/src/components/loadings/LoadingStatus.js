@@ -87,7 +87,6 @@ class LoadingStatus extends Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div className="ui segment">
         Status: {this.renderStatusList()}
