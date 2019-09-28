@@ -52,7 +52,6 @@ class OrderEdit extends Component {
     }
 
     onChange = async e => {
-        console.log(e.target.value)
         if (e.target.name === 'declarations') {
             this.setState({
                 ...this.state,

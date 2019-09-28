@@ -5,7 +5,8 @@ import {
   CLEAR_FILES,
   DELETE_FILE,
   FETCH_FILES,
-  DOWNLOAD_FILE
+  DOWNLOAD_FILE,
+  FILE_ERROR
 } from '../action/types';
 
 const initialState = {
@@ -17,7 +18,6 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_FILES:
-      console.log(action.payload);
       return {
         ...state,
         files: {
@@ -28,7 +28,6 @@ export default (state = initialState, action) => {
     case DOWNLOAD_FILE:
       return state;
     case UPLOAD_FILES:
-      console.log(action.payload)
       return {
         ...state,
         files: {
@@ -42,7 +41,6 @@ export default (state = initialState, action) => {
     case REMOVE_FILE:
       return { ...state, filesToUpload: [state.filesToUpload.filter(file => file.name !== action.payload.name)] };
     case DELETE_FILE:
-      console.log(action.payload)
       return {
         ...state,
         files: {
@@ -52,6 +50,8 @@ export default (state = initialState, action) => {
       };
     case CLEAR_FILES:
       return { ...state, filesToUpload: [] };
+    case FILE_ERROR:
+      return { ...state, error: action.payload };
     default:
       return state;
   }

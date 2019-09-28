@@ -27,7 +27,6 @@ class CommentList extends Component {
       // newData[0].comments.push({ text: this.state.comment, user: this.props.user.name, id: '_' + Math.random().toString(36).substr(2, 9) });
 
       newData = this.state.commentsData.map(data => {
-        console.log(data);
         if (data.orderID === this.props.order._id) {
           let newComments = [...data.comments, { text: this.state.comment, user: this.props.user.name, id: '_' + Math.random().toString(36).substr(2, 9) }];
           data.comments = newComments;

@@ -40,14 +40,12 @@ router.post('/', [
       let user = await User.findOne({ email });
 
       if (!user) {
-        console.log('user')
         return res.status(400).json({ msg: 'Invalid email or password' });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        console.log('email')
         return res.status(400).json({ msg: 'Invalid email or password' });
       }
 

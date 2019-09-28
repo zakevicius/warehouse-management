@@ -16,26 +16,6 @@ const options = {
   password: ftp.password
 };
 
-// c.on('ready', () => {
-//   c.get('/files/favicon.ico', (err, stream) => {
-//     if (err) console.log(err);
-//     stream.once('close', () => {
-//       c.end();
-//     });
-//     stream.pipe(fs.createWriteStream('C:/files/copy.ico'));
-//   });
-// });
-// c.on('ready', () => {
-//   c.mkdir(`/files/documents/ids`, true, err => {
-//     console.log(err);
-//   })
-//   c.put(`C:/files/copy.ico`, `/files/document/ico.ico`, err => {
-//     if (err) console.log(err);
-//     c.end();
-//   })
-// })
-// c.connect(options);
-
 // @route       GET api/files
 // @desc        Get all users clients
 // @access      Private
@@ -68,7 +48,6 @@ router.get('/download/:id', async (req, res) => {
     // c.connect(options);
   }
   catch (err) {
-    console.log(err);
     res.status(500).json({ msg: 'Server error downloading files' });
   }
 })

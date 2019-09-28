@@ -60,7 +60,6 @@ router.post('/', [
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log(errors.array())
       return res.status(400).json({ errors: errors.array() });
     }
 
@@ -103,7 +102,6 @@ router.post('/', [
 // @desc        Update order
 // @access      Private
 router.put('/:id', auth, async (req, res) => {
-  console.log(req.body);
   const { sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status } = req.body;
 
   // Creating updated order object
@@ -154,7 +152,6 @@ router.delete('/:id', auth, async (req, res) => {
     if (!order) {
       return res.status(404).json({ msg: 'Order not found' });
     }
-    console.log(order.user, req.user.id)
 
     // Check if user is authorized to delete order
     if (ObjectID(order.user).toString() !== req.user.id) {

@@ -2,8 +2,6 @@ import api from '../apis/api';
 import { history } from '../components/history';
 import * as types from './types';
 import setAuthToken from '../utils/setAuthToken';
-import Downloader from 'js-file-downloader';
-import { saveAs } from 'file-saver';
 
 // LOGIN, LOGOUT, SIGNUP
 export const login = (user) => async (dispatch) => {
@@ -25,6 +23,7 @@ export const login = (user) => async (dispatch) => {
             dispatch({ type: types.UNSET_LOADING });
         } catch (err) {
             dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
+            dispatch({ type: types.UNSET_LOADING });
         }
     };
 
@@ -35,8 +34,8 @@ export const login = (user) => async (dispatch) => {
         dispatch({ type: types.LOGIN_SUCCESS, payload: res.data });
         loadUser();
     } catch (err) {
-        console.log(err);
-        dispatch({ type: types.AUTH_ERROR, payload: err });
+        dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
+        dispatch({ type: types.UNSET_LOADING });
     }
 };
 
@@ -60,8 +59,9 @@ export const fetchData = (typeOfData, id = null) => async (dispatch) => {
         dispatch({ type: requestType, payload: res.data });
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
-        console.log(err);
-        dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
+        let errorType = setErrorType(typeOfData);
+        dispatch({ type: errorType, payload: err.response.data.msg });
+        dispatch({ type: types.UNSET_LOADING });
     }
 };
 
@@ -75,14 +75,15 @@ export const fetchSingleData = (typeOfData, id) => async dispatch => {
         dispatch({ type: requestType, payload: res.data });
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
-        dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
+        let errorType = setErrorType(typeOfData);
+        dispatch({ type: errorType, payload: err.response.data.msg });
+        dispatch({ type: types.UNSET_LOADING });
     }
 }
 
 // CREATING NEW DATA
 export const createData = (typeOfData, data) => async dispatch => {
     const requestType = setRequestType(typeOfData, 'create');
-    const errorType = setRequestType(typeOfData, 'error');
 
     try {
         dispatch({ type: types.SET_LOADING });
@@ -91,16 +92,19 @@ export const createData = (typeOfData, data) => async dispatch => {
         setTimeout(() => {
             history.push(`${typeOfData}/page/1`);
         }, 500);
+        dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
+        let errorType = setErrorType(typeOfData);
         dispatch({ type: errorType, payload: err.response.data.msg });
+        dispatch({ type: types.UNSET_LOADING });
     }
 }
 
 // GETTING ID FOR NEW DATA
 export const fetchNewID = (clientID, type) => async dispatch => {
     const requestType = setRequestType(type, 'newID');
-    console.log(type, requestType);
     try {
+        dispatch({ type: types.SET_LOADING });
         const client = await api.get(`/clients/${clientID}`);
         const res = await api.get(type);
         if (res.data.length === 0) {
@@ -115,11 +119,10 @@ export const fetchNewID = (clientID, type) => async dispatch => {
                 // if there are already orders/loadings for this client take last id ant increase value by 1
                 switch (type) {
                     case '/orders':
-                        arr = data.filter(d => d.orderID.slice(0, 1) === client.data.data.orderLetter).map(item => item.orderID.slice(1));
-                        console.log(arr)
+                        arr = data.filter(d => d.orderID.slice(0, client.data.data.orderLetter.length) === client.data.data.orderLetter).map(item => item.orderID.slice(client.data.data.orderLetter.length));
                         break;
                     case '/loadings':
-                        arr = data.map(item => item.loadingID.slice(4));
+                        arr = data.map(item => item.loadingID.slice(client.data.data.orderLetter.length + 3));
                         break;
                     default:
                         return null;
@@ -137,8 +140,11 @@ export const fetchNewID = (clientID, type) => async dispatch => {
                 });
             }
         }
+        dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
-        dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
+        let errorType = setErrorType(type);
+        dispatch({ type: errorType, payload: err.response.data.msg });
+        dispatch({ type: types.UNSET_LOADING });
     }
 }
 
@@ -155,7 +161,9 @@ export const updateData = (typeOfData, data, id) => async dispatch => {
             history.push(`${typeOfData}/${id}`);
         }, 1000);
     } catch (err) {
-        dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
+        let errorType = setErrorType(typeOfData);
+        dispatch({ type: errorType, payload: err.response.data.msg });
+        dispatch({ type: types.UNSET_LOADING });
     }
 }
 
@@ -175,15 +183,15 @@ export const removeData = (typeOfData, id) => async dispatch => {
             dispatch({ type: types.UNSET_LOADING });
         }
     } catch (err) {
-        console.log(err);
-        dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
+        let errorType = setErrorType(typeOfData);
+        dispatch({ type: errorType, payload: err.response.data.msg });
+        dispatch({ type: types.UNSET_LOADING });
     }
 }
 
 // FILTER
 
 export const filterOrders = text => dispatch => {
-    console.log(text);
     dispatch({ type: types.FILTER_ORDERS, payload: text });
 }
 
@@ -205,8 +213,8 @@ export const uploadFiles = (files, id) => async dispatch => {
         dispatch({ type: types.UPLOAD_FILES, payload: res.data });
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
-        console.log(err.response.data.msg)
-        dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
+        dispatch({ type: types.FILE_ERROR, payload: err.response.data.msg });
+        dispatch({ type: types.UNSET_LOADING });
     }
 }
 
@@ -218,7 +226,6 @@ export const addFileToUploadList = (file) => {
 };
 
 export const removeFileFromUploadList = (file) => {
-    console.log(file);
     return {
         type: types.REMOVE_FILE,
         payload: file
@@ -232,18 +239,26 @@ export const clearFiles = () => {
 }
 
 export const downloadFile = (id, filename) => async dispatch => {
-    const res = await api.get(`/files/download/${id}`);
+    try {
+        dispatch({ type: types.SET_LOADING });
+        const res = await api.get(`/files/download/${id}`);
 
-    // const file = new Blob([res.data]);
-    // const fileURL = URL.createObjectURL(file);   
-    const link = document.createElement('a');
+        // const file = new Blob([res.data]);
+        // const fileURL = URL.createObjectURL(file);   
+        const link = document.createElement('a');
 
-    link.href = res.data;
-    link.download = filename;
-    link.click();
-    link.remove();
-    // URL.revokeObjectURL(file);
-    dispatch({ type: types.DOWNLOAD_FILE, payload: res.data });
+        link.href = res.data;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        // URL.revokeObjectURL(file);
+        dispatch({ type: types.DOWNLOAD_FILE, payload: res.data });
+        dispatch({ type: types.UNSET_LOADING });
+    } catch (err) {
+        dispatch({ type: types.FILE_ERROR, payload: err.response.data.msg });
+        dispatch({ type: types.UNSET_LOADING });
+    }
 }
 
 // EVENT HANDLERS
@@ -271,8 +286,14 @@ export const setError = (msg, type) => {
 
 const setErrorType = type => {
     switch (type) {
-        case 'AUTH':
-            return types.AUTH_ERROR;
+        case '/files':
+            return types.FILE_ERROR;
+        case '/orders':
+            return types.ORDER_ERROR;
+        case '/loadings':
+            return types.CLIENT_ERROR;
+        case '/clients':
+            return types.LOADING_ERROR;
         default:
             return null;
     };

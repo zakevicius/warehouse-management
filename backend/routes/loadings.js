@@ -106,7 +106,6 @@ router.post(
 // @desc        Update client
 // @access      Private
 router.put('/:id', auth, async (req, res) => {
-    console.log(req.body)
     let { truck, trailer, orders, status, totalQnt, totalBruto, commentsData } = req.body;
 
     // Build Loading object, which contains new information
