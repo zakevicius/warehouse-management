@@ -21,7 +21,13 @@ class OrderList extends Component {
 
   renderTable = (orders, status) => {
     if (orders.length === 0) {
-      return null;
+      return (
+        <div>
+          <Table
+            type="orders"
+          />
+        </div>
+      );
     }
     if (status === "all") {
       return (

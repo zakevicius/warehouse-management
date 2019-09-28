@@ -1,5 +1,7 @@
 default.json
 email.js
+build
+ftp.js
 
 # Logs
 logs

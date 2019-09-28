@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-process.env.NODE_CONFIG_DIR = './backend/config';
+process.env.NODE_CONFIG_DIR = './config';
 const config = require('config');
 const db = config.get('mongoURI');
 

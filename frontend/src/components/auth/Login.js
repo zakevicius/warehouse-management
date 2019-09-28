@@ -39,13 +39,13 @@ class Login extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-    // if (this.state.user.email === '' || this.state.user.password === '') {
-    //   this.props.setError('Please fill in all fields', 'AUTH')
-    // } else {
-    //   const { email, password } = this.state.user;
-    //   this.props.login({ email, password });
-    // }
-    this.props.login({ email: 'demo@demo.lt', password: "12345678" });
+    if (this.state.user.email === '' || this.state.user.password === '') {
+      this.props.setError('Please fill in all fields', 'AUTH')
+    } else {
+      const { email, password } = this.state.user;
+      this.props.login({ email, password });
+    }
+    // this.props.login({ email: 'demo@demo.lt', password: "12345678" });
   }
 
   render() {
@@ -54,7 +54,6 @@ class Login extends Component {
       <div className="ui raised very padded container segment">
         <form className="ui form" onSubmit={this.onSubmit}>
           <h4 className="ui dividing header">Please Login to continue</h4>
-          <p>demo@demo.lt 12345678</p>
           <div className="six wide field">
             <input
               type="text"

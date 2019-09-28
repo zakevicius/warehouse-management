@@ -3,13 +3,18 @@ import { removeData, downloadFile } from '../../action';
 import { connect } from 'react-redux';
 
 
-const File = ({ type, file, ...props }) => {
+const File = ({ type, file, downloadFile, ...props }) => {
   const onClickRemove = () => {
     props.removeData('/files', file._id);
   };
 
-  const onClickDonwload = () => {
-    downloadFile(file);
+  const onClick = (id) => {
+    downloadFile(id, file.name)
+  }
+
+  const style = {
+    color: 'navy',
+    cursor: 'pointer'
   }
 
   switch (type) {
@@ -25,8 +30,8 @@ const File = ({ type, file, ...props }) => {
       return (
         <p key={file._id} >
           <i className="ui large link close red icon" onClick={onClickRemove} />
-          <a href={`ftp://192.168.1.178/${file.path.split('C:/files/')[1]}`}>{file.name/*.split('___')[1].join('.')[0]*/}</a>
-        </p>
+          <span style={style} onClick={() => onClick(file._id)}>{file.name/*.split('___')[1].join('.')[0]*/}</span>
+        </p >
       )
     default:
       return null;

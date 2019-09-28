@@ -2,6 +2,8 @@ import api from '../apis/api';
 import { history } from '../components/history';
 import * as types from './types';
 import setAuthToken from '../utils/setAuthToken';
+import Downloader from 'js-file-downloader';
+import { saveAs } from 'file-saver';
 
 // LOGIN, LOGOUT, SIGNUP
 export const login = (user) => async (dispatch) => {
@@ -192,7 +194,6 @@ export const clearFilter = () => dispatch => {
 // FILES
 
 export const uploadFiles = (files, id) => async dispatch => {
-    console.log(files);
     const config = {
         headers: {
             "Content-type": "multipart/form-data"
@@ -204,7 +205,7 @@ export const uploadFiles = (files, id) => async dispatch => {
         dispatch({ type: types.UPLOAD_FILES, payload: res.data });
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
-        console.log(err)
+        console.log(err.response.data.msg)
         dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
     }
 }
@@ -230,13 +231,19 @@ export const clearFiles = () => {
     }
 }
 
-export const downloadFile = async (file) => {
-    const res = await api.get(`/files/download/${file._id}`);
-    window.open(res)
-    return {
-        type: types.DOWNLOAD_FILE,
-        payload: res
-    }
+export const downloadFile = (id, filename) => async dispatch => {
+    const res = await api.get(`/files/download/${id}`);
+
+    // const file = new Blob([res.data]);
+    // const fileURL = URL.createObjectURL(file);   
+    const link = document.createElement('a');
+
+    link.href = res.data;
+    link.download = filename;
+    link.click();
+    link.remove();
+    // URL.revokeObjectURL(file);
+    dispatch({ type: types.DOWNLOAD_FILE, payload: res.data });
 }
 
 // EVENT HANDLERS

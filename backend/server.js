@@ -4,7 +4,10 @@ const cors = require('cors');
 const fileUpload = require('express-fileupload');
 
 const app = express();
-app.use(
+app.use((req, res, next) => {
+  res.append('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+},
   [
     cors(),
     fileUpload({

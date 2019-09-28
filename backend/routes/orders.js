@@ -3,10 +3,12 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const { check, validationResult } = require('express-validator');
 const transporter = require('../config/email');
+const ObjectID = require('mongodb').ObjectID;
 
 // const User = require('../models/User');
 // const Client = require('../models/Client');
 const Order = require('../models/Order');
+const Client = require('../models/Client');
 
 // @route       GET api/orders
 // @desc        Get all users orders
@@ -66,6 +68,8 @@ router.post('/', [
 
     try {
       let order = await Order.findOne({ orderID });
+      let client = await Client.findOne({ _id: clientID });
+
       if (order) throw { exists: 'Order with this ID already exists' };
 
       const newOrder = new Order({
@@ -84,7 +88,7 @@ router.post('/', [
       });
       order = await newOrder.save();
 
-      sendMail('m.zakevicius@gmail.com', `Order ${orderID} has arrived to warehouse`, `Order ${orderID} from ${sender} arrived to warehouse`);
+      sendMail(client.email, `Order ${orderID} has arrived to warehouse`, `Order ${orderID} from ${sender} arrived to warehouse`);
 
       res.json(order);
     } catch (err) {
@@ -146,14 +150,14 @@ router.put('/:id', auth, async (req, res) => {
 // @access      Private
 router.delete('/:id', auth, async (req, res) => {
   try {
-    let order = await Order.findById(req.params.id)
-
+    let order = await Order.findById(req.params.id);
     if (!order) {
       return res.status(404).json({ msg: 'Order not found' });
     }
+    console.log(order.user, req.user.id)
 
     // Check if user is authorized to delete order
-    if (order.user !== req.user.id) {
+    if (ObjectID(order.user).toString() !== req.user.id) {
       if (req.user.type !== 'admin') {
         return res.status(401).json({ msg: 'Not authorized' })
       }
@@ -172,7 +176,7 @@ router.delete('/:id', auth, async (req, res) => {
 
 const sendMail = (to, subject, text) => {
   const mailOptions = {
-    from: 'm.zakevicius@gmail.com',
+    from: 'info@logway1.lt',
     to,
     subject,
     text

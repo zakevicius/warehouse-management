@@ -34,6 +34,7 @@ class FileUpload extends Component {
       });
       return;
     }
+
     const data = new FormData();
     this.props.files.forEach(file => {
       data.append('files', file);
