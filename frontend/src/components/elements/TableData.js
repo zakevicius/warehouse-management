@@ -56,30 +56,32 @@ class TableData extends Component {
     //     </td>
     //   </tr>);
     // }
-    const { orders } = this.props.orders;
-    const dataOnPage = this.showDataByPageNumber(orders, this.props.page);
-    return dataOnPage.map(order => {
-      return (
-        <tr key={order._id}>
-          <td className="center aligned">
-            <Link to={`/orders/${order._id}`} >
-              {this.renderButton()}
-            </Link>
-          </td>
-          <td className="center aligned">{order.status}</td>
-          <td className="center aligned">{order.orderID}</td>
-          <td className="center aligned">{order.date.split('T')[0]}</td>
-          <td>{order.sender}</td>
-          <td>{order.receiver}</td>
-          <td className="center aligned">{order.truck}</td>
-          <td className="center aligned">{order.trailer}</td>
-          <td className="center aligned">{order.qnt}</td>
-          <td className="center aligned">{order.bruto}</td>
-          <td>{order.description}</td>
-          <td className="center aligned">{order.declarations.join(', ')}</td>
-        </tr >
-      );
-    });
+    if (this.props.orders) {
+      const { orders } = this.props.orders;
+      const dataOnPage = this.showDataByPageNumber(orders, this.props.page);
+      return dataOnPage.map(order => {
+        return (
+          <tr key={order._id}>
+            <td className="center aligned">
+              <Link to={`/orders/${order._id}`} >
+                {this.renderButton()}
+              </Link>
+            </td>
+            <td className="center aligned">{order.status}</td>
+            <td className="center aligned">{order.orderID}</td>
+            <td className="center aligned">{order.date.split('T')[0]}</td>
+            <td>{order.sender}</td>
+            <td>{order.receiver}</td>
+            <td className="center aligned">{order.truck}</td>
+            <td className="center aligned">{order.trailer}</td>
+            <td className="center aligned">{order.qnt}</td>
+            <td className="center aligned">{order.bruto}</td>
+            <td>{order.description}</td>
+            <td className="center aligned">{order.declarations.join(', ')}</td>
+          </tr >
+        );
+      });
+    }
   }
 
   // RENDERING CLIENTS
@@ -295,7 +297,7 @@ class TableData extends Component {
     } else if (this.props.loadings) {
       totalData = this.props.loadings.loadings;
     }
-    if (totalData.length <= this.itemsPerPage || page === 0) {
+    if (!totalData || totalData.length <= this.itemsPerPage || page === 0) {
       return null;
     } else {
       return (

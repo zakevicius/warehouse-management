@@ -82,7 +82,7 @@ router.post(
             // Udating order status
             try {
                 orders.forEach(async id => {
-                    const newInfo = { status: 'loading', loadingID: loading._id };
+                    const newInfo = { status: 'waiting to load', loadingID: loading._id };
                     order = await Order.findByIdAndUpdate(id,
                         { $set: newInfo },
                         { new: true }

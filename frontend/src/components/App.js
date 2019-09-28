@@ -32,7 +32,6 @@ class App extends React.Component {
           <Fragment>
             <Header handleClick={this.handleClick} />
             <Switch>
-              <Route path="/f" component={FileUpload} />
               <PrivateRoute path="/" exact component={Home} />
 
               {/* Orders */}

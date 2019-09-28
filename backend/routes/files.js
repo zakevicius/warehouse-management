@@ -6,6 +6,36 @@ const fs = require('fs');
 const Order = require('../models/Order');
 const File = require('../models/File');
 
+// FTP settings
+const ftp = require('../config/ftp');
+const Client = require('ftp');
+const options = {
+  host: 'logway1.lt',
+  port: 21,
+  user: ftp.username,
+  password: ftp.password
+};
+
+// c.on('ready', () => {
+//   c.get('/files/favicon.ico', (err, stream) => {
+//     if (err) console.log(err);
+//     stream.once('close', () => {
+//       c.end();
+//     });
+//     stream.pipe(fs.createWriteStream('C:/files/copy.ico'));
+//   });
+// });
+// c.on('ready', () => {
+//   c.mkdir(`/files/documents/ids`, true, err => {
+//     console.log(err);
+//   })
+//   c.put(`C:/files/copy.ico`, `/files/document/ico.ico`, err => {
+//     if (err) console.log(err);
+//     c.end();
+//   })
+// })
+// c.connect(options);
+
 // @route       GET api/files
 // @desc        Get all users clients
 // @access      Private
@@ -23,34 +53,30 @@ router.get('/download/:id', async (req, res) => {
   const file = await File.findById(req.params.id);
   try {
     const { order, type, name } = file;
-    const path = `ftp://192.168.1.178/${order}/${type}/${name}`;
-    res.attachment(path);
+    const path = `ftp://${ftp.username}:${ftp.password}@logway1.lt/files/${order}/${type}/${name}`;
+    res.send(path);
+
+    // const path = `/files/${order}/${type}/${name}`;
+    // const c = new Client();
+    // c.on('ready', function () {
+    //   c.get(path, (err, stream) => {
+    //     if (err) throw err;
+    //     stream.once('close', function () { c.end(); });
+    //     stream.pipe(res);
+    //   });
+    // });
+    // c.connect(options);
   }
   catch (err) {
-    console.log(err)
+    console.log(err);
+    res.status(500).json({ msg: 'Server error downloading files' });
   }
 })
-
-// @route       GET api/clients/:id
-// @desc        Get client by id
-// @access      Private
-// router.get('/:id', auth, async (req, res) => {
-//   try {
-//     let client = await Client.findById(req.params.id, (err, data) => data);
-//     let orders = await Order.find({ clientID: req.params.id });
-//     res.json({ data: client, orders });
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).json({ msg: 'Server error fetching client' });
-//   }
-// });
 
 // @route       POST api/files
 // @desc        Add new client
 // @access      Private
 router.post('/:id', auth, async (req, res, next) => {
-  console.log(req.params, req.user);
-
   let photos = [];
   let documents = [];
   let errors = [];
@@ -70,18 +96,19 @@ router.post('/:id', auth, async (req, res, next) => {
     const saveAs = `${Date.now()}___${name}`;
     const folder = req.params.id
 
-    if (!fs.existsSync(`C:/files/${folder}/${type}`)) {
-      fs.mkdirSync(`C:/files/${folder}/${type}`);
-    }
+    const path = `/files/${folder}/${type}/${saveAs}`;
 
-    const path = `C:/files/${folder}/${type}/${saveAs}`;
-
-    file.mv(path, (err) => {
-      if (err) {
-        console.error(err);
-        errors.push(err);
-      }
-    });
+    const c = new Client();
+    c.on('ready', () => {
+      c.mkdir(`/files/${folder}/${type}/`, true, err => {
+        if (err) console.log(err);
+      })
+      c.put(file.tempFilePath, path, err => {
+        if (err) console.log(err);
+        c.end();
+      })
+    })
+    c.connect(options);
 
     try {
       // Creating new File
@@ -124,22 +151,24 @@ router.post('/:id', auth, async (req, res, next) => {
     }
   }
 
-  if (errors.length > 0) {
-    return res.status(500).send(errors);
-  } else if (req.files.files.length) {
-    (async () => {
-      await req.files.files.forEach(async file => {
-        await uploadFile(file);
-      });
-      console.log(photos, documents)
-      res.json({ photos, documents });
-    })();
-  } else {
-    (async () => {
-      await uploadFile(req.files.files);
-      console.log(photos, documents)
-      res.json({ photos, documents });
-    })();
+  try {
+    if (errors.length > 0) {
+      return res.status(500).send(errors);
+    } else if (req.files.files.length) {
+      (async () => {
+        await req.files.files.forEach(async file => {
+          await uploadFile(file);
+        });
+        res.json({ photos, documents });
+      })();
+    } else {
+      (async () => {
+        await uploadFile(req.files.files);
+        res.json({ photos, documents });
+      })();
+    }
+  } catch (err) {
+    res.status(500).json({ msg: 'Server error uploading A file' })
   }
 });
 
@@ -152,17 +181,16 @@ router.delete('/:id', auth, async (req, res) => {
     const name = file.name;
     const folder = order._id;
     const type = file.type;
-    const path = `C:/files/${folder}/${type}`;
+    const path = `/files/${folder}/${type}/${name}`;
 
-    if (fs.existsSync(path)) {
-      fs.unlink(`${path}/${name}`, err => {
-        if (err) {
-          console.error(err);
-        }
-      });
-    } else {
-      console.error('Does not exist')
-    }
+    const c = new Client();
+    c.on('ready', () => {
+      c.delete(path, err => {
+        if (err) console.log(err);
+        c.end();
+      })
+    })
+    c.connect(options);
   };
 
   try {
