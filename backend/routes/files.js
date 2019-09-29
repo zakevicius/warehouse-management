@@ -135,9 +135,9 @@ router.post('/:id', auth, async (req, res, next) => {
       return res.status(500).send(errors);
     } else if (req.files.files.length) {
       (async () => {
-        await req.files.files.forEach(async file => {
+        for (const file of req.files.files) {
           await uploadFile(file);
-        });
+        }
         res.json({ photos, documents });
       })();
     } else {
@@ -212,4 +212,4 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;

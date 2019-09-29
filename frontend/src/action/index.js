@@ -158,7 +158,7 @@ export const updateData = (typeOfData, data, id) => async dispatch => {
         dispatch({ type: requestType, payload: res.data });
 
         setTimeout(() => {
-            history.push(`${typeOfData}/${id}`);
+            history.push(`${typeOfData}/${id}${typeOfData === '/clients' && '/page/1'}`);
         }, 1000);
     } catch (err) {
         let errorType = setErrorType(typeOfData);

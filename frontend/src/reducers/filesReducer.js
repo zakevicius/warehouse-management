@@ -28,10 +28,11 @@ export default (state = initialState, action) => {
     case DOWNLOAD_FILE:
       return state;
     case UPLOAD_FILES:
+      console.log(action.payload)
       return {
         ...state,
         files: {
-          photos: [...state.files.photos, action.payload.photos],
+          photos: [...state.files.photos, ...action.payload.photos],
           documents: [...state.files.documents, ...action.payload.documents]
         },
         status: [...state.status, action.payload]

@@ -39,6 +39,7 @@ class FileUpload extends Component {
     this.props.files.forEach(file => {
       data.append('files', file);
     });
+
     this.props.uploadFiles(data, this.props.id);
     this.props.clearFiles();
   };

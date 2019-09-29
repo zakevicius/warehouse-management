@@ -13,8 +13,8 @@ app.use((req, res, next) => {
     fileUpload({
       useTempFiles: true,
       safeFileNames: true,
-      preserveExtension: true,
-      tempFileDir: `C:/files/temp`
+      preserveExtension: 4,
+      tempFileDir: `/tmp/`
     })
   ]
 );

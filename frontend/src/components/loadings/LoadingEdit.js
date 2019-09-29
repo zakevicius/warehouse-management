@@ -18,7 +18,7 @@ class LoadingEdit extends Component {
 
   async componentWillMount() {
     await this.props.fetchSingleData('/clients', this.props.loading.data.clientID);
-    const { loadingID, truck, trailer, status, date } = this.props.loading.data;
+    const { loadingID, truck, trailer, date } = this.props.loading.data;
     const client = this.props.loading.client.name;
     const ordersToLoad = this.props.loading.orders;
     const ordersList = this.props.client.orders.filter(order => order.status === 'in');

@@ -6,18 +6,18 @@ import Spinner from '../elements/Spinner';
 class FileList extends Component {
   renderAddRemoveFileList = (files) => {
     if (!files || files.length === 0) return <div>No files</div>;
-    return files.map(file => <File file={file} type="addRemove" removeFile={this.props.removeFile} />)
+    return files.map(file => <File key={file._id} file={file} type="addRemove" removeFile={this.props.removeFile} />)
   };
 
   showFiles = ({ photos, documents }) => {
     const renderPhotos = () => {
       if (!photos || photos.length === 0 || photos[0].length === 0) return <div>No photos</div>;
-      return photos.map(file => <File file={file} type="photo" />);
+      return photos.map(file => <File key={file._id} file={file} type="photo" />);
     };
 
     const renderDocuments = () => {
       if (!documents || documents.length === 0) return <div>No Documents</div>;
-      return documents.map(file => <File file={file} type="document" />);
+      return documents.map(file => <File key={file._id} file={file} type="document" />);
     };
 
     return (
