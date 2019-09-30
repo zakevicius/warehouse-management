@@ -104,8 +104,6 @@ class OrderCreate extends Component {
                             <option value=''>Select status...</option>
                             <option value='waiting'>Waiting</option>
                             <option value='in'>In</option>
-                            <option value='loading'>Loading</option>
-                            <option value='out'>out</option>
                         </select>
                     </div>
                     <div className="field">
