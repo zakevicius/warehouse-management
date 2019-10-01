@@ -28,8 +28,8 @@ class TableData extends Component {
       </tr>);
     }
     const order = this.props.order;
-    const firstColumn = ['ID', 'Status', 'Date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description', 'Declarations'];
-    const secondColumn = [order.orderID, order.status, order.date.split('T')[0], order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description, order.declarations.join(', ')];
+    const firstColumn = ['ID', 'Additional ID', 'Status', 'Date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description', 'Declarations'];
+    const secondColumn = [order.orderID, order.additionalID, order.status, order.date.split('T')[0], order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description, order.declarations.join(', ')];
     let i = 0;
     return (
       firstColumn.map(text => {
@@ -69,6 +69,7 @@ class TableData extends Component {
             </td>
             <td className="center aligned">{order.status}</td>
             <td className="center aligned">{order.orderID}</td>
+            <td className="center aligned">{order.additionalID}</td>
             <td className="center aligned">{order.date.split('T')[0]}</td>
             <td>{order.sender}</td>
             <td>{order.receiver}</td>

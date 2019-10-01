@@ -14,7 +14,7 @@ const ClientSchema = mongoose.Schema({
     required: true
   },
   email: {
-    type: String,
+    type: Array,
     required: true
   },
   phone: {

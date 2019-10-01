@@ -36,6 +36,7 @@ class TableHeader extends Component {
               </th>
               <th className="one wide center aligned">Status</th>
               <th className="one wide center aligned">Order</th>
+              <th className="one wide center aligned">Additional ID</th>
               <th className="one wide center aligned">Date</th>
               <th className="two wide center aligned">Sender</th>
               <th className="two wide center aligned">Receiver</th>

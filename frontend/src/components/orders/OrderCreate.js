@@ -6,6 +6,7 @@ import Button from '../elements/Button';
 class OrderCreate extends Component {
     state = {
         orderID: '',
+        additionalID: '',
         date: new Date().toISOString(),
         sender: '',
         receiver: '',
@@ -91,6 +92,10 @@ class OrderCreate extends Component {
                             <option value=''>Select a client...</option>
                             {this.renderClientList()}
                         </select>
+                    </div>
+                    <div className="field">
+                        <label htmlFor="additionalID">Additional ID</label>
+                        <input type="text" name="additionalID" value={this.state.additionalID} onChange={this.onChange} />
                     </div>
                     <div className="field">
                         <label htmlFor="status">Status</label>

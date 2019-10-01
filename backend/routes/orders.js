@@ -64,7 +64,7 @@ router.post('/', [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status } = req.body;
+    const { additionalID, sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status } = req.body;
 
     try {
       let order = await Order.findOne({ orderID });
@@ -75,6 +75,7 @@ router.post('/', [
       const newOrder = new Order({
         user: req.user.id,
         orderID,
+        additionalID,
         sender,
         receiver,
         truck,
@@ -88,9 +89,10 @@ router.post('/', [
       });
       order = await newOrder.save();
 
-      // for (let i = 3; i <= 20; i++) {
+      // for (let i = 2; i <= 20; i++) {
       //   const newOrder = new Order({
       //     user: req.user.id,
+      //     additionalID: `D${i}`,
       //     orderID: `DEMO${i}`,
       //     sender: `DEMO${i}`,
       //     receiver: `DEMO${i}`,
@@ -121,7 +123,7 @@ router.post('/', [
 // @desc        Update order
 // @access      Private
 router.put('/:id', auth, async (req, res) => {
-  const { sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status } = req.body;
+  const { additionalID, sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status } = req.body;
 
   // Creating updated order object
   const newOrderInformation = {};
@@ -136,6 +138,7 @@ router.put('/:id', auth, async (req, res) => {
   if (clientID) newOrderInformation.clientID = clientID;
   if (orderID) newOrderInformation.orderID = orderID;
   if (status) newOrderInformation.status = status;
+  if (additionalID) newOrderInformation.additionalID = additionalID;
 
   try {
     let order = await Order.findById(req.params.id);
@@ -182,11 +185,14 @@ router.delete('/:id', auth, async (req, res) => {
     // DELETING ORDER FROM LOADING IT WAS INCLUDED IN
     // Update orders status back from 'loading' to 'in'
     let loading = await Loading.findById(order.loadingID);
-    const newInfo = { orders: loading.orders.filter(item => item !== order._id.toString()) };
-    await Loading.findByIdAndUpdate(loading._id,
-      { $set: newInfo },
-      { new: true }
-    );
+    if (loading) {
+      const newInfo = { orders: loading.orders.filter(item => item !== order._id.toString()) };
+      await Loading.findByIdAndUpdate(loading._id,
+        { $set: newInfo },
+        { new: true }
+      )
+    }
+    ;
 
     // DELETING ORDER
     await Order.findByIdAndRemove(req.params.id);

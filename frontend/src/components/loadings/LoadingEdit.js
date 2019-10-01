@@ -21,7 +21,7 @@ class LoadingEdit extends Component {
     const { loadingID, truck, trailer, date } = this.props.loading.data;
     const client = this.props.loading.client.name;
     const ordersToLoad = this.props.loading.orders;
-    const ordersList = this.props.client.orders.filter(order => order.status === 'in');
+    const ordersList = this.props.client.orders.filter(order => (order.status === 'in' || order.status === 'waiting') && order.loadingID === null);
     this.setState({
       loadingID,
       truck,
@@ -73,8 +73,8 @@ class LoadingEdit extends Component {
       trailer: this.state.trailer,
       orders: this.state.ordersToLoad.map(order => order._id),
       status: 'waiting to load',
-      totalQnt,
-      totalBruto
+      totalQnt: totalQnt.toFixed(3),
+      totalBruto: totalBruto.toFixed(3)
     }, this.props.loading.data._id);
   }
 

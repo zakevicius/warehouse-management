@@ -25,10 +25,11 @@ class OrderEdit extends Component {
         if (!this.props.order) {
             this.props.fetchSingleData('/orders', this.props.match.params.id);
         }
-        const { orderID, date, sender, receiver, truck, trailer, qnt, bruto, description, declarations, status } = this.props.order;
+        const { orderID, additionalID, date, sender, receiver, truck, trailer, qnt, bruto, description, declarations, status } = this.props.order;
         const client = this.props.clients.filter(client => client._id === this.props.order.clientID)[0].name;
         this.setState({
             orderID,
+            additionalID,
             date: date.split('T')[0],
             sender,
             receiver,
@@ -98,6 +99,10 @@ class OrderEdit extends Component {
                         </select>
                     </div>
                     <div className="field">
+                        <label htmlFor="additionalID">Additional ID</label>
+                        <input type="text" name="additionalID" value={this.state.additionalID} onChange={this.onChange} />
+                    </div>
+                    <div className="field">
                         <label htmlFor="status">Status</label>
                         <select
                             className="ui fluid dropdown"
@@ -109,8 +114,6 @@ class OrderEdit extends Component {
                             <option value=''>Select status...</option>
                             <option value='waiting'>Waiting</option>
                             <option value='in'>In</option>
-                            <option value='loading'>Loading</option>
-                            <option value='out'>out</option>
                         </select>
                     </div>
                     <div className="field">

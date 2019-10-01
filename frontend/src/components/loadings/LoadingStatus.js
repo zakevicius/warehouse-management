@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import Button from '../elements/Button';
-import { updateData } from '../../action';
+import { updateData, setError } from '../../action';
 
 class LoadingStatus extends Component {
 
@@ -18,6 +18,23 @@ class LoadingStatus extends Component {
 
   onSubmit = e => {
     e.preventDefault();
+    let confirmLoaded = true;
+    if (this.state.newStatus === "loaded") {
+      for (let i = 0; i < this.props.loading.orders.length; i++) {
+        console.log(this.props.loading.orders[i].status)
+        if (this.props.loading.orders[i].status === 'waiting') {
+          console.log('tr')
+          this.props.setError('Not all orders have arrived.', '/loadings');
+          this.setState({
+            button: 'Update',
+            editStatus: false,
+          });
+          confirmLoaded = false;
+          break;
+        }
+      };
+    }
+    if (!confirmLoaded) return;
     this.setState({
       button: 'Update',
       editStatus: false,
@@ -95,5 +112,10 @@ class LoadingStatus extends Component {
   }
 };
 
+const mapStateToProps = state => {
+  return {
+    loading: state.loadingsData.loading
+  }
+}
 
-export default connect(null, { updateData })(LoadingStatus);
+export default connect(mapStateToProps, { updateData, setError })(LoadingStatus);

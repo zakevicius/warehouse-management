@@ -64,22 +64,35 @@ router.post(
     //Checking if client exists 
     try {
       let client = await Client.findOne({ email });
+      let allClients = await Client.find();
 
       if (client && client.user.toString() === req.user.id) {
         res.status(400).json({ msg: 'Client with this email already exists' });
       } else {
+        // Checking if letter already exists
+        let letterExists = false;
+        for (let i = 0; i < allClients.length; i++) {
+          if (allClients[i].orderLetter === orderLetter && allClients[i]._id !== req.params.id) {
+            letterExists = true;
+            break;
+          }
+        }
 
-        // Creating new Client
-        client = new Client({
-          name,
-          email,
-          phone,
-          orderLetter,
-          user: req.user.id
-        });
+        if (letterExists) {
+          res.status(400).json({ msg: 'Letter already taken' })
+        } else {
+          // Creating new Client
+          client = new Client({
+            name,
+            email,
+            phone,
+            orderLetter,
+            user: req.user.id
+          });
 
-        await client.save();
-        res.json(client);
+          await client.save();
+          res.json(client);
+        }
       }
     } catch (err) {
       console.error(err.message);
@@ -120,14 +133,27 @@ router.put('/:id', auth, async (req, res) => {
       }
     }
 
-    // Update client
-    client = await Client.findByIdAndUpdate(
-      req.params.id,
-      { $set: newClientInformation },
-      { new: true }
-    )
+    let allClients = Client.find();
+    let letterExists = false;
+    for (let i = 0; i < allClients.length; i++) {
+      if (allClients[i].orderLetter === orderLetter && allClients[i]._id !== req.params.id) {
+        letterExists = true;
+        break;
+      }
+    }
 
-    res.json(client);
+    if (letterExists) {
+      res.status(400).json({ msg: 'Letter already taken' })
+    } else {
+      // Update client
+      client = await Client.findByIdAndUpdate(
+        req.params.id,
+        { $set: newClientInformation },
+        { new: true }
+      )
+
+      res.json(client);
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Server error updating client' });

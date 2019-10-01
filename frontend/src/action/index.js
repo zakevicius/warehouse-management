@@ -164,7 +164,7 @@ export const updateData = (typeOfData, data, id) => async dispatch => {
         dispatch({ type: requestType, payload: res.data });
 
         setTimeout(() => {
-            history.push(`${typeOfData}/${id}${typeOfData === '/clients' && '/page/1'}`);
+            history.push(`${typeOfData}/${id}${typeOfData === '/clients' ? '/page/1' : ""}`);
         }, 1000);
     } catch (err) {
         let message = err.response ? err.response.data.msg : err.message;
@@ -301,9 +301,9 @@ const setErrorType = type => {
         case '/orders':
             return types.ORDER_ERROR;
         case '/loadings':
-            return types.CLIENT_ERROR;
-        case '/clients':
             return types.LOADING_ERROR;
+        case '/clients':
+            return types.CLIENT_ERROR;
         default:
             return null;
     };
