@@ -72,7 +72,7 @@ class LoadingEdit extends Component {
       truck: this.state.truck,
       trailer: this.state.trailer,
       orders: this.state.ordersToLoad.map(order => order._id),
-      status: 'waiting',
+      status: 'waiting to load',
       totalQnt,
       totalBruto
     }, this.props.loading.data._id);

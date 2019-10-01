@@ -9,6 +9,7 @@ const ObjectID = require('mongodb').ObjectID;
 // const Client = require('../models/Client');
 const Order = require('../models/Order');
 const Client = require('../models/Client');
+const Loading = require('../models/Loading');
 
 // @route       GET api/orders
 // @desc        Get all users orders
@@ -87,6 +88,24 @@ router.post('/', [
       });
       order = await newOrder.save();
 
+      // for (let i = 3; i <= 20; i++) {
+      //   const newOrder = new Order({
+      //     user: req.user.id,
+      //     orderID: `DEMO${i}`,
+      //     sender: `DEMO${i}`,
+      //     receiver: `DEMO${i}`,
+      //     truck: `DEMO${i}${i}${i}`,
+      //     trailer: `DEMO${i}${i}`,
+      //     qnt: `${i * 10}`,
+      //     bruto: `${i * 1000}`,
+      //     description,
+      //     declarations,
+      //     clientID,
+      //     status
+      //   });
+      //   order = await newOrder.save();
+      // }
+
       sendMail(client.email, `Order ${orderID} has arrived to warehouse`, `Order ${orderID} from ${sender} arrived to warehouse`);
 
       res.json(order);
@@ -160,6 +179,16 @@ router.delete('/:id', auth, async (req, res) => {
       }
     }
 
+    // DELETING ORDER FROM LOADING IT WAS INCLUDED IN
+    // Update orders status back from 'loading' to 'in'
+    let loading = await Loading.findById(order.loadingID);
+    const newInfo = { orders: loading.orders.filter(item => item !== order._id.toString()) };
+    await Loading.findByIdAndUpdate(loading._id,
+      { $set: newInfo },
+      { new: true }
+    );
+
+    // DELETING ORDER
     await Order.findByIdAndRemove(req.params.id);
 
     res.json({ msg: 'Order deleted' });
