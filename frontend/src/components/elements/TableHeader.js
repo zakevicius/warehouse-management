@@ -76,20 +76,11 @@ class TableHeader extends Component {
           <thead>
             <tr>
               <th className="one wide center aligned">
-                {
-                  this.props.type === 'loading' ?
-                    (
-                      <Link to={`/${link}/page/1`}>
-                        <Button
-                          button={{ type: 'secondary left floated', text: 'Back' }}
-                        />
-                      </Link>
-                    ) : <Button
-                      button={{ type: "secondary", text: "Back" }}
-                      onClick={() => history.goBack()}
-                    />
-                }
-
+                <Link to={`/${link}/page/1`}>
+                  <Button
+                    button={{ type: 'secondary left floated', text: 'Back' }}
+                  />
+                </Link>
               </th>
               <th className="four wide">
                 {
