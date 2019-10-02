@@ -72,7 +72,7 @@ class LoadingStatus extends Component {
     if (this.state.editStatus) {
       return (
         <Fragment>
-          <form onSubmit={this.onSubmit}>
+          <form onSubmit={this.onSubmit} style={{ 'display': 'flex', 'align-items': 'center' }}>
             <select
               className="ui fluid dropdown one wide"
               name='status'
@@ -96,7 +96,7 @@ class LoadingStatus extends Component {
     } else {
       return (
         <Fragment>
-          <span>{this.state.status.charAt(0).toUpperCase() + this.state.status.slice(1)}</span>
+          <span style={{ 'margin': '5px' }}>{this.state.status.charAt(0).toUpperCase() + this.state.status.slice(1)}</span>
           {this.renderStatusButton()}
         </Fragment>
       )
@@ -105,7 +105,7 @@ class LoadingStatus extends Component {
 
   render() {
     return (
-      <div className="ui segment">
+      <div className="ui segment" style={{ 'display': 'flex', 'align-items': 'center' }}>
         Status: {this.renderStatusList()}
       </div>
     )

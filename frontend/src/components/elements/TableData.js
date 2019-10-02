@@ -98,8 +98,19 @@ class TableData extends Component {
       </tr>);
     }
     const { data } = this.props.client;
-    const firstColumn = ['Name', 'Phone', 'E-mail'];
-    const secondColumn = [data.name, data.phone, data.email];
+    const firstColumn = ['Name', 'Phone'];
+    const secondColumn = [data.name, data.phone];
+
+    // Creating additional email fields
+    let emailNo = 1;
+    data.email.forEach(email => {
+      if (email !== '') {
+        firstColumn.push(`Email ${emailNo}`);
+        secondColumn.push(email);
+        emailNo++;
+      }
+    });
+
     let i = 0;
     return (
       firstColumn.map(text => {
@@ -136,7 +147,7 @@ class TableData extends Component {
           </td>
           <td className="center aligned">{client.name}</td>
           <td>{client.phone}</td>
-          <td>{client.email}</td>
+          <td>{client.email.join(', ')}</td>
         </tr>
       );
     });

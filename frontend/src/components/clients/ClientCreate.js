@@ -9,18 +9,25 @@ class ClientCreate extends Component {
     state = {
         orderLetter: '',
         name: '',
-        email: '',
+        email: [],
         phone: ''
     }
 
-    componentDidMount() {
-    }
-
     onChange = async e => {
-        this.setState({
-            ...this.state,
-            [e.target.name]: e.target.value
-        });
+        let emailFields = ['email1', 'email2', 'email3'];
+        let emails = [...this.state.email]
+        if (emailFields.indexOf(e.target.name) >= 0) {
+            emails[emailFields.indexOf(e.target.name)] = e.target.value;
+            this.setState({
+                ...this.state,
+                email: emails
+            });
+        } else {
+            this.setState({
+                ...this.state,
+                [e.target.name]: e.target.value
+            });
+        }
     }
 
     onSubmit = e => {
@@ -38,8 +45,16 @@ class ClientCreate extends Component {
                         <input type="text" name="name" value={this.state.name} onChange={this.onChange} />
                     </div>
                     <div className="field">
-                        <label htmlFor="email">Email</label>
-                        <input type="email" name="email" value={this.state.email} onChange={this.onChange} />
+                        <label htmlFor="email1">Email</label>
+                        <input type="text" name="email1" value={this.state.email[0]} onChange={this.onChange} />
+                    </div>
+                    <div className="field">
+                        <label htmlFor="email2">Email</label>
+                        <input type="text" name="email2" value={this.state.email[1]} onChange={this.onChange} />
+                    </div>
+                    <div className="field">
+                        <label htmlFor="email3">Email</label>
+                        <input type="text" name="email3" value={this.state.email[2]} onChange={this.onChange} />
                     </div>
                     <div className="field">
                         <label htmlFor="phone">Phone</label>

@@ -48,8 +48,7 @@ router.post(
     auth,
     [
       check('name', 'First name is required').not().isEmpty(),
-      check('orderLetter', 'Last name is required').not().isEmpty(),
-      check('email', 'Email is required').isEmail(),
+      check('orderLetter', 'Last name is required').not().isEmpty()
     ]
   ],
 
@@ -60,6 +59,7 @@ router.post(
     }
 
     const { name, email, phone, orderLetter } = req.body;
+    email = email.filter(item => item !== '');
 
     //Checking if client exists 
     try {
@@ -100,8 +100,9 @@ router.put('/:id', auth, async (req, res) => {
   const newClientInformation = {};
   if (name) newClientInformation.name = name;
   if (orderLetter) newClientInformation.orderLetter = orderLetter;
-  if (email) newClientInformation.email = email;
+  if (email) newClientInformation.email = email.filter(item => item !== '');;
   if (phone) newClientInformation.phone = phone;
+
 
   // Find Client to update
   try {

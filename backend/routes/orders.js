@@ -72,8 +72,8 @@ router.post('/', [
       let orderWithAdditionalID = await Order.findOne({ additionalID });
       let client = await Client.findOne({ _id: clientID });
 
-      if (orderWithID && orderWithID._id.toString() !== order._id.toString()) return res.status(400).json({ msg: 'Order with this ID already exists' });
-      if (orderWithAdditionalID && orderWithAdditionalID._id.toString() !== order._id.toString()) return res.status(400).json({ msg: 'Order with this additional ID already exists' });
+      if (orderWithID) return res.status(400).json({ msg: 'Order with this ID already exists' });
+      if (orderWithAdditionalID && additionalID !== '') return res.status(400).json({ msg: 'Order with this additional ID already exists' });
 
       const newOrder = new Order({
         user: req.user.id,
@@ -90,7 +90,8 @@ router.post('/', [
         clientID,
         status
       });
-      order = await newOrder.save();
+
+      const order = await newOrder.save();
 
       // for (let i = 2; i <= 20; i++) {
       //   const newOrder = new Order({
@@ -111,7 +112,9 @@ router.post('/', [
       //   order = await newOrder.save();
       // }
 
-      sendMail(client.email, `Order ${orderID} has arrived to warehouse`, `Order ${orderID} from ${sender} arrived to warehouse`);
+      client.email.forEach(email => {
+        sendMail(email, `Order ID${orderID} was created`, `Order ID: ${orderID} from ${sender} to ${receiver} was created`);
+      });
 
       res.json(order);
     } catch (err) {
