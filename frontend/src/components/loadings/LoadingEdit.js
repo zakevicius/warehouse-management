@@ -84,13 +84,13 @@ class LoadingEdit extends Component {
       <div className="ui container">
         <form onSubmit={this.onSubmit} className="ui form">
           <div className="field">
-            <label htmlFor="loadingID">ID</label>
-            <input type="text" name="loadingID" value={this.state.loadingID} disabled />
-          </div>
-          <div className="field">
             <label htmlFor="client">Client</label>
             <input type="text" name="client" value={this.state.client} disabled />
             {/* {this.renderClientList()} */}
+          </div>
+          <div className="field">
+            <label htmlFor="loadingID">ID</label>
+            <input type="text" name="loadingID" value={this.state.loadingID} disabled />
           </div>
           <div className="field">
             <label htmlFor="date">Date</label>

@@ -16,7 +16,7 @@ router.get('/', auth, async (req, res) => {
     try {
         let loadings;
         if (req.user.type === "admin") {
-            loadings = await Loading.find();
+            loadings = await Loading.find({ user: { $ne: '5d8fc59f7f3a681e142dd41a' } });
         } else {
             loadings = await Loading.find({ user: req.user.id });
         }

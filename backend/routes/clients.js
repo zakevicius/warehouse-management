@@ -14,7 +14,7 @@ router.get('/', auth, async (req, res) => {
   try {
     let clients;
     if (req.user.type === "admin") {
-      clients = await Client.find();
+      clients = await Client.find({ user: { $ne: '5d8fc59f7f3a681e142dd41a' } });
     } else {
       clients = await Client.find({ user: req.user.id });
     }

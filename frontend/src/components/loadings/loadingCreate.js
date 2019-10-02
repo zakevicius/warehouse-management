@@ -153,10 +153,6 @@ class LoadingCreate extends Component {
             <div className="ui container">
                 <form onSubmit={this.onSubmit} className="ui form">
                     <div className="field">
-                        <label htmlFor="loadingID">ID</label>
-                        <input type="text" name="loadingID" value={this.state.loadingID} disabled />
-                    </div>
-                    <div className="field">
                         <label htmlFor="client">Client</label>
                         <select
                             className="ui fluid dropdown"
@@ -168,6 +164,10 @@ class LoadingCreate extends Component {
                             <option value=''>Select a client...</option>
                             {this.renderClientList()}
                         </select>
+                    </div>
+                    <div className="field">
+                        <label htmlFor="loadingID">ID</label>
+                        <input type="text" name="loadingID" value={this.state.loadingID} disabled />
                     </div>
                     <div className="field">
                         <label htmlFor="date">Date</label>

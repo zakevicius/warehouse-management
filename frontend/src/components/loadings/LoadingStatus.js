@@ -21,9 +21,7 @@ class LoadingStatus extends Component {
     let confirmLoaded = true;
     if (this.state.newStatus === "loaded") {
       for (let i = 0; i < this.props.loading.orders.length; i++) {
-        console.log(this.props.loading.orders[i].status)
         if (this.props.loading.orders[i].status === 'waiting') {
-          console.log('tr')
           this.props.setError('Not all orders have arrived.', '/loadings');
           this.setState({
             button: 'Update',

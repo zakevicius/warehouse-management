@@ -18,7 +18,7 @@ router.get('/', auth, async (req, res) => {
   try {
     let orders;
     if (req.user.type === 'admin') {
-      orders = await Order.find().sort({ date: -1 });
+      orders = await Order.find({ clientID: { $ne: '5d9323e6816b7d3bbcc65f8d' } }).sort({ date: -1 });
     } else {
       orders = await Order.find({ user: req.user.id }).sort({ date: -1 });
     }
@@ -113,7 +113,7 @@ router.post('/', [
       // }
 
       client.email.forEach(email => {
-        sendMail(email, `Order ID${orderID} was created`, `Order ID: ${orderID} from ${sender} to ${receiver} was created`);
+        sendMail(email, `Order ID: ${orderID} was created`, `Order ID: ${orderID} from ${sender} to ${receiver} was created`);
       });
 
       res.json(order);
