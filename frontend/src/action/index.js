@@ -281,6 +281,8 @@ export const setActiveTab = (type, tab) => {
     };
 };
 
+export const clearState = () => ({ type: types.CLEAR_STATE });
+
 // ERRORS HANDLER
 
 export const setError = (msg, type) => {

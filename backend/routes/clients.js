@@ -64,36 +64,25 @@ router.post(
     //Checking if client exists 
     try {
       let client = await Client.findOne({ email });
-      let allClients = await Client.find();
+      let checkClient = await Client.findOne({ orderLetter });
 
       if (client && client.user.toString() === req.user.id) {
-        res.status(400).json({ msg: 'Client with this email already exists' });
-      } else {
-        // Checking if letter already exists
-        let letterExists = false;
-        for (let i = 0; i < allClients.length; i++) {
-          if (allClients[i].orderLetter === orderLetter && allClients[i]._id !== req.params.id) {
-            letterExists = true;
-            break;
-          }
-        }
-
-        if (letterExists) {
-          res.status(400).json({ msg: 'Letter already taken' })
-        } else {
-          // Creating new Client
-          client = new Client({
-            name,
-            email,
-            phone,
-            orderLetter,
-            user: req.user.id
-          });
-
-          await client.save();
-          res.json(client);
-        }
+        return res.status(400).json({ msg: 'Client with this email already exists' });
       }
+      if (checkClient) return res.status(400).json({ msg: 'Letter already taken' });
+
+      // Creating new Client
+      client = new Client({
+        name,
+        email,
+        phone,
+        orderLetter,
+        user: req.user.id
+      });
+
+      await client.save();
+      res.json(client);
+
     } catch (err) {
       console.error(err.message);
       res.status(500).json({ msg: 'Server error creating new client' });
@@ -117,8 +106,10 @@ router.put('/:id', auth, async (req, res) => {
   // Find Client to update
   try {
     let client = await Client.findById(req.params.id);
+    let checkClient = await Client.findOne({ orderLetter });
 
     if (!client) return res.status(404).json({ msg: 'Client not found' });
+    if (checkClient && checkClient._id.toString() !== client._id.toString()) return res.status(400).json({ msg: 'Letter already taken' });
 
     // Make sure user authorized to update client
     const user = await User.findById(req.user.id);
@@ -133,27 +124,14 @@ router.put('/:id', auth, async (req, res) => {
       }
     }
 
-    let allClients = Client.find();
-    let letterExists = false;
-    for (let i = 0; i < allClients.length; i++) {
-      if (allClients[i].orderLetter === orderLetter && allClients[i]._id !== req.params.id) {
-        letterExists = true;
-        break;
-      }
-    }
+    // Update client
+    client = await Client.findByIdAndUpdate(
+      req.params.id,
+      { $set: newClientInformation },
+      { new: true }
+    )
 
-    if (letterExists) {
-      res.status(400).json({ msg: 'Letter already taken' })
-    } else {
-      // Update client
-      client = await Client.findByIdAndUpdate(
-        req.params.id,
-        { $set: newClientInformation },
-        { new: true }
-      )
-
-      res.json(client);
-    }
+    res.json(client);
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Server error updating client' });

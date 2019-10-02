@@ -4,7 +4,8 @@ import {
     CREATE_CLIENT,
     UPDATE_CLIENT,
     DELETE_CLIENT,
-    CLIENT_ERROR
+    CLIENT_ERROR,
+    CLEAR_STATE
 } from '../action/types';
 
 export default (state = { clients: [] }, action) => {
@@ -26,7 +27,9 @@ export default (state = { clients: [] }, action) => {
                 clients: state.clients.filter(client => client._id !== action.payload)
             };
         case CLIENT_ERROR:
-            return { ...state, errors: action.payload };
+            return { ...state, error: action.payload };
+        case CLEAR_STATE:
+            return { clients: [] };
         default:
             return state;
     }

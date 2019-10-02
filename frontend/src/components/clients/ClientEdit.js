@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { updateData, fetchSingleData } from '../../action';
 import Button from '../elements/Button';
+import Error from '../elements/Error';
 
 class ClientEdit extends Component {
     state = {
@@ -22,7 +23,7 @@ class ClientEdit extends Component {
             email,
             phone
         });
-    }
+    } z
 
     onChange = e => {
         this.setState({
@@ -58,11 +59,7 @@ class ClientEdit extends Component {
                     </div>
                     <Button button={{ type: 'primary ', text: 'Submit' }} />
                 </form>
-                {this.props.errors &&
-                    <div className="ui red segment" style={{ color: "#e25353" }}>
-                        <i className="times icon"></i>{this.props.errors}
-                    </div>
-                }
+                {this.props.error && <Error error={this.props.error} />}
             </div>
         );
     }
@@ -71,7 +68,7 @@ class ClientEdit extends Component {
 const mapStateToProps = state => {
     return {
         client: state.clientsData.client.data,
-        errors: state.clientsData.errors
+        error: state.clientsData.error
     }
 }
 

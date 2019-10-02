@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createData, fetchNewID, fetchData } from '../../action';
 import Button from '../elements/Button';
+import Error from '../elements/Error';
 
 class OrderCreate extends Component {
     state = {
@@ -78,7 +79,7 @@ class OrderCreate extends Component {
                 <form onSubmit={this.onSubmit} className="ui form">
                     <div className="field">
                         <label htmlFor="orderID">ID</label>
-                        <input type="text" name="orderID" value={this.state.orderID} disabled />
+                        <input type="text" name="orderID" value={this.state.orderID} onChange={this.onChange} />
                     </div>
                     <div className="field">
                         <label htmlFor="client">Client</label>
@@ -149,6 +150,7 @@ class OrderCreate extends Component {
                     </div>
                     <Button button={{ type: 'primary ', text: 'Submit' }} />
                 </form>
+                {this.props.error && <Error error={this.props.error} />}
             </div>
         );
     }
@@ -157,7 +159,8 @@ class OrderCreate extends Component {
 const mapStateToProps = state => {
     return {
         id: state.ordersData.newOrderID,
-        clients: state.clientsData.clients
+        clients: state.clientsData.clients,
+        error: state.ordersData.error
     }
 }
 
@@ -165,5 +168,5 @@ export default connect(mapStateToProps,
     {
         createData,
         fetchNewID,
-        fetchData,
+        fetchData
     })(OrderCreate);

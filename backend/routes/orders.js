@@ -48,6 +48,7 @@ router.get('/:id', auth, async (req, res) => {
 router.post('/', [
   auth,
   [
+    check('orderID', 'Order ID is require').not().isEmpty(),
     check('sender', 'Sender is required').not().isEmpty(),
     check('receiver', 'Receiver is required').not().isEmpty(),
     check('truck', 'Truck is required').not().isEmpty(),
@@ -67,10 +68,12 @@ router.post('/', [
     const { additionalID, sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status } = req.body;
 
     try {
-      let order = await Order.findOne({ orderID });
+      let orderWithID = await Order.findOne({ orderID });
+      let orderWithAdditionalID = await Order.findOne({ additionalID });
       let client = await Client.findOne({ _id: clientID });
 
-      if (order) throw { exists: 'Order with this ID already exists' };
+      if (orderWithID && orderWithID._id.toString() !== order._id.toString()) return res.status(400).json({ msg: 'Order with this ID already exists' });
+      if (orderWithAdditionalID && orderWithAdditionalID._id.toString() !== order._id.toString()) return res.status(400).json({ msg: 'Order with this additional ID already exists' });
 
       const newOrder = new Order({
         user: req.user.id,
@@ -144,6 +147,12 @@ router.put('/:id', auth, async (req, res) => {
     let order = await Order.findById(req.params.id);
 
     if (!order) res.status(404).json({ msg: 'Order not found' });
+
+    let orderWithID = await Order.findOne({ orderID });
+    let orderWithAdditionalID = await Order.findOne({ additionalID });
+
+    if (orderWithID && orderWithID._id.toString() !== order._id.toString()) return res.status(400).json({ msg: 'Order with this ID already exists' });
+    if (orderWithAdditionalID && orderWithAdditionalID._id.toString() !== order._id.toString()) return res.status(400).json({ msg: 'Order with this additional ID already exists' });
 
     // Check if user authorized
     if (order.user.toString() !== req.user.id) {

@@ -6,7 +6,8 @@ import {
   DELETE_FILE,
   FETCH_FILES,
   DOWNLOAD_FILE,
-  FILE_ERROR
+  FILE_ERROR,
+  CLEAR_STATE
 } from '../action/types';
 
 const initialState = {
@@ -53,6 +54,8 @@ export default (state = initialState, action) => {
       return { ...state, filesToUpload: [] };
     case FILE_ERROR:
       return { ...state, error: action.payload };
+    case CLEAR_STATE:
+      return { initialState };
     default:
       return state;
   }

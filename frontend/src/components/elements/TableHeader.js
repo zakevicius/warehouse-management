@@ -153,6 +153,7 @@ class TableHeader extends Component {
             <tr>
               <th className="two wide center aligned"></th>
               <th className="two wide center aligned">Cargo ID</th>
+              <th className="two wide center aligned">Additional ID</th>
               <th className="two wide center aligned">Date</th>
               <th className="two wide center aligned">Sender</th>
               <th className="two wide center aligned">Receiver</th>

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { createData } from '../../action';
 import Button from '../elements/Button';
 import Spinner from '../elements/Spinner';
+import Error from '../elements/Error';
 
 class ClientCreate extends Component {
     state = {
@@ -50,11 +51,7 @@ class ClientCreate extends Component {
                     </div>
                     <Button button={{ type: 'primary ', text: 'Submit' }} />
                 </form>
-                {this.props.errors &&
-                    <div className="ui red segment" style={{ color: "#e25353" }}>
-                        <i className="times icon"></i>{this.props.errors}
-                    </div>
-                }
+                {this.props.error && <Error error={this.props.error} />}
             </div>
         );
     }
@@ -62,7 +59,7 @@ class ClientCreate extends Component {
 
 const mapStateToProps = state => {
     return {
-        errors: state.clientsData.errors,
+        error: state.clientsData.error,
         load: state.eventsData.load
     }
 }

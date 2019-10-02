@@ -11,10 +11,6 @@ class ClientShow extends Component {
         this.props.setActiveTab('clients');
     }
 
-    // componentDidUpdate() {
-    //     this.render();
-    // }
-
     render() {
         if (!this.props.client || this.props.load) return <Spinner />;
         return (

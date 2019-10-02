@@ -18,7 +18,7 @@ class LoadingEdit extends Component {
 
   async componentWillMount() {
     await this.props.fetchSingleData('/clients', this.props.loading.data.clientID);
-    const { loadingID, truck, trailer, date } = this.props.loading.data;
+    const { loadingID, truck, trailer, date, status } = this.props.loading.data;
     const client = this.props.loading.client.name;
     const ordersToLoad = this.props.loading.orders;
     const ordersList = this.props.client.orders.filter(order => (order.status === 'in' || order.status === 'waiting') && order.loadingID === null);
@@ -29,9 +29,10 @@ class LoadingEdit extends Component {
       date,
       trailer,
       ordersToLoad,
-      ordersList
+      ordersList,
+      status
     });
-  }
+  } z
 
   addOrderToLoading = (order) => {
     this.setState({
@@ -72,7 +73,7 @@ class LoadingEdit extends Component {
       truck: this.state.truck,
       trailer: this.state.trailer,
       orders: this.state.ordersToLoad.map(order => order._id),
-      status: 'waiting to load',
+      status: this.state.status,
       totalQnt: totalQnt.toFixed(3),
       totalBruto: totalBruto.toFixed(3)
     }, this.props.loading.data._id);

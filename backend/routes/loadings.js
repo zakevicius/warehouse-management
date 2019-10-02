@@ -102,7 +102,10 @@ router.post(
                 res.status(500).json({ msg: 'Server error updating order status' });
             }
 
-            sendMail('m.zakevicius@gmail.com', `${client} created new loading`, `New loading ID:${loadingID} was created by ${client}`);
+            logwayEmails.forEach(email => {
+                sendMail(email, `${client} created new loading`, `New loading ID:${loadingID} was created by ${client}`);
+            });
+
             res.json(loading);
         } catch (err) {
             console.error(err.message);
@@ -291,5 +294,7 @@ const sendMail = (to, subject, text) => {
         }
     })
 }
+
+const logwayEmails = ['m.zakevicius@gmail.com', 'm.zakevicius@gmail.com'];
 
 module.exports = router; 
