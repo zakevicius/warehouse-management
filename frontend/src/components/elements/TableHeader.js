@@ -128,13 +128,13 @@ class TableHeader extends Component {
                   <Button button={{ type: 'primary basic', text: 'New loading' }} />
                 </Link>
               </th>
-              <th>Status</th>
-              <th>ID</th>
-              <th>Date</th>
-              <th>Truck</th>
-              <th>Trailer</th>
-              <th>Total CLL</th>
-              <th>Total Bruto</th>
+              <th className="two wide center aligned">Status</th>
+              <th className="two wide center aligned">ID</th>
+              <th className="two wide center aligned">Date</th>
+              <th className="two wide center aligned">Truck</th>
+              <th className="two wide center aligned">Trailer</th>
+              <th className="two wide center aligned">Total CLL</th>
+              <th className="two wide center aligned">Total Bruto</th>
             </tr>
           </thead>
         );

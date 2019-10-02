@@ -5,7 +5,6 @@ import Button from './Button';
 import FileUpload from '../files/FileUpload';
 import FileList from '../files/FileList';
 import CommentList from '../comments/CommentList';
-import Error from '../elements/Error';
 
 class TableData extends Component {
   constructor(props) {
