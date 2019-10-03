@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchSingleData, fetchData } from '../../action'
+import { fetchSingleData, fetchData, setActiveTab } from '../../action'
 import Table from '../elements/Table';
 import Spinner from '../elements/Spinner';
 
@@ -8,6 +8,7 @@ class OrderShow extends Component {
   componentDidMount() {
     this.props.fetchSingleData('/orders', this.props.match.params.id);
     this.props.fetchData('/files', this.props.match.params.id);
+    this.props.setActiveTab('orders');
   }
 
   render() {
@@ -22,4 +23,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { fetchSingleData, fetchData })(OrderShow);
+export default connect(mapStateToProps, { fetchSingleData, fetchData, setActiveTab })(OrderShow);

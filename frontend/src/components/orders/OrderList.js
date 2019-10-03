@@ -13,8 +13,8 @@ class OrderList extends Component {
 
   componentDidMount() {
     this.props.clearFilter();
+    this.props.setActiveTab("orders");
     if (!this.props.ordersToShow) {
-      this.props.setActiveTab("orders");
       this.props.fetchData("/orders");
     }
   }

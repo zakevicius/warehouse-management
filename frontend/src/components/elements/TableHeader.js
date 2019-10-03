@@ -76,11 +76,12 @@ class TableHeader extends Component {
           <thead>
             <tr>
               <th className="one wide center aligned">
-                <Link to={`/${link}/page/1`}>
-                  <Button
-                    button={{ type: 'secondary left floated', text: 'Back' }}
-                  />
-                </Link>
+                {/* <Link to={`/${link}/page/1`}> */}
+                <Button
+                  button={{ type: 'secondary left floated', text: 'Back' }}
+                  onClick={() => history.goBack()}
+                />
+                {/* </Link> */}
               </th>
               <th className="four wide">
                 {
@@ -157,6 +158,7 @@ class TableHeader extends Component {
         return (
           <thead>
             <tr>
+              <th className="one wide center aligned"></th>
               <th className="two wide center aligned">Cargo ID</th>
               <th className="two wide center aligned">Date</th>
               <th className="two wide center aligned">Sender</th>

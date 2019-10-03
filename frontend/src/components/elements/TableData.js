@@ -28,40 +28,74 @@ class TableData extends Component {
         </td>
       </tr>);
     }
+
     const order = this.props.order;
-    const firstColumn = ['ID', 'Additional ID', 'Status', 'Date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description'];
+    const firstColumn = ['ID', 'Additional ID', 'Status', 'Date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description', 'Declarations'];
     const secondColumn = [order.orderID, order.additionalID, order.status, order.date.split('T')[0], order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description];
+
+    const renderDeclarations = decl => {
+      return (
+        <td>
+          {order.declarations.map(decl => (
+            <p key={decl}>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href={`https://ec.europa.eu/taxation_customs/dds2/ecs/ecs_home.jsp?Lang=en&MRN=${decl}&Expand=true`}
+              >
+                {decl}
+              </a>
+            </p>
+          ))}
+        </td>
+      )
+    }
+    const renderStatus = status => {
+      // switch (status) {
+      //   case 'waiting to load':
+      //   case 'loading':
+      //   case 'out':
+      if (order.loadingID !== null) {
+        return (
+          <td style={{ 'display': 'flex', 'alignItems': 'center' }}>
+            <span style={{ 'marginRight': '10px' }}>{status}</span>
+            <Link to={`/loadings/${order.loadingID}`}>
+              <Button button={{ type: "secondary inverted", text: 'Go to loading' }} />
+            </Link>
+          </td>
+        );
+      } else {
+        //   default:
+        return (
+          <td>{status}</td>
+        )
+        // }
+
+      }
+    }
+    const renderInfo = i => {
+      if (i === 3) {
+        return renderStatus(order.status);
+      } else if (i === firstColumn.length) {
+        return renderDeclarations(order.declarations)
+      } else {
+        return <td>{secondColumn[i - 1]}</td>
+      }
+    }
+
     let i = 0;
     return (
-      <Fragment>
-        {firstColumn.map(text => {
-          i++;
-          return (
-            <tr key={i}>
-              <td className="right aligned" style={{ fontWeight: "bold" }}>{text}</td>
-              <td>{secondColumn[i - 1]}</td>
-              {i === 1 && <td rowSpan={secondColumn.length - 3}><FileList id={order._id} type="showFiles" /></td>}
-              {i === secondColumn.length - 2 && <td rowSpan="3"><FileUpload id={order._id} /></td>}
-            </tr >
-          );
-        })};
-      <tr>
-          <td className="right aligned" style={{ fontWeight: "bold" }}>Declarations</td>
-          <td>
-            {order.declarations.map(decl => (
-              <p>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={`https://ec.europa.eu/taxation_customs/dds2/ecs/ecs_home.jsp?Lang=en&MRN=${decl}&Expand=true`}
-                >
-                  {decl}
-                </a>
-              </p>
-            ))}
-          </td>
-        </tr>
-      </Fragment>
+      firstColumn.map(text => {
+        i++;
+        return (
+          <tr key={i}>
+            <td className="right aligned" style={{ fontWeight: "bold" }}>{text}</td>
+            {renderInfo(i)}
+            {i === 1 && <td rowSpan={secondColumn.length - 3}><FileList id={order._id} type="showFiles" /></td>}
+            {i === secondColumn.length - 2 && <td rowSpan="3"><FileUpload id={order._id} /></td>}
+          </tr >
+        );
+      })
     );
   }
 
@@ -277,6 +311,11 @@ class TableData extends Component {
     return dataOnPage.map(order => {
       return (
         <tr key={order._id}>
+          <td className="center aligned">
+            <Link to={`/orders/${order._id}`} >
+              {this.renderButton()}
+            </Link>
+          </td>
           <td className="center aligned">{order.orderID}</td>
           <td className="center aligned">{order.date.split('T')[0]}</td>
           <td className="center aligned">{order.sender}</td>
