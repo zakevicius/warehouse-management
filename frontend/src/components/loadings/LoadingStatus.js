@@ -70,7 +70,7 @@ class LoadingStatus extends Component {
     if (this.state.editStatus) {
       return (
         <Fragment>
-          <form onSubmit={this.onSubmit} style={{ 'display': 'flex', 'align-items': 'center' }}>
+          <form onSubmit={this.onSubmit} style={{ 'display': 'flex', 'alignItems': 'center' }}>
             <select
               className="ui fluid dropdown one wide"
               name='status'
@@ -103,7 +103,7 @@ class LoadingStatus extends Component {
 
   render() {
     return (
-      <div className="ui segment" style={{ 'display': 'flex', 'align-items': 'center' }}>
+      <div className="ui segment" style={{ 'display': 'flex', 'alignItems': 'center' }}>
         Status: {this.renderStatusList()}
       </div>
     )

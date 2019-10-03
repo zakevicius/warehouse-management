@@ -154,8 +154,13 @@ router.put('/:id', auth, async (req, res) => {
     let orderWithID = await Order.findOne({ orderID });
     let orderWithAdditionalID = await Order.findOne({ additionalID });
 
-    if (orderWithID && orderWithID._id.toString() !== order._id.toString()) return res.status(400).json({ msg: 'Order with this ID already exists' });
-    if (orderWithAdditionalID && orderWithAdditionalID._id.toString() !== order._id.toString()) return res.status(400).json({ msg: 'Order with this additional ID already exists' });
+    if (orderWithID && orderWithID._id.toString() !== order._id.toString()) {
+      return res.status(400).json({ msg: 'Order with this ID already exists' });
+    }
+    if (orderWithAdditionalID && orderWithAdditionalID._id.toString() !== order._id.toString() && additionalID !== '') {
+      return res.status(400).json({ msg: 'Order with this additional ID already exists' });
+    }
+
 
     // Check if user authorized
     if (order.user.toString() !== req.user.id) {
