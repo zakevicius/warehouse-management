@@ -9,6 +9,10 @@ const OrderSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  additionalID: {
+    type: String,
+    required: false
+  },
   date: {
     type: Date,
     default: Date.now
@@ -72,6 +76,11 @@ const OrderSchema = mongoose.Schema({
   clientID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'clients'
+  },
+  loadingID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'loadings',
+    default: null
   }
 });
 

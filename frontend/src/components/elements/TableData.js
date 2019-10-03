@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Button from './Button';
 import FileUpload from '../files/FileUpload';
 import FileList from '../files/FileList';
@@ -28,21 +29,39 @@ class TableData extends Component {
       </tr>);
     }
     const order = this.props.order;
-    const firstColumn = ['ID', 'Status', 'Date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description', 'Declarations'];
-    const secondColumn = [order.orderID, order.status, order.date.split('T')[0], order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description, order.declarations.join(', ')];
+    const firstColumn = ['ID', 'Additional ID', 'Status', 'Date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description'];
+    const secondColumn = [order.orderID, order.additionalID, order.status, order.date.split('T')[0], order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description];
     let i = 0;
     return (
-      firstColumn.map(text => {
-        i++;
-        return (
-          <tr key={i}>
-            <td className="right aligned" style={{ fontWeight: "bold" }}>{text}</td>
-            <td>{secondColumn[i - 1]}</td>
-            {i === 1 && <td rowSpan={secondColumn.length - 3}><FileList id={order._id} type="showFiles" /></td>}
-            {i === secondColumn.length - 2 && <td rowSpan="3"><FileUpload id={order._id} /></td>}
-          </tr >
-        );
-      })
+      <Fragment>
+        {firstColumn.map(text => {
+          i++;
+          return (
+            <tr key={i}>
+              <td className="right aligned" style={{ fontWeight: "bold" }}>{text}</td>
+              <td>{secondColumn[i - 1]}</td>
+              {i === 1 && <td rowSpan={secondColumn.length - 3}><FileList id={order._id} type="showFiles" /></td>}
+              {i === secondColumn.length - 2 && <td rowSpan="3"><FileUpload id={order._id} /></td>}
+            </tr >
+          );
+        })};
+      <tr>
+          <td className="right aligned" style={{ fontWeight: "bold" }}>Declarations</td>
+          <td>
+            {order.declarations.map(decl => (
+              <p>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`https://ec.europa.eu/taxation_customs/dds2/ecs/ecs_home.jsp?Lang=en&MRN=${decl}&Expand=true`}
+                >
+                  {decl}
+                </a>
+              </p>
+            ))}
+          </td>
+        </tr>
+      </Fragment>
     );
   }
 
@@ -69,6 +88,7 @@ class TableData extends Component {
             </td>
             <td className="center aligned">{order.status}</td>
             <td className="center aligned">{order.orderID}</td>
+            <td className="center aligned">{order.additionalID}</td>
             <td className="center aligned">{order.date.split('T')[0]}</td>
             <td>{order.sender}</td>
             <td>{order.receiver}</td>
@@ -97,8 +117,19 @@ class TableData extends Component {
       </tr>);
     }
     const { data } = this.props.client;
-    const firstColumn = ['Name', 'Phone', 'E-mail'];
-    const secondColumn = [data.name, data.phone, data.email];
+    const firstColumn = ['Name', 'Phone'];
+    const secondColumn = [data.name, data.phone];
+
+    // Creating additional email fields
+    let emailNo = 1;
+    data.email.forEach(email => {
+      if (email !== '') {
+        firstColumn.push(`Email ${emailNo}`);
+        secondColumn.push(email);
+        emailNo++;
+      }
+    });
+
     let i = 0;
     return (
       firstColumn.map(text => {
@@ -135,7 +166,7 @@ class TableData extends Component {
           </td>
           <td className="center aligned">{client.name}</td>
           <td>{client.phone}</td>
-          <td>{client.email}</td>
+          <td>{client.email.join(', ')}</td>
         </tr>
       );
     });
@@ -225,6 +256,7 @@ class TableData extends Component {
               {this.renderAddRemove(order._id)}
             </td>
             <td className="center aligned">{order.orderID}</td>
+            <td className="center aligned">{order.additionalID}</td>
             <td className="center aligned">{order.date.split('T')[0]}</td>
             <td className="center aligned">{order.sender}</td>
             <td className="center aligned">{order.receiver}</td>
@@ -379,6 +411,7 @@ class TableData extends Component {
       }
     }
   }
+
   render() {
     return (
       <tbody>
@@ -388,5 +421,15 @@ class TableData extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    errors: [
+      state.clientsData.error,
+      state.loadingsData.error,
+      state.ordersData.error,
+      state.filesData.error
+    ]
+  }
+};
 
-export default TableData;
+export default connect(mapStateToProps, {})(TableData);

@@ -16,7 +16,7 @@ router.get('/', auth, async (req, res) => {
     try {
         let loadings;
         if (req.user.type === "admin") {
-            loadings = await Loading.find();
+            loadings = await Loading.find({ user: { $ne: '5d8fc59f7f3a681e142dd41a' } });
         } else {
             loadings = await Loading.find({ user: req.user.id });
         }
@@ -81,19 +81,31 @@ router.post(
 
             // Udating order status
             try {
-                orders.forEach(async id => {
-                    const newInfo = { status: 'waiting to load', loadingID: loading._id };
-                    order = await Order.findByIdAndUpdate(id,
-                        { $set: newInfo },
-                        { new: true }
-                    );
-                })
+                let orderStatus;
+                await (async () => {
+                    for (const id of orders) {
+                        orderToUpdate = await Order.findOne({ _id: id });
+                        if (orderToUpdate.status === "waiting") {
+                            orderStatus = "waiting"
+                        } else {
+                            orderStatus = status;
+                        }
+                        await Order.findByIdAndUpdate(
+                            id,
+                            { $set: { status: orderStatus, loadingID: loading._id } },
+                            { new: true }
+                        )
+                    }
+                })();
             } catch (err) {
                 console.error(err.message);
                 res.status(500).json({ msg: 'Server error updating order status' });
             }
 
-            sendMail('m.zakevicius@gmail.com', `${client} created new loading`, `New loading ID:${loadingID} was created by ${client}`);
+            logwayEmails.forEach(email => {
+                sendMail(email, `${client} created new loading`, `New loading ID:${loadingID} was created by ${client}`);
+            });
+
             res.json(loading);
         } catch (err) {
             console.error(err.message);
@@ -120,7 +132,7 @@ router.put('/:id', auth, async (req, res) => {
 
     // Find Loading to update
     try {
-        let loading = await Loading.findById(req.params.id);
+        let loading = await Loading.findOne({ _id: req.params.id });
 
         if (!loading) return res.status(404).json({ msg: 'Loading not found' });
 
@@ -138,31 +150,62 @@ router.put('/:id', auth, async (req, res) => {
         }
 
         // Update loading
-        loading = await Loading.findByIdAndUpdate(
-            req.params.id,
+        loading = await Loading.findOneAndUpdate(
+            { _id: req.params.id },
             { $set: newLoadingInformation },
             { new: true }
         );
 
         // Udating order status
         if (orders) {
-            await Order.updateMany(
-                { loadingID: loading._id },
-                { $set: { status: 'in', loadingID: null } },
-                { multi: true }
-            );
+            let ordersToUpdate = await Order.find({ loadingID: loading._id });
+
+            await (async () => {
+                for (const item of ordersToUpdate) {
+                    let orderStatus;
+                    if (item.status === "waiting") {
+                        orderStatus = "waiting"
+                    } else {
+                        orderStatus = "in"
+                    }
+                    await Order.findByIdAndUpdate(
+                        item._id,
+                        { $set: { status: orderStatus, loadingID: null } },
+                        { new: true }
+                    )
+                }
+            })();
+            // await Order.updateMany(
+            //     { loadingID: loading._id },
+            //     { $set: { status: status === 'waiting' ? 'waiting' : 'in', loadingID: null } },
+            //     { multi: true }
+            // );
         }
 
         if (orders) {
-            status = status === 'loaded' ? 'out' : status;
+            await (async () => {
+                for (const id of orders) {
+                    orderToUpdate = await Order.findOne({ _id: id });
+                    if (orderToUpdate.status === "waiting") {
+                        newStatus = "waiting";
+                    } else {
+                        newStatus = status === 'loaded' ? 'out' : status;
+                    }
+                    await Order.findByIdAndUpdate(
+                        id,
+                        { $set: { status: newStatus, loadingID: loading._id } },
+                        { new: true }
+                    )
+                }
+            })();
 
-            orders.forEach(async id => {
-                const newInfo = { status: status, loadingID: loading._id };
-                order = await Order.findByIdAndUpdate(id,
-                    { $set: newInfo },
-                    { new: true }
-                );
-            });
+            // orders.forEach(async id => {
+            //     const newInfo = { status: status, loadingID: loading._id };
+            //     order = await Order.findByIdAndUpdate(id,
+            //         { $set: newInfo },
+            //         { new: true }
+            //     );
+            // });
         }
 
         res.json(loading);
@@ -193,15 +236,33 @@ router.delete('/:id', auth, async (req, res) => {
             }
         }
 
-        // Update orders status back from 'loading' to 'in'
+        // Update orders status back from 'loading'
         try {
-            loading.orders.forEach(async id => {
-                const newInfo = { status: 'in', loadingID: null };
-                order = await Order.findByIdAndUpdate(id,
-                    { $set: newInfo },
-                    { new: true }
-                );
-            })
+            let orderStatus;
+            await (async () => {
+                for (const id of loading.orders) {
+                    orderToUpdate = await Order.findOne({ _id: id });
+                    if (orderToUpdate.status === "waiting") {
+                        orderStatus = "waiting"
+                    } else {
+                        orderStatus = "in";
+                    }
+                    await Order.findByIdAndUpdate(
+                        id,
+                        { $set: { status: orderStatus, loadingID: null } },
+                        { new: true }
+                    )
+
+                }
+            })();
+
+            // loading.orders.forEach(async id => {
+            //     const newInfo = { status: 'in', loadingID: null };
+            //     order = await Order.findByIdAndUpdate(id,
+            //         { $set: newInfo },
+            //         { new: true }
+            //     );
+            // })
         } catch (err) {
             console.error(err.message);
             res.status(500).json({ msg: 'Server error updating order status' });
@@ -233,5 +294,7 @@ const sendMail = (to, subject, text) => {
         }
     })
 }
+
+const logwayEmails = ['m.zakevicius@gmail.com', 'm.zakevicius@gmail.com'];
 
 module.exports = router; 

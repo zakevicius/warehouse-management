@@ -90,7 +90,7 @@ class LoadingCreate extends Component {
             // get orders for selected client
             await this.props.fetchSingleData('/clients', client._id)
                 .then(() => {
-                    const availableOrders = this.props.client.orders.filter(order => order.status === 'in');
+                    const availableOrders = this.props.client.orders.filter(order => (order.status === 'in' || order.status === 'waiting') && !order.loadingID);
                     this.setState({
                         ordersList: [
                             ...this.state.ordersList,
@@ -143,8 +143,8 @@ class LoadingCreate extends Component {
             orders: this.state.ordersToLoad.map(order => order._id),
             status: 'waiting to load',
             client: this.state.client,
-            totalQnt,
-            totalBruto
+            totalQnt: totalQnt.toFixed(3),
+            totalBruto: totalBruto.toFixed(3)
         });
     };
 
@@ -152,10 +152,6 @@ class LoadingCreate extends Component {
         return (
             <div className="ui container">
                 <form onSubmit={this.onSubmit} className="ui form">
-                    <div className="field">
-                        <label htmlFor="loadingID">ID</label>
-                        <input type="text" name="loadingID" value={this.state.loadingID} disabled />
-                    </div>
                     <div className="field">
                         <label htmlFor="client">Client</label>
                         <select
@@ -168,6 +164,10 @@ class LoadingCreate extends Component {
                             <option value=''>Select a client...</option>
                             {this.renderClientList()}
                         </select>
+                    </div>
+                    <div className="field">
+                        <label htmlFor="loadingID">ID</label>
+                        <input type="text" name="loadingID" value={this.state.loadingID} disabled />
                     </div>
                     <div className="field">
                         <label htmlFor="date">Date</label>

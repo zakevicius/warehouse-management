@@ -22,7 +22,8 @@ export const login = (user) => async (dispatch) => {
             dispatch({ type: types.USER_LOADED, payload: res.data });
             dispatch({ type: types.UNSET_LOADING });
         } catch (err) {
-            dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
+            let message = err.response ? err.response.data.msg : err.message;
+            dispatch({ type: types.AUTH_ERROR, payload: message });
             dispatch({ type: types.UNSET_LOADING });
         }
     };
@@ -34,7 +35,8 @@ export const login = (user) => async (dispatch) => {
         dispatch({ type: types.LOGIN_SUCCESS, payload: res.data });
         loadUser();
     } catch (err) {
-        dispatch({ type: types.AUTH_ERROR, payload: err.response.data.msg });
+        let message = err.response ? err.response.data.msg : err.message;
+        dispatch({ type: types.AUTH_ERROR, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
 };
@@ -59,8 +61,9 @@ export const fetchData = (typeOfData, id = null) => async (dispatch) => {
         dispatch({ type: requestType, payload: res.data });
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
+        let message = err.response ? err.response.data.msg : err.message;
         let errorType = setErrorType(typeOfData);
-        dispatch({ type: errorType, payload: err.response.data.msg });
+        dispatch({ type: errorType, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
 };
@@ -75,8 +78,9 @@ export const fetchSingleData = (typeOfData, id) => async dispatch => {
         dispatch({ type: requestType, payload: res.data });
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
+        let message = err.response ? err.response.data.msg : err.message;
         let errorType = setErrorType(typeOfData);
-        dispatch({ type: errorType, payload: err.response.data.msg });
+        dispatch({ type: errorType, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
 }
@@ -94,8 +98,9 @@ export const createData = (typeOfData, data) => async dispatch => {
         }, 500);
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
+        let message = err.response ? err.response.data.msg : err.message;
         let errorType = setErrorType(typeOfData);
-        dispatch({ type: errorType, payload: err.response.data.msg });
+        dispatch({ type: errorType, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
 }
@@ -142,8 +147,9 @@ export const fetchNewID = (clientID, type) => async dispatch => {
         }
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
+        let message = err.response ? err.response.data.msg : err.message;
         let errorType = setErrorType(type);
-        dispatch({ type: errorType, payload: err.response.data.msg });
+        dispatch({ type: errorType, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
 }
@@ -158,11 +164,12 @@ export const updateData = (typeOfData, data, id) => async dispatch => {
         dispatch({ type: requestType, payload: res.data });
 
         setTimeout(() => {
-            history.push(`${typeOfData}/${id}${typeOfData === '/clients' && '/page/1'}`);
+            history.push(`${typeOfData}/${id}${typeOfData === '/clients' ? '/page/1' : ""}`);
         }, 1000);
     } catch (err) {
+        let message = err.response ? err.response.data.msg : err.message;
         let errorType = setErrorType(typeOfData);
-        dispatch({ type: errorType, payload: err.response.data.msg });
+        dispatch({ type: errorType, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
 }
@@ -183,8 +190,9 @@ export const removeData = (typeOfData, id) => async dispatch => {
             dispatch({ type: types.UNSET_LOADING });
         }
     } catch (err) {
+        let message = err.response ? err.response.data.msg : err.message;
         let errorType = setErrorType(typeOfData);
-        dispatch({ type: errorType, payload: err.response.data.msg });
+        dispatch({ type: errorType, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
 }
@@ -213,7 +221,8 @@ export const uploadFiles = (files, id) => async dispatch => {
         dispatch({ type: types.UPLOAD_FILES, payload: res.data });
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
-        dispatch({ type: types.FILE_ERROR, payload: err.response.data.msg });
+        let message = err.response ? err.response.data.msg : err.message;
+        dispatch({ type: types.FILE_ERROR, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
 }
@@ -256,7 +265,8 @@ export const downloadFile = (id, filename) => async dispatch => {
         dispatch({ type: types.DOWNLOAD_FILE, payload: res.data });
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
-        dispatch({ type: types.FILE_ERROR, payload: err.response.data.msg });
+        let message = err.response ? err.response.data.msg : err.message;
+        dispatch({ type: types.FILE_ERROR, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
 }
@@ -270,6 +280,8 @@ export const setActiveTab = (type, tab) => {
         payload: tab
     };
 };
+
+export const clearState = () => ({ type: types.CLEAR_STATE });
 
 // ERRORS HANDLER
 
@@ -291,9 +303,9 @@ const setErrorType = type => {
         case '/orders':
             return types.ORDER_ERROR;
         case '/loadings':
-            return types.CLIENT_ERROR;
-        case '/clients':
             return types.LOADING_ERROR;
+        case '/clients':
+            return types.CLIENT_ERROR;
         default:
             return null;
     };

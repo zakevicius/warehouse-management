@@ -9,6 +9,7 @@ const ObjectID = require('mongodb').ObjectID;
 // const Client = require('../models/Client');
 const Order = require('../models/Order');
 const Client = require('../models/Client');
+const Loading = require('../models/Loading');
 
 // @route       GET api/orders
 // @desc        Get all users orders
@@ -17,7 +18,7 @@ router.get('/', auth, async (req, res) => {
   try {
     let orders;
     if (req.user.type === 'admin') {
-      orders = await Order.find().sort({ date: -1 });
+      orders = await Order.find({ clientID: { $ne: '5d9323e6816b7d3bbcc65f8d' } }).sort({ date: -1 });
     } else {
       orders = await Order.find({ user: req.user.id }).sort({ date: -1 });
     }
@@ -47,6 +48,7 @@ router.get('/:id', auth, async (req, res) => {
 router.post('/', [
   auth,
   [
+    check('orderID', 'Order ID is require').not().isEmpty(),
     check('sender', 'Sender is required').not().isEmpty(),
     check('receiver', 'Receiver is required').not().isEmpty(),
     check('truck', 'Truck is required').not().isEmpty(),
@@ -63,17 +65,20 @@ router.post('/', [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status } = req.body;
+    const { additionalID, sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status } = req.body;
 
     try {
-      let order = await Order.findOne({ orderID });
+      let orderWithID = await Order.findOne({ orderID });
+      let orderWithAdditionalID = await Order.findOne({ additionalID });
       let client = await Client.findOne({ _id: clientID });
 
-      if (order) throw { exists: 'Order with this ID already exists' };
+      if (orderWithID) return res.status(400).json({ msg: 'Order with this ID already exists' });
+      if (orderWithAdditionalID && additionalID !== '') return res.status(400).json({ msg: 'Order with this additional ID already exists' });
 
       const newOrder = new Order({
         user: req.user.id,
         orderID,
+        additionalID,
         sender,
         receiver,
         truck,
@@ -85,9 +90,31 @@ router.post('/', [
         clientID,
         status
       });
-      order = await newOrder.save();
 
-      sendMail(client.email, `Order ${orderID} has arrived to warehouse`, `Order ${orderID} from ${sender} arrived to warehouse`);
+      const order = await newOrder.save();
+
+      // for (let i = 2; i <= 20; i++) {
+      //   const newOrder = new Order({
+      //     user: req.user.id,
+      //     additionalID: `D${i}`,
+      //     orderID: `DEMO${i}`,
+      //     sender: `DEMO${i}`,
+      //     receiver: `DEMO${i}`,
+      //     truck: `DEMO${i}${i}${i}`,
+      //     trailer: `DEMO${i}${i}`,
+      //     qnt: `${i * 10}`,
+      //     bruto: `${i * 1000}`,
+      //     description,
+      //     declarations,
+      //     clientID,
+      //     status
+      //   });
+      //   order = await newOrder.save();
+      // }
+
+      client.email.forEach(email => {
+        sendMail(email, `Order ID: ${orderID} was created`, `Order ID: ${orderID} from ${sender} to ${receiver} was created`);
+      });
 
       res.json(order);
     } catch (err) {
@@ -102,7 +129,7 @@ router.post('/', [
 // @desc        Update order
 // @access      Private
 router.put('/:id', auth, async (req, res) => {
-  const { sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status } = req.body;
+  const { additionalID, sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status } = req.body;
 
   // Creating updated order object
   const newOrderInformation = {};
@@ -117,11 +144,18 @@ router.put('/:id', auth, async (req, res) => {
   if (clientID) newOrderInformation.clientID = clientID;
   if (orderID) newOrderInformation.orderID = orderID;
   if (status) newOrderInformation.status = status;
+  if (additionalID) newOrderInformation.additionalID = additionalID;
 
   try {
     let order = await Order.findById(req.params.id);
 
     if (!order) res.status(404).json({ msg: 'Order not found' });
+
+    let orderWithID = await Order.findOne({ orderID });
+    let orderWithAdditionalID = await Order.findOne({ additionalID });
+
+    if (orderWithID && orderWithID._id.toString() !== order._id.toString()) return res.status(400).json({ msg: 'Order with this ID already exists' });
+    if (orderWithAdditionalID && orderWithAdditionalID._id.toString() !== order._id.toString()) return res.status(400).json({ msg: 'Order with this additional ID already exists' });
 
     // Check if user authorized
     if (order.user.toString() !== req.user.id) {
@@ -160,6 +194,19 @@ router.delete('/:id', auth, async (req, res) => {
       }
     }
 
+    // DELETING ORDER FROM LOADING IT WAS INCLUDED IN
+    // Update orders status back from 'loading' to 'in'
+    let loading = await Loading.findById(order.loadingID);
+    if (loading) {
+      const newInfo = { orders: loading.orders.filter(item => item !== order._id.toString()) };
+      await Loading.findByIdAndUpdate(loading._id,
+        { $set: newInfo },
+        { new: true }
+      )
+    }
+    ;
+
+    // DELETING ORDER
     await Order.findByIdAndRemove(req.params.id);
 
     res.json({ msg: 'Order deleted' });

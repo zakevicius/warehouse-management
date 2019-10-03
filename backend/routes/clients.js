@@ -14,7 +14,7 @@ router.get('/', auth, async (req, res) => {
   try {
     let clients;
     if (req.user.type === "admin") {
-      clients = await Client.find();
+      clients = await Client.find({ user: { $ne: '5d8fc59f7f3a681e142dd41a' } });
     } else {
       clients = await Client.find({ user: req.user.id });
     }
@@ -48,8 +48,7 @@ router.post(
     auth,
     [
       check('name', 'First name is required').not().isEmpty(),
-      check('orderLetter', 'Last name is required').not().isEmpty(),
-      check('email', 'Email is required').isEmail(),
+      check('orderLetter', 'Last name is required').not().isEmpty()
     ]
   ],
 
@@ -60,27 +59,30 @@ router.post(
     }
 
     const { name, email, phone, orderLetter } = req.body;
+    email = email.filter(item => item !== '');
 
     //Checking if client exists 
     try {
       let client = await Client.findOne({ email });
+      let checkClient = await Client.findOne({ orderLetter });
 
       if (client && client.user.toString() === req.user.id) {
-        res.status(400).json({ msg: 'Client with this email already exists' });
-      } else {
-
-        // Creating new Client
-        client = new Client({
-          name,
-          email,
-          phone,
-          orderLetter,
-          user: req.user.id
-        });
-
-        await client.save();
-        res.json(client);
+        return res.status(400).json({ msg: 'Client with this email already exists' });
       }
+      if (checkClient) return res.status(400).json({ msg: 'Letter already taken' });
+
+      // Creating new Client
+      client = new Client({
+        name,
+        email,
+        phone,
+        orderLetter,
+        user: req.user.id
+      });
+
+      await client.save();
+      res.json(client);
+
     } catch (err) {
       console.error(err.message);
       res.status(500).json({ msg: 'Server error creating new client' });
@@ -98,14 +100,17 @@ router.put('/:id', auth, async (req, res) => {
   const newClientInformation = {};
   if (name) newClientInformation.name = name;
   if (orderLetter) newClientInformation.orderLetter = orderLetter;
-  if (email) newClientInformation.email = email;
+  if (email) newClientInformation.email = email.filter(item => item !== '');;
   if (phone) newClientInformation.phone = phone;
+
 
   // Find Client to update
   try {
     let client = await Client.findById(req.params.id);
+    let checkClient = await Client.findOne({ orderLetter });
 
     if (!client) return res.status(404).json({ msg: 'Client not found' });
+    if (checkClient && checkClient._id.toString() !== client._id.toString()) return res.status(400).json({ msg: 'Letter already taken' });
 
     // Make sure user authorized to update client
     const user = await User.findById(req.user.id);

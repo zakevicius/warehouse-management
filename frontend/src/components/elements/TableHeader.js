@@ -36,6 +36,7 @@ class TableHeader extends Component {
               </th>
               <th className="one wide center aligned">Status</th>
               <th className="one wide center aligned">Order</th>
+              <th className="one wide center aligned">Additional ID</th>
               <th className="one wide center aligned">Date</th>
               <th className="two wide center aligned">Sender</th>
               <th className="two wide center aligned">Receiver</th>
@@ -75,20 +76,11 @@ class TableHeader extends Component {
           <thead>
             <tr>
               <th className="one wide center aligned">
-                {
-                  this.props.type === 'loading' ?
-                    (
-                      <Link to={`/${link}/page/1`}>
-                        <Button
-                          button={{ type: 'secondary left floated', text: 'Back' }}
-                        />
-                      </Link>
-                    ) : <Button
-                      button={{ type: "secondary", text: "Back" }}
-                      onClick={() => history.goBack()}
-                    />
-                }
-
+                <Link to={`/${link}/page/1`}>
+                  <Button
+                    button={{ type: 'secondary left floated', text: 'Back' }}
+                  />
+                </Link>
               </th>
               <th className="four wide">
                 {
@@ -136,13 +128,13 @@ class TableHeader extends Component {
                   <Button button={{ type: 'primary basic', text: 'New loading' }} />
                 </Link>
               </th>
-              <th>Status</th>
-              <th>ID</th>
-              <th>Date</th>
-              <th>Truck</th>
-              <th>Trailer</th>
-              <th>Total CLL</th>
-              <th>Total Bruto</th>
+              <th className="two wide center aligned">Status</th>
+              <th className="two wide center aligned">ID</th>
+              <th className="two wide center aligned">Date</th>
+              <th className="two wide center aligned">Truck</th>
+              <th className="two wide center aligned">Trailer</th>
+              <th className="two wide center aligned">Total CLL</th>
+              <th className="two wide center aligned">Total Bruto</th>
             </tr>
           </thead>
         );
@@ -152,6 +144,7 @@ class TableHeader extends Component {
             <tr>
               <th className="two wide center aligned"></th>
               <th className="two wide center aligned">Cargo ID</th>
+              <th className="two wide center aligned">Additional ID</th>
               <th className="two wide center aligned">Date</th>
               <th className="two wide center aligned">Sender</th>
               <th className="two wide center aligned">Receiver</th>

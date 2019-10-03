@@ -18,10 +18,10 @@ class LoadingEdit extends Component {
 
   async componentWillMount() {
     await this.props.fetchSingleData('/clients', this.props.loading.data.clientID);
-    const { loadingID, truck, trailer, date } = this.props.loading.data;
+    const { loadingID, truck, trailer, date, status } = this.props.loading.data;
     const client = this.props.loading.client.name;
     const ordersToLoad = this.props.loading.orders;
-    const ordersList = this.props.client.orders.filter(order => order.status === 'in');
+    const ordersList = this.props.client.orders.filter(order => (order.status === 'in' || order.status === 'waiting') && order.loadingID === null);
     this.setState({
       loadingID,
       truck,
@@ -29,9 +29,10 @@ class LoadingEdit extends Component {
       date,
       trailer,
       ordersToLoad,
-      ordersList
+      ordersList,
+      status
     });
-  }
+  } z
 
   addOrderToLoading = (order) => {
     this.setState({
@@ -72,9 +73,9 @@ class LoadingEdit extends Component {
       truck: this.state.truck,
       trailer: this.state.trailer,
       orders: this.state.ordersToLoad.map(order => order._id),
-      status: 'waiting',
-      totalQnt,
-      totalBruto
+      status: this.state.status,
+      totalQnt: totalQnt.toFixed(3),
+      totalBruto: totalBruto.toFixed(3)
     }, this.props.loading.data._id);
   }
 
@@ -83,13 +84,13 @@ class LoadingEdit extends Component {
       <div className="ui container">
         <form onSubmit={this.onSubmit} className="ui form">
           <div className="field">
-            <label htmlFor="loadingID">ID</label>
-            <input type="text" name="loadingID" value={this.state.loadingID} disabled />
-          </div>
-          <div className="field">
             <label htmlFor="client">Client</label>
             <input type="text" name="client" value={this.state.client} disabled />
             {/* {this.renderClientList()} */}
+          </div>
+          <div className="field">
+            <label htmlFor="loadingID">ID</label>
+            <input type="text" name="loadingID" value={this.state.loadingID} disabled />
           </div>
           <div className="field">
             <label htmlFor="date">Date</label>

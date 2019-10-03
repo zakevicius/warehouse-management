@@ -2,9 +2,8 @@ import React from 'react'
 
 const Error = (props) => {
   return (
-    <div className="ui segment">
-      <div className="ui active loader"></div>
-      <p></p>
+    <div className="ui red segment" style={{ color: "#e25353" }}>
+      <i className="times icon"></i>{props.error}
     </div>
   );
 };

@@ -47,6 +47,7 @@ export const DOWNLOAD_FILE = 'DOWNLOAD_FILE';
 export const FILE_ERROR = 'FILE_ERROR';
 
 //EVENTS
+export const CLEAR_STATE = 'CLEAR_STATE';
 export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
 export const SET_ACTIVE_SUB_TAB = 'SET_ACTIVE_SUB_TAB';
 export const SET_LOADING = 'SET_LOADING';
