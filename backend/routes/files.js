@@ -61,7 +61,7 @@ router.post('/:id', auth, async (req, res, next) => {
   let errors = [];
 
   const setType = ext => {
-    const photosTypes = ['jpeg', 'gif', 'jpg', 'bmp', 'png']
+    const photosTypes = ['jpeg', 'gif', 'jpg', 'bmp', 'png', 'JPEG', 'GIF', 'JPG', 'BMP', 'PNG']
     if (photosTypes.indexOf(ext) >= 0) {
       return 'photo';
     } else {
