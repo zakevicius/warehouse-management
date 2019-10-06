@@ -3,7 +3,9 @@ import {
   LOGIN_FAIL,
   AUTH_ERROR,
   LOG_OUT,
-  USER_LOADED
+  USER_LOADED,
+  REGISTER_SUCCESS,
+  REGISTER_FAIL
 } from '../action/types';
 
 const initialState = {
@@ -38,6 +40,18 @@ export default (state = initialState, action) => {
         ...state,
         user: { ...action.payload },
         isAuthenticated: true,
+      };
+    case REGISTER_SUCCESS:
+      return {
+        ...state,
+        registerMsg: action.payload,
+        newUserCreated: 'success'
+      };
+    case REGISTER_FAIL:
+      return {
+        ...state,
+        registerMsg: action.payload,
+        newUserCreated: 'fail'
       };
     default:
       return state;

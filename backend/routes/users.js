@@ -34,7 +34,7 @@ router.post('/',
       let user = await User.findOne({ email });
 
       if (user) {
-        return res.status(400).json({ msg: 'User already exists' });
+        return res.status(400).json({ msg: 'User with this email already exists' });
       }
 
       // Creating new user
@@ -71,6 +71,7 @@ router.post('/',
         }
       );
       sendMail(user.email, `Account was created`, `Your account was created at app.logway1.lt. Please contact us for your login information`);
+      res.json({ msg: 'User successfully created.' });
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');

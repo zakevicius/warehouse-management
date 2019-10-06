@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { register, fetchData } from '../../action/index';
+import Error from '../elements/Error';
+import Success from '../elements/Success';
 
 class Register extends Component {
 
@@ -48,6 +50,15 @@ class Register extends Component {
       );
     }
   };
+
+  renderMessage = () => {
+    const { newUserCreated, registerMsg } = this.props.auth;
+    if (newUserCreated === 'success') {
+      return <Success msg={registerMsg} />
+    } else if (newUserCreated === 'fail') {
+      return <Error error={registerMsg} />
+    }
+  }
 
   onChange = e => {
     if (e.target.name === 'selectedClient') {
@@ -121,6 +132,7 @@ class Register extends Component {
           {this.renderSelect(this.state.type)}
           <button className="ui button" type="submit">Submit</button>
         </form>
+        {this.renderMessage()}
       </div>
     )
   };
@@ -128,7 +140,8 @@ class Register extends Component {
 
 const mapStateToProps = state => {
   return {
-    clients: state.clientsData.clients
+    clients: state.clientsData.clients,
+    auth: state.auth
   }
 };
 

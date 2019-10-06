@@ -50,7 +50,7 @@ export const register = data => async dispatch => {
     try {
         dispatch({ type: types.SET_LOADING });
         const res = await api.post('/users', data);
-        dispatch({ type: types.REGISTER_SUCCESS, payload: res.data });
+        dispatch({ type: types.REGISTER_SUCCESS, payload: res.data.msg });
     } catch (err) {
         let message = err.response ? err.response.data.msg : err.message;
         dispatch({ type: types.REGISTER_FAIL, payload: message });
