@@ -52,7 +52,8 @@ router.post('/', [
       const payload = {
         user: {
           id: user.id,
-          type: user.type
+          type: user.type,
+          clients: user.clients
         }
       };
 
@@ -63,7 +64,7 @@ router.post('/', [
         },
         (err, token) => {
           if (err) throw err;
-          res.json({ token, id: user.id, type: user.type });
+          res.json({ token, id: user.id, type: user.type, clients: user.clients });
         }
       );
     } catch (err) {

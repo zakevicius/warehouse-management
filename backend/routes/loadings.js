@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const { check, validationResult } = require('express-validator');
-const transporter = require('../config/email');
+const sendMail = require('../config/email');
 
 const User = require('../models/User');
 const Client = require('../models/Client');
@@ -18,7 +18,7 @@ router.get('/', auth, async (req, res) => {
         if (req.user.type === "admin") {
             loadings = await Loading.find({ user: { $ne: '5d8fc59f7f3a681e142dd41a' } });
         } else {
-            loadings = await Loading.find({ user: req.user.id });
+            loadings = await Loading.find({ clientID: req.user.clients[0] });
         }
         res.json(loadings);
     } catch (err) {
@@ -102,6 +102,7 @@ router.post(
                 res.status(500).json({ msg: 'Server error updating order status' });
             }
 
+            const logwayEmails = ['m.zakevicius@gmail.com', 'm.zakevicius@gmail.com'];
             logwayEmails.forEach(email => {
                 sendMail(email, `${client} created new loading`, `New loading ID:${loadingID} was created by ${client}`);
             });
@@ -145,7 +146,9 @@ router.put('/:id', auth, async (req, res) => {
 
         if (loading.user.toString() !== req.user.id) {
             if (user.type !== 'admin') {
-                return res.status(401).json({ msg: 'Not authorized ' });
+                if (user.clients[0].toString() !== loading.clientID.toString()) {
+                    return res.status(401).json({ msg: 'Not authorized ' });
+                }
             }
         }
 
@@ -278,23 +281,23 @@ router.delete('/:id', auth, async (req, res) => {
     }
 });
 
-const sendMail = (to, subject, text) => {
-    const mailOptions = {
-        from: 'm.zakevicius@gmail.com',
-        to,
-        subject,
-        text
-    }
+// const sendMail = (to, subject, text) => {
+//     const mailOptions = {
+//         from: 'm.zakevicius@gmail.com',
+//         to,
+//         subject,
+//         text
+//     }
 
-    transporter.sendMail(mailOptions, (err, info) => {
-        if (err) {
-            console.error(err);
-        } else {
-            console.log('Email sent');
-        }
-    })
-}
+//     transporter.sendMail(mailOptions, (err, info) => {
+//         if (err) {
+//             console.error(err);
+//         } else {
+//             console.log('Email sent');
+//         }
+//     })
+// }
 
-const logwayEmails = ['m.zakevicius@gmail.com', 'm.zakevicius@gmail.com'];
+
 
 module.exports = router; 

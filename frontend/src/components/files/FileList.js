@@ -24,13 +24,13 @@ class FileList extends Component {
       <Fragment>
         <div>
           <h4>Photos</h4>
-          <div className="ui segment">
+          <div className="ui segment" style={{ display: 'flex', flexWrap: 'wrap' }}>
             {renderPhotos()}
           </div>
         </div>
         <div>
           <h4>Documents</h4>
-          <div className="ui segment">
+          <div className="ui segment" style={{ display: 'flex', flexWrap: 'wrap' }}>
             {renderDocuments()}
           </div>
         </div>

@@ -29,7 +29,7 @@ export default (state = { clients: [] }, action) => {
         case CLIENT_ERROR:
             return { ...state, error: action.payload };
         case CLEAR_STATE:
-            return { clients: [] };
+            return { ...state, client: null };
         default:
             return state;
     }

@@ -58,12 +58,14 @@ class LoadingStatus extends Component {
   }
 
   renderStatusButton = () => {
-    return (
-      <Button
-        button={{ type: 'positive basic left floated', text: this.state.button }}
-        onClick={this.onClick}
-      />
-    )
+    if (this.props.userType === "admin") {
+      return (
+        <Button
+          button={{ type: 'positive basic left floated', text: this.state.button }}
+          onClick={this.onClick}
+        />
+      )
+    }
   }
 
   renderStatusList = () => {
@@ -112,7 +114,8 @@ class LoadingStatus extends Component {
 
 const mapStateToProps = state => {
   return {
-    loading: state.loadingsData.loading
+    loading: state.loadingsData.loading,
+    userType: state.auth.user.type
   }
 }
 

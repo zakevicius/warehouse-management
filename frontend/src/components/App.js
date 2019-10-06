@@ -19,7 +19,7 @@ import LoadingCreate from "./loadings/LoadingCreate";
 import LoadingEdit from "./loadings/LoadingEdit";
 import Header from "./Header";
 import Footer from "./Footer";
-// import Register from './auth/Register';
+import Register from './auth/Register';
 import Login from "./auth/Login";
 import PrivateRoute from "../routing/PrivateRoute";
 
@@ -93,7 +93,7 @@ class App extends React.Component {
 
               {/* Auth */}
               <Route path="/login" exact component={Login} />
-              {/* <PrivateRoute path="/register" exact component={Register} /> */}
+              <PrivateRoute path="/register" exact component={Register} />
             </Switch>
             <Footer />
           </Fragment>

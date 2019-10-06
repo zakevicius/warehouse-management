@@ -28,7 +28,14 @@ class CommentList extends Component {
 
       newData = this.state.commentsData.map(data => {
         if (data.orderID === this.props.order._id) {
-          let newComments = [...data.comments, { text: this.state.comment, user: this.props.user.name, id: '_' + Math.random().toString(36).substr(2, 9) }];
+          let newComments = [...data.comments, {
+            text: this.state.comment,
+            user: {
+              name: this.props.user.name,
+              _id: this.props.user._id
+            },
+            id: '_' + Math.random().toString(36).substr(2, 9)
+          }];
           data.comments = newComments;
           return data;
         } else {
@@ -42,7 +49,10 @@ class CommentList extends Component {
           comments: [
             {
               text: this.state.comment,
-              user: this.props.user.name,
+              user: {
+                name: this.props.user.name,
+                _id: this.props.user._id
+              },
               id: '_' + Math.random().toString(36).substr(2, 9)
             }
           ]

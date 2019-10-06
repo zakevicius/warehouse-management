@@ -12,7 +12,7 @@ class LoadingShow extends Component {
   async componentDidMount() {
     await this.props.fetchSingleData('/loadings', this.props.match.params.id);
     this.props.setActiveTab('loadings');
-  }
+  } z
 
   render() {
     if (this.props.load || !this.props.loading) return <Spinner />;

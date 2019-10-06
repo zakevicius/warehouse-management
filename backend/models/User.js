@@ -21,6 +21,10 @@ const UserSchema = mongoose.Schema({
   date: {
     type: Date,
     default: Date.now
+  },
+  clients: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'clients'
   }
 });
 

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const { check, validationResult } = require('express-validator');
-const transporter = require('../config/email');
+const sendMail = require('../config/email');
 const ObjectID = require('mongodb').ObjectID;
 
 // const User = require('../models/User');
@@ -20,7 +20,7 @@ router.get('/', auth, async (req, res) => {
     if (req.user.type === 'admin') {
       orders = await Order.find({ clientID: { $ne: '5d9323e6816b7d3bbcc65f8d' } }).sort({ date: -1 });
     } else {
-      orders = await Order.find({ user: req.user.id }).sort({ date: -1 });
+      orders = await Order.find({ clientID: req.user.clients[0] }).sort({ date: -1 });
     }
     res.json(orders);
   } catch (err) {
@@ -65,7 +65,7 @@ router.post('/', [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { additionalID, sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status } = req.body;
+    const { additionalID, sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status, date } = req.body;
 
     try {
       let orderWithID = await Order.findOne({ orderID });
@@ -88,7 +88,8 @@ router.post('/', [
         description,
         declarations,
         clientID,
-        status
+        status,
+        date
       });
 
       const order = await newOrder.save();
@@ -129,7 +130,7 @@ router.post('/', [
 // @desc        Update order
 // @access      Private
 router.put('/:id', auth, async (req, res) => {
-  const { additionalID, sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status } = req.body;
+  const { additionalID, sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status, date } = req.body;
 
   // Creating updated order object
   const newOrderInformation = {};
@@ -145,6 +146,7 @@ router.put('/:id', auth, async (req, res) => {
   if (orderID) newOrderInformation.orderID = orderID;
   if (status) newOrderInformation.status = status;
   if (additionalID) newOrderInformation.additionalID = additionalID;
+  if (date) newOrderInformation.date = date;
 
   try {
     let order = await Order.findById(req.params.id);
@@ -203,7 +205,7 @@ router.delete('/:id', auth, async (req, res) => {
     // Update orders status back from 'loading' to 'in'
     let loading = await Loading.findById(order.loadingID);
     if (loading) {
-      const newInfo = { orders: loading.orders.filter(item => item !== order._id.toString()) };
+      const newInfo = { orders: loading.orders.filter(item => item !== order._id.toString()), totalQnt: loading.totalQnt - order.qnt, totalBruto: loading.totalBruto - order.bruto };
       await Loading.findByIdAndUpdate(loading._id,
         { $set: newInfo },
         { new: true }
@@ -223,22 +225,22 @@ router.delete('/:id', auth, async (req, res) => {
 
 // Email settings
 
-const sendMail = (to, subject, text) => {
-  const mailOptions = {
-    from: 'info@logway1.lt',
-    to,
-    subject,
-    text
-  }
+// const sendMail = (to, subject, text) => {
+//   const mailOptions = {
+//     from: 'info@logway1.lt',
+//     to,
+//     subject,
+//     text
+//   }
 
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log('Email sent');
-    }
-  })
-}
+//   transporter.sendMail(mailOptions, (err, info) => {
+//     if (err) {
+//       console.error(err);
+//     } else {
+//       console.log('Email sent');
+//     }
+//   })
+// }
 
 
 

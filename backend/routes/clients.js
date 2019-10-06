@@ -12,13 +12,14 @@ const Order = require('../models/Order');
 // @access      Private
 router.get('/', auth, async (req, res) => {
   try {
-    let clients;
+    let data, user;
     if (req.user.type === "admin") {
-      clients = await Client.find({ user: { $ne: '5d8fc59f7f3a681e142dd41a' } });
+      data = await Client.find({ user: { $ne: '5d8fc59f7f3a681e142dd41a' } });
     } else {
-      clients = await Client.find({ user: req.user.id });
+      userData = await User.findById(req.user.id, { clients: 1, _id: 0 });
+      data = await Client.find({ _id: userData.clients[0] });
     }
-    res.json(clients);
+    res.json(data);
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Server error fetching clients' });
@@ -58,7 +59,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, phone, orderLetter } = req.body;
+    let { name, email, phone, orderLetter } = req.body;
     email = email.filter(item => item !== '');
 
     //Checking if client exists 

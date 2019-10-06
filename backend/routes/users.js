@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
+const sendMail = require('../config/email');
 
 const User = require('../models/User');
 
@@ -25,7 +26,8 @@ router.post('/',
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password } = req.body;
+    const { name, email, password, type, clients } = req.body;
+    console.log(clients)
 
     // Checking if user exists
     try {
@@ -39,7 +41,9 @@ router.post('/',
       user = new User({
         name,
         email,
-        password
+        password,
+        type,
+        clients
       });
 
       // Hashing password
@@ -66,6 +70,7 @@ router.post('/',
           res.json({ token })
         }
       );
+      sendMail(user.email, `Account was created`, `Your account was created at app.logway1.lt. Please contact us for your login information`);
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
