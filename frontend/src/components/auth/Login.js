@@ -26,7 +26,11 @@ class Login extends Component {
       return <h1>LOADING</h1>
     }
     if (this.props.auth.isAuthenticated) {
-      history.push('/');
+      if (this.props.location.state) {
+        history.push(this.props.location.state.redirectURL);
+      } else {
+        history.push('/');
+      }
     }
   }
 
@@ -49,6 +53,7 @@ class Login extends Component {
   }
 
   render() {
+    console.log(this.props.location)
     if (this.props.load) return <Spinner />;
     return (
       <div className="ui raised very padded container segment">
