@@ -26,7 +26,11 @@ class Login extends Component {
       return <h1>LOADING</h1>
     }
     if (this.props.auth.isAuthenticated) {
-      history.push('/');
+      if (this.props.location.state) {
+        history.push(this.props.location.state.redirectURL);
+      } else {
+        history.push('/');
+      }
     }
   }
 

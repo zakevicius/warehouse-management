@@ -35,10 +35,19 @@ router.get('/', auth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
   try {
     let order = await Order.findById(req.params.id, (err, res) => res);
-    res.json(order);
+    console.log(req.user.clients, order.clientID)
+    if (req.user.type === 'admin' || req.user.clients.indexOf(order.clientID.toString()) >= 0) {
+      res.json(order);
+    } else {
+      throw ({ msg: 'Not authorized' })
+    }
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ msg: 'Server error getting order' });
+    let msg = 'Server error getting order';
+    if (err.msg) {
+      msg = err.msg;
+    }
+    res.status(500).json({ msg });
   }
 });
 
