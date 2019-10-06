@@ -53,7 +53,6 @@ class Login extends Component {
   }
 
   render() {
-    console.log(this.props.location)
     if (this.props.load) return <Spinner />;
     return (
       <div className="ui raised very padded container segment">
