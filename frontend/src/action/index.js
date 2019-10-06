@@ -3,7 +3,7 @@ import { history } from '../components/history';
 import * as types from './types';
 import setAuthToken from '../utils/setAuthToken';
 
-// LOGIN, LOGOUT, SIGNUP
+// LOGIN, LOGOUT, SIGNUP, REGISTER
 export const login = (user) => async (dispatch) => {
     const config = {
         headers: {
@@ -44,6 +44,18 @@ export const login = (user) => async (dispatch) => {
 export const logout = () => {
     history.push('/login');
     return { type: types.LOG_OUT };
+}
+
+export const register = data => async dispatch => {
+    try {
+        dispatch({ type: types.SET_LOADING });
+        const res = await api.post('/users', data);
+        dispatch({ type: types.REGISTER_SUCCESS, payload: res.data });
+    } catch (err) {
+        let message = err.response ? err.response.data.msg : err.message;
+        dispatch({ type: types.REGISTER_FAIL, payload: message });
+        dispatch({ type: types.UNSET_LOADING });
+    }
 }
 
 // FETCHING ALL DATA
@@ -257,6 +269,7 @@ export const downloadFile = (id, filename) => async dispatch => {
         const link = document.createElement('a');
 
         link.href = res.data;
+        link.target = '_blank';
         link.download = filename;
         document.body.appendChild(link);
         link.click();

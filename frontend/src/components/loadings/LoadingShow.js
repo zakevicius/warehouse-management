@@ -9,10 +9,10 @@ import LoadingStatus from './LoadingStatus';
 
 class LoadingShow extends Component {
 
-  componentDidMount() {
-    this.props.fetchSingleData('/loadings', this.props.match.params.id);
+  async componentDidMount() {
+    await this.props.fetchSingleData('/loadings', this.props.match.params.id);
     this.props.setActiveTab('loadings');
-  }
+  } z
 
   render() {
     if (this.props.load || !this.props.loading) return <Spinner />;

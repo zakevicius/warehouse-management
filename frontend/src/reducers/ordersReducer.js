@@ -26,6 +26,7 @@ export default (state = { orders: [] }, action) => {
                     return order.sender.match(regex) ||
                         order.receiver.match(regex) ||
                         order.orderID.match(regex) ||
+                        order.additionalID.match(regex) ||
                         order.truck.match(regex) ||
                         order.trailer.match(regex) ||
                         order.date.match(regex)
@@ -34,7 +35,7 @@ export default (state = { orders: [] }, action) => {
         case CLEAR_FILTER:
             return { ...state, filtered: null };
         case CLEAR_STATE:
-            return { orders: [] };
+            return { ...state, order: null };
         default:
             return state;
     }

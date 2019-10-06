@@ -1,6 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-const Comment = ({ comment, user, removeComment }) => {
+const Comment = ({ comment, user, removeComment, signedUser }) => {
+  console.log(user, signedUser)
   return (
     <div
       style={{
@@ -12,21 +14,35 @@ const Comment = ({ comment, user, removeComment }) => {
       }}
       className="comment"
     >
-      <i className="minus icon red" onClick={() => removeComment(comment.id)}></i>
-      {comment.text}
+      <span
+        style={{
+          color: 'darkred'
+        }}
+      >
+        {comment.text}
+      </span>
+      {/* {(user._id === signedUser._id) && */}
+      {signedUser.type === 'admin' &&
+        <i className="minus icon red" style={{ float: 'right', margin: '0 1em', cursor: 'pointer' }} onClick={() => removeComment(comment.id)}></i>
+      }
       <span
         style={{
           float: 'right',
           color: 'grey',
-          textAlign: 'right',
           padding: '0',
           margin: '0'
         }}
       >
-        <i>- by {user}</i>
+        <i>- by {user.name}</i>
       </span>
     </div>
   )
 };
 
-export default Comment;
+const mapStateToProps = state => {
+  return {
+    signedUser: state.auth.user
+  }
+}
+
+export default connect(mapStateToProps, {})(Comment);

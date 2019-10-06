@@ -53,34 +53,40 @@ class ClientEdit extends Component {
     render() {
         return (
             <div className="ui container">
-                <form onSubmit={this.onSubmit} className="ui form">
-                    <div className="field">
-                        <label htmlFor="name">Name</label>
-                        <input type="text" name="name" value={this.state.name} onChange={this.onChange} />
-                    </div>
-                    <div className="field">
-                        <label htmlFor="email1">Email</label>
-                        <input type="text" name="email1" value={this.state.email[0]} onChange={this.onChange} />
-                    </div>
-                    <div className="field">
-                        <label htmlFor="email2">Email</label>
-                        <input type="text" name="email2" value={this.state.email[1]} onChange={this.onChange} />
-                    </div>
-                    <div className="field">
-                        <label htmlFor="email3">Email</label>
-                        <input type="text" name="email3" value={this.state.email[2]} onChange={this.onChange} />
-                    </div>
-                    <div className="field">
-                        <label htmlFor="phone">Phone</label>
-                        <input type="text" name="phone" value={this.state.phone} onChange={this.onChange} />
-                    </div>
-                    <div className="field">
-                        <label htmlFor="orderLetter">Letter for orders</label>
-                        <input type="text" name="orderLetter" value={this.state.orderLetter} onChange={this.onChange} />
-                    </div>
-                    <Button button={{ type: 'primary ', text: 'Submit' }} />
-                </form>
-                {this.props.error && <Error error={this.props.error} />}
+                <div className="ui very padded segment">
+                    <form onSubmit={this.onSubmit} className="ui form">
+                        <div className="three fields">
+                            <div className="field">
+                                <label htmlFor="name">Name</label>
+                                <input type="text" name="name" value={this.state.name} onChange={this.onChange} />
+                            </div>
+                            <div className="field">
+                                <label htmlFor="orderLetter">Letter for orders</label>
+                                <input type="text" name="orderLetter" value={this.state.orderLetter} onChange={this.onChange} />
+                            </div>
+                            <div className="field">
+                                <label htmlFor="phone">Phone</label>
+                                <input type="text" name="phone" value={this.state.phone} onChange={this.onChange} />
+                            </div>
+                        </div>
+                        <div className="three fields">
+                            <div className="field">
+                                <label htmlFor="email1">Email 1</label>
+                                <input type="email" name="email1" value={this.state.email[0]} onChange={this.onChange} />
+                            </div>
+                            <div className="field">
+                                <label htmlFor="email2">Email 2</label>
+                                <input type="email" name="email2" value={this.state.email[1]} onChange={this.onChange} />
+                            </div>
+                            <div className="field">
+                                <label htmlFor="email3">Email 3</label>
+                                <input type="email" name="email3" value={this.state.email[2]} onChange={this.onChange} />
+                            </div>
+                        </div>
+                        <Button button={{ type: 'primary ', text: 'Submit' }} />
+                    </form>
+                    {this.props.error && <Error error={this.props.error} />}
+                </div>
             </div>
         );
     }

@@ -9,7 +9,7 @@ import CommentList from '../comments/CommentList';
 class TableData extends Component {
   constructor(props) {
     super(props);
-    this.itemsPerPage = 10
+    this.itemsPerPage = 20
   }
 
   renderButton() {
@@ -92,7 +92,7 @@ class TableData extends Component {
             <td className="right aligned" style={{ fontWeight: "bold" }}>{text}</td>
             {renderInfo(i)}
             {i === 1 && <td rowSpan={secondColumn.length - 3}><FileList id={order._id} type="showFiles" /></td>}
-            {i === secondColumn.length - 2 && <td rowSpan="3"><FileUpload id={order._id} /></td>}
+            {(i === secondColumn.length - 2 && this.props.userType === 'admin') && <td rowSpan="3"><FileUpload id={order._id} /></td>}
           </tr >
         );
       })
@@ -234,7 +234,7 @@ class TableData extends Component {
           <td className="center aligned">{loading.truck}</td>
           <td className="center aligned">{loading.trailer}</td>
           <td className="center aligned">{loading.totalQnt}</td>
-          <td className="center aligned">{loading.totalBruto}</td>
+          <td className="center aligned">{loading.totalBruto.toFixed(3)}</td>
         </tr>
       );
     });
@@ -462,6 +462,7 @@ class TableData extends Component {
 
 const mapStateToProps = state => {
   return {
+    userType: state.auth.user.type,
     errors: [
       state.clientsData.error,
       state.loadingsData.error,

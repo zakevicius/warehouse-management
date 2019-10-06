@@ -10,27 +10,36 @@ const File = ({ type, file, downloadFile, ...props }) => {
 
   const onClick = (id) => {
     downloadFile(id, file.name)
-  }
+  };
 
-  const style = {
-    color: 'navy',
-    cursor: 'pointer'
-  }
+  const styleSpan = {
+    cursor: 'pointer',
+  };
+
+  const styleP = {
+    marginRight: '2em',
+    display: 'flex',
+    overflow: 'hidden',
+    width: '10em'
+  };
 
   switch (type) {
     case "addRemove":
       return (
-        <p key={file._id}>
+        <p key={file._id} style={styleP}>
           <i className="ui large link close red icon" onClick={() => props.removeFile(file)} />
-          {file.name/*.split('.').length === 2 ? file.name.split('.')[0] : file.name.split('.').slice(0, -1).join('.')*/}
+          {file.name}
         </p>
       );
     case "photo":
     case "document":
       return (
-        <p key={file._id} >
-          <i className="ui large link close red icon" onClick={onClickRemove} />
-          <span style={style} onClick={() => onClick(file._id)}>{file.name/*.split('___')[1].join('.')[0]*/}</span>
+        <p key={file._id} style={styleP}>
+          {props.userType === "admin" ?
+            <i className="ui large link close red icon" onClick={onClickRemove} /> :
+            <i className="file alternate outline icon" onClick={onClickRemove} />
+          }
+          <span style={styleSpan} onClick={() => onClick(file._id)}>{file.name.split('.')[0].split('___')[1]}</span>
         </p >
       )
     default:
@@ -38,4 +47,10 @@ const File = ({ type, file, downloadFile, ...props }) => {
   }
 };
 
-export default connect(null, { removeData, downloadFile })(File);
+const mapStateToProps = state => {
+  return {
+    userType: state.auth.user.type
+  }
+}
+
+export default connect(mapStateToProps, { removeData, downloadFile })(File);

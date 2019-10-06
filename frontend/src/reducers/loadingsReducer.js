@@ -20,7 +20,7 @@ export default (state = { loadings: [] }, action) => {
     case LOADING_ERROR:
       return { ...state, error: action.payload };
     case CLEAR_STATE:
-      return { loadings: [] };
+      return { ...state, loading: null };
     default:
       return state;
   }

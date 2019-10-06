@@ -20,13 +20,16 @@ const Header = props => {
       >
         Orders
       </Link>
-      <Link
-        onClick={() => props.setActiveTab("primary", "clients")}
-        to="/clients/page/1"
-        className={props.active === "clients" ? "active item" : "item"}
-      >
-        Clients
-      </Link>
+      {
+        props.user.type === 'admin' || props.user.type === 'user' ?
+          <Link
+            onClick={() => props.setActiveTab("primary", "clients")}
+            to="/clients/page/1"
+            className={props.active === "clients" ? "active item" : "item"}
+          >
+            Clients
+      </Link> : ""
+      }
       <Link
         onClick={() => props.setActiveTab("primary", "loadings")}
         to="/loadings/page/1"
@@ -38,16 +41,16 @@ const Header = props => {
         <button className="ui inverted button" onClick={props.logout}>
           Log out
         </button>
-      </div>
-    </Fragment>
-  );
-
-  const guestLinks = (
-    <Fragment>
-      <div className="right item">
-        <Link to="/login" className="ui inverted button">
-          Log in
-        </Link>
+        {props.user.type === 'admin' || props.user.type === 'user' ?
+          <Link
+            to="/register"
+            className="item"
+          >
+            <button className="ui inverted button">
+              Register new user
+              </button>
+          </Link> : ""
+        }
       </div>
     </Fragment>
   );
@@ -56,7 +59,7 @@ const Header = props => {
     <div className="ui inverted vertical masthead center aligned segment">
       <div className="ui container">
         <div className="ui large secondary inverted pointing menu">
-          {props.isAuthenticated ? authLinks : guestLinks}
+          {props.isAuthenticated && authLinks}
         </div>
       </div>
     </div>
@@ -66,7 +69,8 @@ const Header = props => {
 const mapStateToProps = state => {
   return {
     active: state.eventsData.activeTab,
-    isAuthenticated: state.auth.isAuthenticated
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user
   };
 };
 

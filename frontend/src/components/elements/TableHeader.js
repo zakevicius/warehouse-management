@@ -30,9 +30,13 @@ class TableHeader extends Component {
           <thead>
             <tr>
               <th className="one wide center aligned">
-                <Link to='/orders/new'>
-                  <Button button={{ type: 'primary basic', text: 'New order' }} />
-                </Link>
+                {
+                  this.props.user.type === 'admin' || this.props.user.type === 'user' ?
+                    <Link to='/orders/new'>
+                      <Button button={{ type: 'primary basic', text: 'New order' }} />
+                    </Link>
+                    : ""
+                }
               </th>
               <th className="one wide center aligned">Status</th>
               <th className="one wide center aligned">Order</th>
@@ -87,7 +91,8 @@ class TableHeader extends Component {
                 {
                   this.props.type !== 'clientEdit' &&
                     this.props.type !== 'orderEdit' &&
-                    this.props.type !== 'loadingEdit' ?
+                    this.props.type !== 'loadingEdit' &&
+                    (this.props.user.type === 'admin' || this.props.user.type === 'user') ?
                     (
                       <Link to={`/${link}/edit/${id}`}>
                         <Button
@@ -96,10 +101,13 @@ class TableHeader extends Component {
                       </Link>
                     ) : null
                 }
-                <Button
-                  button={{ type: 'negative right floated', text: 'Delete' }}
-                  onClick={() => this.remove(this.props.type)}
-                />
+                {
+                  this.props.user.type === 'admin' || this.props.user.type === 'user' ?
+                    <Button
+                      button={{ type: 'negative right floated', text: 'Delete' }}
+                      onClick={() => this.remove(this.props.type)}
+                    /> : ""
+                }
               </th>
               {this.props.type === "order" && <th className="six wide">Files</th>}
             </tr>
@@ -110,9 +118,13 @@ class TableHeader extends Component {
           <thead>
             <tr>
               <th className="one wide center aligned">
-                <Link to='/clients/new'>
-                  <Button button={{ type: 'primary basic', text: 'New client' }} />
-                </Link>
+                {
+                  this.props.user.type === 'admin' || this.props.user.type === 'user' ?
+                    <Link to='/clients/new'>
+                      <Button button={{ type: 'primary basic', text: 'New client' }} />
+                    </Link>
+                    : ""
+                }
               </th>
               <th className="two wide center aligned">Name</th>
               <th className="two wide center aligned">Phone</th>
@@ -125,9 +137,13 @@ class TableHeader extends Component {
           <thead>
             <tr>
               <th className="one wide center aligned">
-                <Link to='/loadings/new'>
-                  <Button button={{ type: 'primary basic', text: 'New loading' }} />
-                </Link>
+                {
+                  this.props.user.type === 'admin' || this.props.user.type === 'user' ?
+                    <Link to='/loadings/new'>
+                      <Button button={{ type: 'primary basic', text: 'New loading' }} />
+                    </Link>
+                    : ""
+                }
               </th>
               <th className="two wide center aligned">Status</th>
               <th className="two wide center aligned">ID</th>
@@ -186,6 +202,7 @@ const mapStateToProps = state => {
     order: state.ordersData.order,
     client: state.clientsData.client,
     loading: state.loadingsData.loading,
+    user: state.auth.user
   }
 }
 
