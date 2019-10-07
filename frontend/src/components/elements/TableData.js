@@ -9,7 +9,7 @@ import CommentList from '../comments/CommentList';
 class TableData extends Component {
   constructor(props) {
     super(props);
-    this.itemsPerPage = 20
+    this.itemsPerPage = 15
   }
 
   renderButton() {
