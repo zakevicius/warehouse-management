@@ -2,7 +2,6 @@ const express = require('express');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
-const path = require('path');
 
 const app = express();
 app.use((req, res, next) => {
@@ -28,12 +27,6 @@ app.use(express.json({ extended: false }));
 
 app.get('/', (req, res) => {
   res.json({ msg: 'Welcome to Logway API' });
-});
-
-app.use(express.static(path.join(__dirname, 'build')));
-
-app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.use('/api/auth', require('./routes/auth'));

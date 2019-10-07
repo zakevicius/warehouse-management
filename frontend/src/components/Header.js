@@ -41,7 +41,7 @@ const Header = props => {
         <button className="ui inverted button" onClick={props.logout}>
           Log out
         </button>
-        {props.user.type === 'admin' || props.user.type === 'user' ?
+        {props.user.type === 'admin' ?
           <Link
             to="/register"
             className="item"

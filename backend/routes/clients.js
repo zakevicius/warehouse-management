@@ -13,11 +13,21 @@ const Order = require('../models/Order');
 router.get('/', auth, async (req, res) => {
   try {
     let data, user;
+    let dataArr = [];
     if (req.user.type === "admin") {
       data = await Client.find({ user: { $ne: '5d8fc59f7f3a681e142dd41a' } });
     } else {
       userData = await User.findById(req.user.id, { clients: 1, _id: 0 });
-      data = await Client.find({ _id: userData.clients[0] });
+      for (let i = 0; i < userData.clients.length; i++) {
+        data = await Client.find({ _id: userData.clients[i] });
+        dataArr.push(data);
+      }
+      data = dataArr[0];
+      if (dataArr.length > 0) {
+        for (let i = 1; i < dataArr.length; i++) {
+          data = data.concat(dataArr[i]);
+        }
+      }
     }
     res.json(data);
   } catch (err) {

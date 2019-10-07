@@ -17,10 +17,20 @@ const Loading = require('../models/Loading');
 router.get('/', auth, async (req, res) => {
   try {
     let orders;
+    let ordersArr = [];
     if (req.user.type === 'admin') {
       orders = await Order.find({ clientID: { $ne: '5d9323e6816b7d3bbcc65f8d' } }).sort({ date: -1 });
     } else {
-      orders = await Order.find({ clientID: req.user.clients[0] }).sort({ date: -1 });
+      for (let i = 0; i < req.user.clients.length; i++) {
+        orders = await Order.find({ clientID: req.user.clients[i] }).sort({ date: -1 });
+        ordersArr.push(orders);
+      }
+      orders = ordersArr[0];
+      if (ordersArr.length > 0) {
+        for (let i = 1; i < ordersArr.length; i++) {
+          orders = orders.concat(ordersArr[i]);
+        }
+      }
     }
     res.json(orders);
   } catch (err) {
@@ -35,7 +45,6 @@ router.get('/', auth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
   try {
     let order = await Order.findById(req.params.id, (err, res) => res);
-    console.log(req.user.clients, order.clientID)
     if (req.user.type === 'admin' || req.user.clients.indexOf(order.clientID.toString()) >= 0) {
       res.json(order);
     } else {

@@ -15,10 +15,20 @@ const Loading = require('../models/Loading')
 router.get('/', auth, async (req, res) => {
     try {
         let loadings;
+        let loadingsArr = [];
         if (req.user.type === "admin") {
             loadings = await Loading.find({ user: { $ne: '5d8fc59f7f3a681e142dd41a' } });
         } else {
-            loadings = await Loading.find({ clientID: req.user.clients[0] });
+            for (let i = 0; i < req.user.clients.length; i++) {
+                loadings = await Loading.find({ clientID: req.user.clients[i] });
+                loadingsArr.push(loadings);
+            }
+            loadings = loadingsArr[0];
+            if (loadingsArr.length > 0) {
+                for (let i = 1; i < loadingsArr.length; i++) {
+                    loadings = loadings.concat(loadingsArr[i]);
+                }
+            }
         }
         res.json(loadings);
     } catch (err) {

@@ -31,7 +31,7 @@ class TableHeader extends Component {
             <tr>
               <th className="one wide center aligned">
                 {
-                  this.props.user.type === 'admin' || this.props.user.type === 'user' ?
+                  this.props.user.type === 'admin' ?
                     <Link to='/orders/new'>
                       <Button button={{ type: 'primary basic', text: 'New order' }} />
                     </Link>
@@ -92,7 +92,7 @@ class TableHeader extends Component {
                   this.props.type !== 'clientEdit' &&
                     this.props.type !== 'orderEdit' &&
                     this.props.type !== 'loadingEdit' &&
-                    (this.props.user.type === 'admin' || this.props.user.type === 'user') ?
+                    (this.props.user.type === 'admin') ?
                     (
                       <Link to={`/${link}/edit/${id}`}>
                         <Button
@@ -102,7 +102,7 @@ class TableHeader extends Component {
                     ) : null
                 }
                 {
-                  this.props.user.type === 'admin' || this.props.user.type === 'user' ?
+                  this.props.user.type === 'admin' ?
                     <Button
                       button={{ type: 'negative right floated', text: 'Delete' }}
                       onClick={() => this.remove(this.props.type)}
@@ -119,7 +119,7 @@ class TableHeader extends Component {
             <tr>
               <th className="one wide center aligned">
                 {
-                  this.props.user.type === 'admin' || this.props.user.type === 'user' ?
+                  this.props.user.type === 'admin' ?
                     <Link to='/clients/new'>
                       <Button button={{ type: 'primary basic', text: 'New client' }} />
                     </Link>
@@ -138,7 +138,7 @@ class TableHeader extends Component {
             <tr>
               <th className="one wide center aligned">
                 {
-                  this.props.user.type === 'admin' || this.props.user.type === 'user' ?
+                  this.props.user.type === 'admin' ?
                     <Link to='/loadings/new'>
                       <Button button={{ type: 'primary basic', text: 'New loading' }} />
                     </Link>
