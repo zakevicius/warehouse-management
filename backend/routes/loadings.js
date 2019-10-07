@@ -9,6 +9,8 @@ const Client = require('../models/Client');
 const Order = require('../models/Order');
 const Loading = require('../models/Loading')
 
+const appURL = 'http://app.logway1.lt'
+
 // @route       GET api/loadings
 // @desc        Get all users loadings
 // @access      Private
@@ -112,9 +114,9 @@ router.post(
                 res.status(500).json({ msg: 'Server error updating order status' });
             }
 
-            const logwayEmails = ['m.zakevicius@gmail.com', 'm.zakevicius@gmail.com'];
+            const logwayEmails = ['info@logway1.lt', 'tadas@logway1.lt', 'paulius@logway1.lt', 'ilona@logway1.lt', 'maija@logway1.lt'];
             logwayEmails.forEach(email => {
-                sendMail(email, `${client} created new loading`, `New loading ID:${loadingID} was created by ${client}`);
+                sendMail(email, `${client} created new loading`, `New loading ID:${loadingID} was created by ${client} \n ${appURL}/loadings/${loading._id}`);
             });
 
             res.json(loading);

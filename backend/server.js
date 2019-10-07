@@ -22,12 +22,6 @@ app.options('*', cors());
 
 connectDB();
 
-app.use(express.static(__dirname + '/public'))
-
-app.get('*', function (request, response) {
-  response.redirect('http://app.logway1.lt')
-})
-
 // Initialize middleware
 app.use(express.json({ extended: false }));
 

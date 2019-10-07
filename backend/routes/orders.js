@@ -5,6 +5,8 @@ const { check, validationResult } = require('express-validator');
 const sendMail = require('../config/email');
 const ObjectID = require('mongodb').ObjectID;
 
+const appURL = 'http://app.logway1.lt'
+
 // const User = require('../models/User');
 // const Client = require('../models/Client');
 const Order = require('../models/Order');
@@ -132,7 +134,7 @@ router.post('/', [
       // }
 
       client.email.forEach(email => {
-        sendMail(email, `Order ID: ${orderID} was created`, `Order ID: ${orderID} from ${sender} to ${receiver} was created`);
+        sendMail(email, `Order ID: ${orderID} was created`, `Order ID: ${orderID} from ${sender} to ${receiver} was created \n ${appURL}/orders/${order._id}`);
       });
 
       res.json(order);
