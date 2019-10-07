@@ -23,7 +23,7 @@ router.post('/',
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ msg: errors.array()[0].msg });
     }
 
     const { name, email, password, type, clients } = req.body;
@@ -54,22 +54,22 @@ router.post('/',
       await user.save();
 
       // Creating JSON Web Token for user
-      const payload = {
-        user: {
-          id: user.id
-        }
-      };
-      jwt.sign(
-        payload,
-        config.get('jwtSecret'),
-        {
-          expiresIn: 36000
-        },
-        (err, token) => {
-          if (err) throw err;
-          res.json({ token })
-        }
-      );
+      // const payload = {
+      //   user: {
+      //     id: user.id
+      //   }
+      // };
+      // jwt.sign(
+      //   payload,
+      //   config.get('jwtSecret'),
+      //   {
+      //     expiresIn: 36000
+      //   },
+      //   (err, token) => {
+      //     if (err) throw err;
+      //     res.json({ token })
+      //   }
+      // );
       sendMail(user.email, `Account was created`, `Your account was created at app.logway1.lt. Please contact us for your login information`);
       res.json({ msg: 'User successfully created.' });
     } catch (err) {

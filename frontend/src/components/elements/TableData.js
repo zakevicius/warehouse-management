@@ -113,7 +113,6 @@ class TableData extends Component {
       const { orders } = this.props.orders;
       const dataOnPage = this.showDataByPageNumber(orders, this.props.page);
       return dataOnPage.map(order => {
-        console.log(order)
         return (
           <tr key={order._id}>
             <td className="center aligned">

@@ -9,7 +9,6 @@ import {
 } from '../action/types';
 
 export default (state = { orders: [] }, action) => {
-    console.log(action.payload)
     switch (action.type) {
         case NEW_ORDER_ID:
             return { ...state, newOrderID: action.payload };
