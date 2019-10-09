@@ -151,7 +151,9 @@ export const fetchNewID = (clientID, type) => async dispatch => {
                 // if there are already orders/loadings for this client take last id ant increase value by 1
                 switch (type) {
                     case '/orders':
+                        console.log(data)
                         arr = data.filter(d => d.orderID.slice(0, client.data.data.orderLetter.length) === client.data.data.orderLetter).map(item => item.orderID.slice(client.data.data.orderLetter.length));
+                        console.log(arr)
                         break;
                     case '/loadings':
                         arr = data.map(item => item.loadingID.slice(client.data.data.orderLetter.length + 3));
