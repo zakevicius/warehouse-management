@@ -4,6 +4,10 @@
 
 .ui.table thead th {
   padding: 0.5rem;
+  white-space: nowrap;
+}
+.ui.table thead th i {
+  margin-left: 1em;
 }
 
 .ui.table td {
