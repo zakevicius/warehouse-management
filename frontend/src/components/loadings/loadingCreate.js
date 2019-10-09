@@ -14,7 +14,9 @@ class LoadingCreate extends Component {
         clientID: '',
         client: 'Select a client',
         date: new Date().toISOString(),
-        ordersToLoad: []
+        ordersToLoad: [],
+        driverPhone: '',
+        commentsOnLoading: ''
     }
 
     componentDidMount() {
@@ -144,7 +146,9 @@ class LoadingCreate extends Component {
             status: 'waiting to load',
             client: this.state.client,
             totalQnt: totalQnt.toFixed(3),
-            totalBruto: totalBruto.toFixed(3)
+            totalBruto: totalBruto.toFixed(3),
+            driverPhone: this.state.driverPhone,
+            commentsOnLoading: this.state.commentsOnLoading
         });
     };
 
@@ -180,6 +184,14 @@ class LoadingCreate extends Component {
                     <div className="field">
                         <label htmlFor="trailer">Trailer</label>
                         <input type="text" name="trailer" value={this.state.trailer} onChange={this.onChange} />
+                    </div>
+                    <div className="field">
+                        <label htmlFor="driverPhone">Driver's phone number</label>
+                        <input type="text" name="driverPhone" value={this.state.driverPhone} onChange={this.onChange} />
+                    </div>
+                    <div className="field">
+                        <label htmlFor="commentsOnLoading">Comments on loading</label>
+                        <input type="text" name="commentsOnLoading" value={this.state.commentsOnLoading} onChange={this.onChange} />
                     </div>
                     <Button button={{ type: 'primary ', text: 'Submit' }} />
                 </form>

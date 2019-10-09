@@ -9,7 +9,6 @@ const Client = require('../models/Client');
 const Order = require('../models/Order');
 const Loading = require('../models/Loading')
 
-const appURL = 'http://app.logway1.lt'
 
 // @route       GET api/loadings
 // @desc        Get all users loadings
@@ -70,17 +69,20 @@ router.post(
     ],
     async (req, res) => {
         const errors = validationResult(req);
+
         if (!errors.isEmpty()) {
             return res.status(400).json({ msg: errors.array()[0].msg });
         }
 
-        const { loadingID, truck, trailer, orders, status, clientID, totalQnt, totalBruto, client } = req.body;
+        const { loadingID, truck, trailer, driverPhone, commentsOnLoading, orders, status, clientID, totalQnt, totalBruto, client } = req.body;
         try {
             // Creating new Loading
             loading = new Loading({
                 loadingID,
                 truck,
                 trailer,
+                driverPhone,
+                commentsOnLoading,
                 orders,
                 status,
                 clientID,
@@ -131,13 +133,16 @@ router.post(
 // @desc        Update client
 // @access      Private
 router.put('/:id', auth, async (req, res) => {
-    let { truck, trailer, orders, status, totalQnt, totalBruto, commentsData } = req.body;
+
+    let { truck, trailer, orders, driverPhone, commentsOnLoading, status, totalQnt, totalBruto, commentsData } = req.body;
 
     // Build Loading object, which contains new information
     const newLoadingInformation = {};
     if (truck) newLoadingInformation.truck = truck;
     if (trailer) newLoadingInformation.trailer = trailer;
     if (orders) newLoadingInformation.orders = orders;
+    if (driverPhone) newLoadingInformation.driverPhone = driverPhone;
+    if (commentsOnLoading) newLoadingInformation.commentsOnLoading = commentsOnLoading;
     if (status) newLoadingInformation.status = status;
     if (totalQnt) newLoadingInformation.totalQnt = totalQnt;
     if (totalBruto) newLoadingInformation.totalBruto = totalBruto;

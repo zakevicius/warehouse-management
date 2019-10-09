@@ -39,6 +39,14 @@ const LoadingSchema = mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    driverPhone: {
+        type: String,
+        default: ""
+    },
+    commentsOnLoading: {
+        type: String,
+        default: ""
     }
 });
 
