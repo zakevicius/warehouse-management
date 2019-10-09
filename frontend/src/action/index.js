@@ -133,9 +133,21 @@ export const fetchNewID = (clientID, type) => async dispatch => {
                 payload: 1
             });
         } else {
-            const data = res.data.filter(item => item.clientID === clientID);
+            let data;
+            switch (type) {
+                case '/orders':
+                    data = res.data.filter(item => (item.clientID === clientID && item.orderID.replace(/[0-9]/g, "") === client.data.data.orderLetter));
+                    break;
+                case '/loadings':
+                    data = res.data.filter(item => (item.clientID === clientID && item.loadingID.slice(3, 3 + client.data.data.orderLetter.length) === client.data.data.orderLetter));
+                    break;
+                default:
+                    break;
+            }
+
             let arr, result;
             if (data.length !== 0) {
+
                 // if there are already orders/loadings for this client take last id ant increase value by 1
                 switch (type) {
                     case '/orders':

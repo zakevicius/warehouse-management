@@ -6,6 +6,9 @@ import { removeData } from '../../action';
 import Button from './Button';
 
 class TableHeader extends Component {
+  state = {
+    sortType: 'ASC'
+  }
 
   remove = (type) => {
     switch (type) {
@@ -23,7 +26,21 @@ class TableHeader extends Component {
     };
   }
 
+  // renderSort = () => {
+  //   return (
+  //     <i className="sort icon" onClick={(e) => this.onSortClick(e, this.props.type, this.state.sortType)} />
+  //   )
+  // }
+
+  // onSortClick = (e, type, sortType) => {
+  //   const data = e.target.parentNode.textContent;
+  //   sortType === 'DESC' ? this.setState({ sortType: "ASC" }) : this.setState({ sortType: 'DESC' });
+  //   console.log(this.state.sortType)
+  //   this.props.sortTable(type, sortType, data);
+  // }
+
   render() {
+    console.log('render table')
     switch (this.props.type) {
       case 'orders':
         return (
@@ -39,13 +56,34 @@ class TableHeader extends Component {
                 }
               </th>
               <th className="one wide center aligned">Status</th>
-              <th className="one wide center aligned">Order</th>
-              <th className="one wide center aligned">Additional ID</th>
-              <th className="one wide center aligned">Date</th>
-              <th className="two wide center aligned">Sender</th>
-              <th className="two wide center aligned">Receiver</th>
-              <th className="one wide center aligned">Truck</th>
-              <th className="one wide center aligned">Trailer</th>
+              <th className="one wide center aligned">
+                Order
+                {/* {this.renderSort()} */}
+              </th>
+              <th className="one wide center aligned">
+                Additional ID
+                {/* {this.renderSort()} */}
+              </th>
+              <th className="one wide center aligned">
+                Date
+                {/* {this.renderSort()} */}
+              </th>
+              <th className="two wide center aligned">
+                Sender
+                {/* {this.renderSort()} */}
+              </th>
+              <th className="two wide center aligned">
+                Receiver
+                {/* {this.renderSort()} */}
+              </th>
+              <th className="one wide center aligned">
+                Truck
+                {/* {this.renderSort()} */}
+              </th>
+              <th className="one wide center aligned">
+                Trailer
+                {/* {this.renderSort()} */}
+              </th>
               <th className="one wide center aligned">CLL</th>
               <th className="one wide center aligned">Bruto</th>
               <th className="three wide center aligned">Description</th>
