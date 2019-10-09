@@ -245,8 +245,8 @@ class TableData extends Component {
       return this.renderSpinner();
     }
     const { data, client } = this.props.loading;
-    const firstColumn = ['ID', 'Truck', 'Trailer', 'Client'];
-    const secondColumn = [data.loadingID, data.truck, data.trailer, client.name];
+    const firstColumn = ['ID', 'Truck', 'Trailer', 'Client', 'Driver\'s phone number', 'Comments on loading'];
+    const secondColumn = [data.loadingID, data.truck, data.trailer, client.name, data.driverPhone, data.commentsOnLoading];
     let i = 0;
     return (
       firstColumn.map(text => {

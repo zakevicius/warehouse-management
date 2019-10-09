@@ -13,12 +13,14 @@ class LoadingEdit extends Component {
     clientID: '',
     client: '',
     date: '',
-    ordersToLoad: []
+    ordersToLoad: [],
+    driverPhone: '',
+    commentsOnLoading: ''
   }
 
   async componentWillMount() {
     await this.props.fetchSingleData('/clients', this.props.loading.data.clientID);
-    const { loadingID, truck, trailer, date, status } = this.props.loading.data;
+    const { loadingID, truck, trailer, date, status, driverPhone, commentsOnLoading } = this.props.loading.data;
     const client = this.props.loading.client.name;
     const ordersToLoad = this.props.loading.orders;
     const ordersList = this.props.client.orders.filter(order => (order.status === 'in' || order.status === 'waiting') && order.loadingID === null);
@@ -30,7 +32,9 @@ class LoadingEdit extends Component {
       trailer,
       ordersToLoad,
       ordersList,
-      status
+      status,
+      driverPhone,
+      commentsOnLoading
     });
   } z
 
@@ -72,6 +76,8 @@ class LoadingEdit extends Component {
       loadingID: this.state.loadingID,
       truck: this.state.truck,
       trailer: this.state.trailer,
+      driverPhone: this.state.driverPhone,
+      commentsOnLoading: this.state.commentsOnLoading,
       orders: this.state.ordersToLoad.map(order => order._id),
       status: this.state.status,
       totalQnt: totalQnt.toFixed(3),
@@ -103,6 +109,14 @@ class LoadingEdit extends Component {
           <div className="field">
             <label htmlFor="trailer">Trailer</label>
             <input type="text" name="trailer" value={this.state.trailer} onChange={this.onChange} />
+          </div>
+          <div className="field">
+            <label htmlFor="driverPhone">Driver's phone number</label>
+            <input type="text" name="driverPhone" value={this.state.driverPhone} onChange={this.onChange} />
+          </div>
+          <div className="field">
+            <label htmlFor="commentsOnLoading">Comments on loading</label>
+            <input type="text" name="commentsOnLoading" value={this.state.commentsOnLoading} onChange={this.onChange} />
           </div>
           <Button button={{ type: 'primary ', text: 'Submit' }} />
         </form>
