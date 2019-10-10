@@ -17,8 +17,10 @@ router.get('/', auth, async (req, res) => {
     try {
         let loadings;
         let loadingsArr = [];
-        if (req.user.type === "admin") {
-            loadings = await Loading.find({ user: { $ne: '5d8fc59f7f3a681e142dd41a' } });
+        if (req.user.type === "super") {
+            loadings = await Loading.find();
+        } else if (req.user.type === "admin") {
+            loadings = await Loading.find({ $and: [{ user: { $ne: '5d8fc59f7f3a681e142dd41a' } }, { user: { $ne: '5d9f1f14cd837a0017e0ef06' } }] });
         } else {
             for (let i = 0; i < req.user.clients.length; i++) {
                 loadings = await Loading.find({ clientID: req.user.clients[i] });
@@ -116,10 +118,10 @@ router.post(
                 res.status(500).json({ msg: 'Server error updating order status' });
             }
 
-            const logwayEmails = ['info@logway1.lt', 'tadas@logway1.lt', 'paulius@logway1.lt', 'ilona@logway1.lt', 'maija@logway1.lt'];
-            logwayEmails.forEach(email => {
-                sendMail(email, `${client} created new loading`, `New loading ID:${loadingID} was created by ${client} \n ${appURL}/loadings/${loading._id}`);
-            });
+            // const logwayEmails = ['info@logway1.lt', 'tadas@logway1.lt', 'paulius@logway1.lt', 'ilona@logway1.lt', 'maija@logway1.lt'];
+            // logwayEmails.forEach(email => {
+            //     sendMail(email, `${client} created new loading`, `New loading ID:${loadingID} was created by ${client} \n ${appURL}/loadings/${loading._id}`);
+            // });
 
             res.json(loading);
         } catch (err) {

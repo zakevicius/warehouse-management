@@ -20,8 +20,10 @@ router.get('/', auth, async (req, res) => {
   try {
     let orders;
     let ordersArr = [];
-    if (req.user.type === 'admin') {
-      orders = await Order.find({ clientID: { $ne: '5d9323e6816b7d3bbcc65f8d' } }).sort({ date: -1 });
+    if (req.user.type === 'super') {
+      orders = await Order.find();
+    } else if (req.user.type === 'admin') {
+      orders = await Order.find({ $and: [{ clientID: { $ne: '5d9323e6816b7d3bbcc65f8d' } }, { userID: { $ne: '5d9f1f14cd837a0017e0ef06' } }] }).sort({ date: -1 });
     } else {
       for (let i = 0; i < req.user.clients.length; i++) {
         orders = await Order.find({ clientID: req.user.clients[i] }).sort({ date: -1 });
