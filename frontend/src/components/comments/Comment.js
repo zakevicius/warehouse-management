@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 const Comment = ({ comment, user, removeComment, signedUser }) => {
-  console.log(user, signedUser)
   return (
     <div
       style={{

@@ -2,13 +2,23 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { history } from '../history';
-import { removeData } from '../../action';
+import { removeData, sortTable } from '../../action';
 import Button from './Button';
+import Modal from './Modal';
 
 class TableHeader extends Component {
   state = {
     sortType: 'ASC'
   }
+
+  // showModal = () => {
+  //   console.log('showwww')
+  //   return <Modal action='show' />;
+  // }
+
+  // hideModal = () => {
+  //   return <Modal action='hide' />;
+  // }
 
   remove = (type) => {
     switch (type) {
@@ -26,21 +36,21 @@ class TableHeader extends Component {
     };
   }
 
-  // renderSort = () => {
-  //   return (
-  //     <i className="sort icon" onClick={(e) => this.onSortClick(e, this.props.type, this.state.sortType)} />
-  //   )
-  // }
+  renderSort = () => {
+    return (
+      <i className="sort icon" onClick={(e) => this.onSortClick(e, this.props.type, this.state.sortType)} />
+    )
+  }
 
-  // onSortClick = (e, type, sortType) => {
-  //   const data = e.target.parentNode.textContent;
-  //   sortType === 'DESC' ? this.setState({ sortType: "ASC" }) : this.setState({ sortType: 'DESC' });
-  //   console.log(this.state.sortType)
-  //   this.props.sortTable(type, sortType, data);
-  // }
+  onSortClick = (e, type, sortType) => {
+    const data = e.target.parentNode.textContent;
+    let orders = this.props.filtered || this.props.orders;
+
+    sortType === 'DESC' ? this.setState({ sortType: "ASC" }) : this.setState({ sortType: 'DESC' });
+    this.props.sortTable(type, sortType, data, orders);
+  }
 
   render() {
-    console.log('render table')
     switch (this.props.type) {
       case 'orders':
         return (
@@ -58,15 +68,15 @@ class TableHeader extends Component {
               <th className="one wide center aligned">Status</th>
               <th className="one wide center aligned">
                 Order
-                {/* {this.renderSort()} */}
+                {this.renderSort()}
               </th>
               <th className="one wide center aligned">
                 Additional ID
-                {/* {this.renderSort()} */}
+                {this.renderSort()}
               </th>
               <th className="one wide center aligned">
                 Date
-                {/* {this.renderSort()} */}
+                {this.renderSort()}
               </th>
               <th className="two wide center aligned">
                 Sender
@@ -129,8 +139,7 @@ class TableHeader extends Component {
                 {
                   this.props.type !== 'clientEdit' &&
                     this.props.type !== 'orderEdit' &&
-                    this.props.type !== 'loadingEdit' &&
-                    (this.props.user.type === 'admin' || this.props.user.type === 'super') ?
+                    this.props.type !== 'loadingEdit' ?
                     (
                       <Link to={`/${link}/edit/${id}`}>
                         <Button
@@ -139,13 +148,13 @@ class TableHeader extends Component {
                       </Link>
                     ) : null
                 }
-                {
-                  this.props.user.type === 'admin' || this.props.user.type === 'super' ?
-                    <Button
-                      button={{ type: 'negative right floated', text: 'Delete' }}
-                      onClick={() => this.remove(this.props.type)}
-                    /> : ""
-                }
+
+                <Button
+                  button={{ type: 'negative right floated', text: 'Delete' }}
+                  // onClick={() => this.showModal()}
+                  onClick={() => this.remove(this.props.type)}
+                />
+
               </th>
               {this.props.type === "order" && <th className="six wide">Files</th>}
             </tr>
@@ -175,13 +184,9 @@ class TableHeader extends Component {
           <thead>
             <tr>
               <th className="one wide center aligned">
-                {
-                  this.props.user.type === 'admin' || this.props.user.type === 'super' ?
-                    <Link to='/loadings/new'>
-                      <Button button={{ type: 'primary basic', text: 'New loading' }} />
-                    </Link>
-                    : ""
-                }
+                <Link to='/loadings/new'>
+                  <Button button={{ type: 'primary basic', text: 'New loading' }} />
+                </Link>
               </th>
               <th className="two wide center aligned">Status</th>
               <th className="two wide center aligned">ID</th>
@@ -237,6 +242,8 @@ class TableHeader extends Component {
 
 const mapStateToProps = state => {
   return {
+    filtered: state.ordersData.filtered,
+    orders: state.ordersData.orders,
     order: state.ordersData.order,
     client: state.clientsData.client,
     loading: state.loadingsData.loading,
@@ -244,4 +251,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { removeData })(TableHeader);
+export default connect(mapStateToProps, { removeData, sortTable })(TableHeader);

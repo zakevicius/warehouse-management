@@ -18,9 +18,9 @@ router.get('/', auth, async (req, res) => {
         let loadings;
         let loadingsArr = [];
         if (req.user.type === "super") {
-            loadings = await Loading.find();
+            loadings = await Loading.find().sort({ date: -1 });
         } else if (req.user.type === "admin") {
-            loadings = await Loading.find({ $and: [{ user: { $ne: '5d8fc59f7f3a681e142dd41a' } }, { user: { $ne: '5d9f1f14cd837a0017e0ef06' } }] });
+            loadings = await Loading.find({ $and: [{ user: { $ne: '5d8fc59f7f3a681e142dd41a' } }, { user: { $ne: '5d9f1f14cd837a0017e0ef06' } }] }).sort({ date: -1 });
         } else {
             for (let i = 0; i < req.user.clients.length; i++) {
                 loadings = await Loading.find({ clientID: req.user.clients[i] });
