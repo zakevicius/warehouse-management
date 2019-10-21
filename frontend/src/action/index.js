@@ -227,13 +227,70 @@ export const removeData = (typeOfData, id) => async dispatch => {
 }
 
 // FILTER
-
 export const filterOrders = text => dispatch => {
     dispatch({ type: types.FILTER_ORDERS, payload: text });
 }
 
 export const clearFilter = () => dispatch => {
     dispatch({ type: types.CLEAR_FILTER });
+}
+
+// SORTING 
+export const sortTable = (type, sortType, data, info) => dispatch => {
+    let sortedOrders;
+
+    const sortData = (info, column, sortType) => {
+        const sortedData = info.sort((a, b) => {
+            let numA = parseInt(a[column].replace(/\D/g, ""));
+            let numB = parseInt(b[column].replace(/\D/g, ""));
+            let letA = a[column].replace(/[0-9]/g, "");
+            let letB = b[column].replace(/[0-9]/g, "");
+
+            switch (sortType) {
+                case 'ASC':
+                    if (letA > letB) { return 1 }
+                    else if (letA === letB) {
+                        if (numA > numB) { return 1 }
+                        else { return -1 }
+                    }
+                    else { return -1 };
+                default:
+                    if (letA < letB) { return 1 }
+                    else if (letA === letB) {
+                        if (numA < numB) { return 1 }
+                        else { return -1 }
+                    }
+                    else { return -1 }
+            }
+        });
+        console.log(sortedData[0])
+        return sortedData;
+    }
+
+    switch (type) {
+        case 'orders':
+            if (!info) break;
+            switch (data) {
+                case 'Order':
+                    sortedOrders = sortData(info, 'orderID', sortType);
+                    break;
+                case 'Additional ID':
+                    sortedOrders = sortData(info, 'additionalID', sortType);
+                    break;
+                case 'Date':
+                    sortedOrders = sortData(info, 'date', sortType);
+                    break;
+                default:
+                    break;
+            };
+            break;
+        default:
+            break;
+    }
+
+    if (sortedOrders) {
+        dispatch({ type: types.SORT_ORDERS, payload: sortedOrders });
+    }
 }
 
 // FILES

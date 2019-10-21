@@ -5,7 +5,8 @@ import {
     ORDER_ERROR,
     FILTER_ORDERS,
     CLEAR_FILTER,
-    CLEAR_STATE
+    CLEAR_STATE,
+    SORT_ORDERS
 } from '../action/types';
 
 export default (state = { orders: [] }, action) => {
@@ -34,6 +35,8 @@ export default (state = { orders: [] }, action) => {
             };
         case CLEAR_FILTER:
             return { ...state, filtered: null };
+        case SORT_ORDERS:
+            return { ...state, order: { orders: action.payload } }
         case CLEAR_STATE:
             return { ...state, order: null };
         default:

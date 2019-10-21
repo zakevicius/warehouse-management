@@ -17,6 +17,7 @@ export const DELETE_ORDER = 'DELETE_ORDER';
 export const UPDATE_ORDER = 'UPDATE_ORDER';
 export const FETCH_ORDER_ID = 'FETCH_ORDER_ID'
 export const ORDER_ERROR = 'ORDER_ERROR';
+export const SORT_ORDERS = "SORT_ORDERS";
 // export const SET_ORDER_STATUS = 'SET_ORDER_STATUS';
 
 //CLIENTS

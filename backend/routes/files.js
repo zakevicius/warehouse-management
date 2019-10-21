@@ -56,6 +56,19 @@ router.get('/download/:id', async (req, res) => {
 // @desc        Add new client
 // @access      Private
 router.post('/:id', auth, async (req, res, next) => {
+
+  let order = await Order.findById(req.params.id);
+
+  // Check if user authorized
+  if (order.user.toString() !== req.user.id) {
+    if (req.user.type !== 'admin' && req.user.type !== 'super') {
+      console.log(req.user.type)
+      return res.status(404).json({ msg: 'not authorized' });
+    }
+  }
+
+  console.log('after not auth')
+
   let photos = [];
   let documents = [];
   let errors = [];
@@ -101,15 +114,6 @@ router.post('/:id', auth, async (req, res, next) => {
 
       await file.save();
 
-      let order = await Order.findById(req.params.id);
-
-      // Check if user authorized
-      if (order.user.toString() !== req.user.id) {
-        if (req.user.type !== 'admin') {
-          return res.status(401).json({ msg: 'not authorized' });
-        }
-      }
-
       let newOrderInformation = {};
       if (type === 'photo') {
         newOrderInformation.photos = [...order.photos, file];
@@ -136,12 +140,14 @@ router.post('/:id', auth, async (req, res, next) => {
     } else if (req.files.files.length) {
       (async () => {
         for (const file of req.files.files) {
+          console.log('many', file)
           await uploadFile(file);
         }
         res.json({ photos, documents });
       })();
     } else {
       (async () => {
+        console.log('one', file)
         await uploadFile(req.files.files);
         res.json({ photos, documents });
       })();

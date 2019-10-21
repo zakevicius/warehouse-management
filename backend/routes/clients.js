@@ -14,8 +14,10 @@ router.get('/', auth, async (req, res) => {
   try {
     let data, user;
     let dataArr = [];
-    if (req.user.type === "admin") {
-      data = await Client.find({ user: { $ne: '5d8fc59f7f3a681e142dd41a' } });
+    if (req.user.type === "super") {
+      data = await Client.find();
+    } else if (req.user.type === "admin") {
+      data = await Client.find({ $and: [{ user: { $ne: '5d8fc59f7f3a681e142dd41a' } }, { user: { $ne: '5d9f1f14cd837a0017e0ef06' } }] });
     } else {
       userData = await User.findById(req.user.id, { clients: 1, _id: 0 });
       for (let i = 0; i < userData.clients.length; i++) {

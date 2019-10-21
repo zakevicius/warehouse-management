@@ -35,7 +35,7 @@ const File = ({ type, file, downloadFile, ...props }) => {
     case "document":
       return (
         <p key={file._id} style={styleP}>
-          {props.userType === "admin" ?
+          {props.userType === "admin" || props.userType === 'super' ?
             <i className="ui large link close red icon" onClick={onClickRemove} /> :
             <i className="file alternate outline icon" onClick={onClickRemove} />
           }
