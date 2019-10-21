@@ -20,6 +20,7 @@ class OrderList extends Component {
   }
 
   renderTable = (orders, status) => {
+    console.log(orders);
     if (orders.length === 0) {
       return (
         <div>

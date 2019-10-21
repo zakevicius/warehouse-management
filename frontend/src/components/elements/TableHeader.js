@@ -51,6 +51,7 @@ class TableHeader extends Component {
   }
 
   render() {
+    console.log('render table')
     switch (this.props.type) {
       case 'orders':
         return (
