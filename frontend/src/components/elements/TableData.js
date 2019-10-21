@@ -92,7 +92,7 @@ class TableData extends Component {
             <td className="right aligned" style={{ fontWeight: "bold" }}>{text}</td>
             {renderInfo(i)}
             {i === 1 && <td rowSpan={secondColumn.length - 3}><FileList id={order._id} type="showFiles" /></td>}
-            {(i === secondColumn.length - 2 && this.props.userType === 'admin') && <td rowSpan="3"><FileUpload id={order._id} /></td>}
+            {(i === secondColumn.length - 2 && (this.props.userType === 'admin' || this.props.userType === 'super')) && <td rowSpan="3"><FileUpload id={order._id} /></td>}
           </tr >
         );
       })

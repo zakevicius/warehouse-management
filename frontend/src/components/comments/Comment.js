@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 const Comment = ({ comment, user, removeComment, signedUser }) => {
-  console.log(user, signedUser)
   return (
     <div
       style={{
@@ -22,7 +21,7 @@ const Comment = ({ comment, user, removeComment, signedUser }) => {
         {comment.text}
       </span>
       {/* {(user._id === signedUser._id) && */}
-      {signedUser.type === 'admin' &&
+      {(signedUser.type === 'admin' || signedUser.type === 'super') &&
         <i className="minus icon red" style={{ float: 'right', margin: '0 1em', cursor: 'pointer' }} onClick={() => removeComment(comment.id)}></i>
       }
       <span

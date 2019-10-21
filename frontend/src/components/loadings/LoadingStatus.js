@@ -58,7 +58,7 @@ class LoadingStatus extends Component {
   }
 
   renderStatusButton = () => {
-    if (this.props.userType === "admin") {
+    if (this.props.userType === "admin" || this.props.userType === 'super') {
       return (
         <Button
           button={{ type: 'positive basic left floated', text: this.state.button }}

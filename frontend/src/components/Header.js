@@ -21,7 +21,7 @@ const Header = props => {
         Orders
       </Link>
       {
-        props.user.type === 'admin' || props.user.type === 'user' ?
+        props.user.type === 'admin' || props.user.type === 'super' ?
           <Link
             onClick={() => props.setActiveTab("primary", "clients")}
             to="/clients/page/1"
@@ -41,7 +41,7 @@ const Header = props => {
         <button className="ui inverted button" onClick={props.logout}>
           Log out
         </button>
-        {props.user.type === 'admin' ?
+        {props.user.type === 'admin' || props.user.type === 'super' ?
           <Link
             to="/register"
             className="item"

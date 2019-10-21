@@ -20,8 +20,10 @@ router.get('/', auth, async (req, res) => {
   try {
     let orders;
     let ordersArr = [];
-    if (req.user.type === 'admin') {
-      orders = await Order.find({ clientID: { $ne: '5d9323e6816b7d3bbcc65f8d' } }).sort({ date: -1 });
+    if (req.user.type === 'super') {
+      orders = await Order.find().sort({ date: -1 });
+    } else if (req.user.type === 'admin') {
+      orders = await Order.find({ $and: [{ clientID: { $ne: '5d9323e6816b7d3bbcc65f8d' } }, { userID: { $ne: '5d9f1f14cd837a0017e0ef06' } }] }).sort({ date: -1 });
     } else {
       for (let i = 0; i < req.user.clients.length; i++) {
         orders = await Order.find({ clientID: req.user.clients[i] }).sort({ date: -1 });
@@ -47,7 +49,7 @@ router.get('/', auth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
   try {
     let order = await Order.findById(req.params.id, (err, res) => res);
-    if (req.user.type === 'admin' || req.user.clients.indexOf(order.clientID.toString()) >= 0) {
+    if (req.user.type === 'admin' || req.user.type === 'super' || req.user.clients.indexOf(order.clientID.toString()) >= 0) {
       res.json(order);
     } else {
       throw ({ msg: 'Not authorized' })
@@ -216,7 +218,7 @@ router.delete('/:id', auth, async (req, res) => {
 
     // Check if user is authorized to delete order
     if (ObjectID(order.user).toString() !== req.user.id) {
-      if (req.user.type !== 'admin') {
+      if (req.user.type !== 'admin' && req.user.type !== 'super') {
         return res.status(401).json({ msg: 'Not authorized' })
       }
     }
