@@ -237,6 +237,7 @@ export const clearFilter = () => dispatch => {
 
 // SORTING 
 export const sortTable = (type, sortType, data, info) => dispatch => {
+    console.log(type, sortType, data, info)
     let sortedOrders;
 
     const sortData = (info, column, sortType) => {
@@ -263,7 +264,6 @@ export const sortTable = (type, sortType, data, info) => dispatch => {
                     else { return -1 }
             }
         });
-        console.log(sortedData[0])
         return sortedData;
     }
 

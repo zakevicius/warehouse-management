@@ -23,6 +23,7 @@ class Table extends Component {
         <table className="ui celled striped table segment">
           <TableHeader
             type={this.props.type}
+            orders={this.props.orders}
           />
           <TableData
             type={this.props.type}

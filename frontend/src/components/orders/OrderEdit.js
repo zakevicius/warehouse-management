@@ -66,6 +66,12 @@ class OrderEdit extends Component {
                 clientID: client._id,
                 [e.target.name]: e.target.value
             });
+        } else if (e.target.name === 'bruto') {
+            let newBruto = e.target.value.replace(',', '.');
+            this.setState({
+                ...this.state,
+                [e.target.name]: newBruto
+            });
         } else {
             this.setState({
                 ...this.state,

@@ -23,7 +23,7 @@ class LoadingEdit extends Component {
     const { loadingID, truck, trailer, date, status, driverPhone, commentsOnLoading } = this.props.loading.data;
     const client = this.props.loading.client.name;
     const ordersToLoad = this.props.loading.orders;
-    const ordersList = this.props.client.orders.filter(order => (order.status === 'in' || order.status === 'waiting') && order.loadingID === null);
+    const ordersList = this.props.client.orders.filter(order => (order.status === 'in' || order.status === 'waiting') & !order.loadingID);
     this.setState({
       loadingID,
       truck,

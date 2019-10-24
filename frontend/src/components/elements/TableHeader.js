@@ -44,14 +44,14 @@ class TableHeader extends Component {
 
   onSortClick = (e, type, sortType) => {
     const data = e.target.parentNode.textContent;
-    let orders = this.props.filtered || this.props.orders;
+    let orders = this.props.orders.orders;
 
     sortType === 'DESC' ? this.setState({ sortType: "ASC" }) : this.setState({ sortType: 'DESC' });
+
     this.props.sortTable(type, sortType, data, orders);
   }
 
   render() {
-    console.log('render table')
     switch (this.props.type) {
       case 'orders':
         return (
@@ -138,9 +138,11 @@ class TableHeader extends Component {
               </th>
               <th className="four wide">
                 {
-                  this.props.type !== 'clientEdit' &&
+                  (this.props.type !== 'clientEdit' &&
                     this.props.type !== 'orderEdit' &&
-                    this.props.type !== 'loadingEdit' ?
+                    this.props.type !== 'loadingEdit' &&
+                    (this.props.user.type === 'admin' || this.props.user.type === 'super')) ||
+                    (this.props.type === 'loading') ?
                     (
                       <Link to={`/${link}/edit/${id}`}>
                         <Button
@@ -149,12 +151,17 @@ class TableHeader extends Component {
                       </Link>
                     ) : null
                 }
-
-                <Button
-                  button={{ type: 'negative right floated', text: 'Delete' }}
-                  // onClick={() => this.showModal()}
-                  onClick={() => this.remove(this.props.type)}
-                />
+                {
+                  (this.props.user.type === 'admin' || this.props.user.type === 'super') ||
+                    (this.props.type === 'loading') ?
+                    (
+                      <Button
+                        button={{ type: 'negative right floated', text: 'Delete' }}
+                        // onClick={() => this.showModal()}
+                        onClick={() => this.remove(this.props.type)}
+                      />
+                    ) : null
+                }
 
               </th>
               {this.props.type === "order" && <th className="six wide">Files</th>}
@@ -244,7 +251,6 @@ class TableHeader extends Component {
 const mapStateToProps = state => {
   return {
     filtered: state.ordersData.filtered,
-    orders: state.ordersData.orders,
     order: state.ordersData.order,
     client: state.clientsData.client,
     loading: state.loadingsData.loading,

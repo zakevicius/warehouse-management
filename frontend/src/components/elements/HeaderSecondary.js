@@ -4,6 +4,7 @@ import { setActiveTab } from "../../action";
 import { Link } from 'react-router-dom';
 
 const HeaderSecondary = props => {
+  console.log(props)
 
   const types = ['all', 'waiting', 'in', 'waiting to load', 'loading', 'out'];
 
@@ -16,7 +17,7 @@ const HeaderSecondary = props => {
           to='/orders/page/1'
           onClick={() => props.setActiveTab("secondary", type)}
           className={type === props.active ? "active item" : "item"}
-        > {type}</Link>
+        > {type.slice(0, 1).toUpperCase().concat(type.slice(1))}</Link>
       )
     );
   };
@@ -24,7 +25,7 @@ const HeaderSecondary = props => {
   return (
     <div className="ui vertical center aligned segment" >
       <div className="ui large secondary pointing menu">
-        {renderLinks()}
+        {renderLinks(this.props.data)}
       </div>
     </div>
   );

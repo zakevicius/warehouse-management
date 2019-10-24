@@ -8,7 +8,6 @@ import {
 } from '../action/types';
 
 export default (state = { loadings: [] }, action) => {
-  console.log(action.payload)
   switch (action.type) {
     case FETCH_LOADINGS:
       return { ...state, loadings: action.payload };

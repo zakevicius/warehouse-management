@@ -40,6 +40,12 @@ class OrderCreate extends Component {
             this.setState({
                 declarations: e.target.value.split(/[\s,;.]+/)
             })
+        } else if (e.target.name === 'bruto') {
+            let newBruto = e.target.value.replace(',', '.');
+            this.setState({
+                ...this.state,
+                [e.target.name]: newBruto
+            });
         } else {
             this.setState({
                 ...this.state,
