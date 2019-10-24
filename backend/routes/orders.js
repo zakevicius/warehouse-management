@@ -135,9 +135,9 @@ router.post('/', [
       //   order = await newOrder.save();
       // }
 
-      // client.email.forEach(email => {
-      //   sendMail(email, `Order ID: ${orderID} was created`, `Order ID: ${orderID} from ${sender} to ${receiver} was created \n ${appURL}/orders/${order._id}`);
-      // });
+      client.email.forEach(email => {
+        sendMail(email, `Order ID: ${orderID} was created`, `Order ID: ${orderID} from ${sender} to ${receiver} was created \n ${appURL}/orders/${order._id}`);
+      });
 
       res.json(order);
     } catch (err) {

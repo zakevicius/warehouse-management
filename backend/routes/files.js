@@ -137,17 +137,15 @@ router.post('/:id', auth, async (req, res, next) => {
   try {
     if (errors.length > 0) {
       return res.status(500).send(errors);
-    } else if (req.files.files.length) {
+    } else if (req.files.files.length > 1) {
       (async () => {
         for (const file of req.files.files) {
-          console.log('many', file)
           await uploadFile(file);
         }
         res.json({ photos, documents });
       })();
     } else {
       (async () => {
-        console.log('one', file)
         await uploadFile(req.files.files);
         res.json({ photos, documents });
       })();
