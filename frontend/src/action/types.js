@@ -18,6 +18,7 @@ export const UPDATE_ORDER = 'UPDATE_ORDER';
 export const FETCH_ORDER_ID = 'FETCH_ORDER_ID'
 export const ORDER_ERROR = 'ORDER_ERROR';
 export const SORT_ORDERS = "SORT_ORDERS";
+export const CLEAR_SORT_ORDERS = "CLEAR_SORT_ORDERS";
 // export const SET_ORDER_STATUS = 'SET_ORDER_STATUS';
 
 //CLIENTS
@@ -61,3 +62,7 @@ export const CLEAR_FILTER = 'CLEAR_FILTER';
 // ERROR
 export const NETWORK_ERROR = 'NETWORK_ERROR';
 export const SET_ERROR = 'SET_ERROR';
+
+// MODAL
+export const SHOW_MODAL = 'SHOW_MODAL';
+export const HIDE_MODAL = 'HIDE_MODAL';

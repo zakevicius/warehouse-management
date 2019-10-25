@@ -1,8 +1,17 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { hideModal } from '../../action';
 
-const Modal = ({ action }) => {
+const Modal = (props) => {
 
-  const showModal = () => {
+  const onConfirm = () => {
+    props.confirm();
+    props.hideModal();
+  }
+
+  if (!props.showModal) {
+    return null;
+  } else {
     return (
       <div className='ui dimmer modals page active'>
         <div className="ui small basic test modal transition visible active" >
@@ -14,11 +23,11 @@ const Modal = ({ action }) => {
             <p>Do you really want to delete?</p>
           </div>
           <div className="actions">
-            <div className="ui green basic cancel inverted button">
+            <div className="ui green basic cancel inverted button" onClick={props.hideModal}>
               <i className="remove icon"></i>
               No
             </div>
-            <div className="ui red ok inverted button">
+            <div className="ui red ok inverted button" onClick={onConfirm}>
               <i className="checkmark icon"></i>
               Yes
             </div>
@@ -26,24 +35,14 @@ const Modal = ({ action }) => {
         </div>
       </div>
     )
-  };
-
-  const hideModal = () => {
-    return (
-      <span></span>
-    )
-  }
-
-  if (action === 'hide') {
-    console.log('hide');
-    return hideModal();
-  } else if (action === 'show') {
-    console.log('show')
-    return showModal();
-  } else {
-    return hideModal();
   }
 };
 
-export default Modal;
+const mapStateToProps = (state) => {
+  return {
+    showModal: state.eventsData.showModal
+  }
+}
+
+export default connect(mapStateToProps, { hideModal })(Modal);
 

@@ -237,7 +237,6 @@ export const clearFilter = () => dispatch => {
 
 // SORTING 
 export const sortTable = (type, sortType, data, info) => dispatch => {
-    console.log(type, sortType, data, info)
     let sortedOrders;
 
     const sortData = (info, column, sortType) => {
@@ -367,6 +366,20 @@ export const setActiveTab = (type, tab) => {
         payload: tab
     };
 };
+
+export const showModal = () => {
+    return {
+        type: types.SHOW_MODAL,
+        payload: true
+    }
+}
+
+export const hideModal = () => {
+    return {
+        type: types.HIDE_MODAL,
+        payload: false
+    }
+}
 
 export const clearState = () => ({ type: types.CLEAR_STATE });
 

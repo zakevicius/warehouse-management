@@ -1,11 +1,12 @@
 import React from 'react';
-import { removeData, downloadFile } from '../../action';
+import { removeData, downloadFile, showModal } from '../../action';
 import { connect } from 'react-redux';
+import Modal from '../elements/Modal';
 
 
 const File = ({ type, file, downloadFile, ...props }) => {
-  const onClickRemove = () => {
-    props.removeData('/files', file._id);
+  const onClickRemove = (id) => {
+    props.removeData('/files', id);
   };
 
   const onClick = (id) => {
@@ -34,13 +35,14 @@ const File = ({ type, file, downloadFile, ...props }) => {
     case "photo":
     case "document":
       return (
-        <p key={file._id} style={styleP}>
+        <div key={file._id} style={styleP}>
           {props.userType === "admin" || props.userType === 'super' ?
-            <i className="ui large link close red icon" onClick={onClickRemove} /> :
-            <i className="file alternate outline icon" onClick={onClickRemove} />
+            <i className="ui large link close red icon" onClick={props.showModal} /> :
+            <i className="file alternate outline icon" />
           }
+          <Modal confirm={() => onClickRemove(file._id)} />
           <span style={styleSpan} onClick={() => onClick(file._id)}>{file.name.split('.')[0].split('___')[1]}</span>
-        </p >
+        </div >
       )
     default:
       return null;
@@ -53,4 +55,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { removeData, downloadFile })(File);
+export default connect(mapStateToProps, { removeData, downloadFile, showModal })(File);

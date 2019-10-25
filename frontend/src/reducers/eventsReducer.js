@@ -2,13 +2,16 @@ import {
     SET_ACTIVE_TAB,
     SET_LOADING,
     UNSET_LOADING,
-    SET_ACTIVE_SUB_TAB
+    SET_ACTIVE_SUB_TAB,
+    SHOW_MODAL,
+    HIDE_MODAL
 } from '../action/types';
 
 const initialState = {
     activeTab: 'home',
     activeSubTab: 'all',
     load: false,
+    showModal: false
 }
 
 export default (state = initialState, action) => {
@@ -21,6 +24,9 @@ export default (state = initialState, action) => {
             return { ...state, load: true };
         case UNSET_LOADING:
             return { ...state, load: false };
+        case SHOW_MODAL:
+        case HIDE_MODAL:
+            return { ...state, showModal: action.payload };
         default:
             return state;
     }

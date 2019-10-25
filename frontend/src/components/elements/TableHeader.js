@@ -1,24 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { history } from '../history';
-import { removeData, sortTable } from '../../action';
+import { removeData, sortTable, showModal } from '../../action';
 import Button from './Button';
 import Modal from './Modal';
 
 class TableHeader extends Component {
   state = {
-    sortType: 'ASC'
+    sortType: 'ASC',
   }
 
-  // showModal = () => {
-  //   console.log('showwww')
-  //   return <Modal action='show' />;
-  // }
+  showModal = () => {
+    this.setState({ showModal: 'show' });
+  }
 
-  // hideModal = () => {
-  //   return <Modal action='hide' />;
-  // }
+  hideModal = () => {
+    this.setState({ showModal: 'hide' });
+  }
 
   remove = (type) => {
     switch (type) {
@@ -44,7 +43,7 @@ class TableHeader extends Component {
 
   onSortClick = (e, type, sortType) => {
     const data = e.target.parentNode.textContent;
-    let orders = this.props.orders.orders;
+    let { orders } = this.props.orders;
 
     sortType === 'DESC' ? this.setState({ sortType: "ASC" }) : this.setState({ sortType: 'DESC' });
 
@@ -100,7 +99,7 @@ class TableHeader extends Component {
               <th className="three wide center aligned">Description</th>
               <th className="two wide center aligned">Declarations</th>
             </tr>
-          </thead>
+          </thead >
         );
       case 'order':
       case 'client':
@@ -155,11 +154,13 @@ class TableHeader extends Component {
                   (this.props.user.type === 'admin' || this.props.user.type === 'super') ||
                     (this.props.type === 'loading') ?
                     (
-                      <Button
-                        button={{ type: 'negative right floated', text: 'Delete' }}
-                        // onClick={() => this.showModal()}
-                        onClick={() => this.remove(this.props.type)}
-                      />
+                      <Fragment>
+                        <Button
+                          button={{ type: 'negative right floated', text: 'Delete' }}
+                          onClick={() => this.props.showModal()}
+                        />
+                        <Modal confirm={() => this.remove(this.props.type)} />
+                      </Fragment>
                     ) : null
                 }
 
@@ -258,4 +259,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { removeData, sortTable })(TableHeader);
+export default connect(mapStateToProps, { removeData, sortTable, showModal })(TableHeader);

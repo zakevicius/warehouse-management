@@ -30,7 +30,6 @@ class App extends React.Component {
       <Fragment>
         <Router history={history}>
           <Fragment>
-            <Modal />
             <Header handleClick={this.handleClick} />
             <Switch>
               <PrivateRoute path="/" exact component={Home} />

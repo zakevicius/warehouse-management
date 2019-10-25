@@ -4,8 +4,6 @@ import { setActiveTab } from "../../action";
 import { Link } from 'react-router-dom';
 
 const HeaderSecondary = props => {
-  console.log(props)
-
   const types = ['all', 'waiting', 'in', 'waiting to load', 'loading', 'out'];
 
   const renderLinks = () => {
@@ -25,7 +23,7 @@ const HeaderSecondary = props => {
   return (
     <div className="ui vertical center aligned segment" >
       <div className="ui large secondary pointing menu">
-        {renderLinks(this.props.data)}
+        {renderLinks()}
       </div>
     </div>
   );
