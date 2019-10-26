@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { createData, fetchNewID, fetchData } from '../../action';
+import { createData, fetchNewID, fetchData, clearError, setActiveTab } from '../../action';
 import Button from '../elements/Button';
 import Error from '../elements/Error';
 
@@ -22,7 +22,12 @@ class OrderCreate extends Component {
         status: 'Select status',
     }
 
+    componentWillMount() {
+        this.props.clearError('/orders');
+    }
+
     componentDidMount() {
+        this.props.setActiveTab('primary', 'orders');
         this.props.fetchData('/clients');
     }
 
@@ -187,5 +192,7 @@ export default connect(mapStateToProps,
     {
         createData,
         fetchNewID,
-        fetchData
+        fetchData,
+        clearError,
+        setActiveTab
     })(OrderCreate);

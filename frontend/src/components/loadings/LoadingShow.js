@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchSingleData, setActiveTab } from '../../action'
+import { fetchSingleData, setActiveTab, clearError } from '../../action'
 import Table from '../elements/Table';
 import Spinner from '../elements/Spinner';
 import Error from '../elements/Error';
@@ -10,9 +10,10 @@ import LoadingStatus from './LoadingStatus';
 class LoadingShow extends Component {
 
   async componentDidMount() {
+    this.props.setActiveTab('primary', 'loadings');
+    this.props.clearError('/loadings');
     await this.props.fetchSingleData('/loadings', this.props.match.params.id);
-    this.props.setActiveTab('loadings');
-  } z
+  }
 
   render() {
     if (this.props.load || !this.props.loading) return <Spinner />;
@@ -35,4 +36,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { fetchSingleData, setActiveTab })(LoadingShow);
+export default connect(mapStateToProps, { fetchSingleData, setActiveTab, clearError })(LoadingShow);

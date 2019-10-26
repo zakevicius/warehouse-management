@@ -5,10 +5,10 @@ import Table from '../elements/Table';
 import Spinner from '../elements/Spinner';
 
 class OrderShow extends Component {
-  componentDidMount() {
-    this.props.fetchSingleData('/orders', this.props.match.params.id);
-    this.props.fetchData('/files', this.props.match.params.id);
-    this.props.setActiveTab('orders');
+  async componentDidMount() {
+    await this.props.fetchSingleData('/orders', this.props.match.params.id);
+    await this.props.fetchData('/files', this.props.match.params.id);
+    this.props.setActiveTab('primary', 'orders');
   }
 
   render() {

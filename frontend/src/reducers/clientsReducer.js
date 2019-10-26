@@ -5,7 +5,8 @@ import {
     UPDATE_CLIENT,
     DELETE_CLIENT,
     CLIENT_ERROR,
-    CLEAR_STATE
+    CLEAR_STATE,
+    CLEAR_CLIENT_ERROR
 } from '../action/types';
 
 export default (state = { clients: [] }, action) => {
@@ -28,6 +29,8 @@ export default (state = { clients: [] }, action) => {
             };
         case CLIENT_ERROR:
             return { ...state, error: action.payload };
+        case CLEAR_CLIENT_ERROR:
+            return { ...state, error: null };
         case CLEAR_STATE:
             return { ...state, client: null };
         default:

@@ -6,7 +6,7 @@ import Spinner from '../elements/Spinner';
 
 class ClientList extends React.Component {
     componentDidMount() {
-        this.props.setActiveTab('clients');
+        this.props.setActiveTab('primary', 'clients');
         this.props.fetchData('/clients');
     }
 

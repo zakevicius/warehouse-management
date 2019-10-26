@@ -7,7 +7,8 @@ import {
     CLEAR_FILTER,
     CLEAR_STATE,
     SORT_ORDERS,
-    CLEAR_SORT_ORDERS
+    CLEAR_SORT_ORDERS,
+    CLEAR_ORDER_ERROR
 } from '../action/types';
 
 export default (state = { orders: [] }, action) => {
@@ -18,8 +19,6 @@ export default (state = { orders: [] }, action) => {
             return { ...state, orders: action.payload };
         case FETCH_ORDER:
             return { ...state, order: action.payload };
-        case ORDER_ERROR:
-            return { ...state, error: action.payload };
         case FILTER_ORDERS:
             return {
                 ...state,
@@ -37,9 +36,13 @@ export default (state = { orders: [] }, action) => {
         case CLEAR_FILTER:
             return { ...state, filtered: null };
         case SORT_ORDERS:
-            return { ...state }
+            return { ...state };
         case CLEAR_SORT_ORDERS:
-            return { ...state, order: null }
+            return { ...state, order: null };
+        case ORDER_ERROR:
+            return { ...state, error: action.payload };
+        case CLEAR_ORDER_ERROR:
+            return { ...state, error: null };
         case CLEAR_STATE:
             return { ...state, order: null };
         default:

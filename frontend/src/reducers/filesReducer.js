@@ -7,7 +7,8 @@ import {
   FETCH_FILES,
   DOWNLOAD_FILE,
   FILE_ERROR,
-  CLEAR_STATE
+  CLEAR_STATE,
+  CLEAR_FILE_ERROR
 } from '../action/types';
 
 const initialState = {
@@ -29,7 +30,6 @@ export default (state = initialState, action) => {
     case DOWNLOAD_FILE:
       return state;
     case UPLOAD_FILES:
-      console.log(action.payload)
       return {
         ...state,
         files: {
@@ -54,6 +54,8 @@ export default (state = initialState, action) => {
       return { ...state, filesToUpload: [] };
     case FILE_ERROR:
       return { ...state, error: action.payload };
+    case CLEAR_FILE_ERROR:
+      return { ...state, error: null };
     case CLEAR_STATE:
       return { initialState };
     default:

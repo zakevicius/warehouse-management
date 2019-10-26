@@ -20,4 +20,11 @@
   font-size: 0.8rem;
 }
 
+.ui.modal {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+}
+
 /*# sourceMappingURL=main.css.map */

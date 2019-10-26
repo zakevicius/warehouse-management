@@ -1,7 +1,6 @@
 import React, { Fragment } from "react";
 import { Router, Route, Switch } from "react-router-dom";
 import { history } from "./history";
-import Modal from "./elements/Modal";
 
 import "../css/main.css";
 

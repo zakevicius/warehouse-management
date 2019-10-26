@@ -4,7 +4,8 @@ import {
   CREATE_LOADING,
   LOADING_ERROR,
   NEW_LOADING_ID,
-  CLEAR_STATE
+  CLEAR_STATE,
+  CLEAR_LOADING_ERROR
 } from '../action/types';
 
 export default (state = { loadings: [] }, action) => {
@@ -19,6 +20,8 @@ export default (state = { loadings: [] }, action) => {
       return { ...state, newLoadingID: action.payload };
     case LOADING_ERROR:
       return { ...state, error: action.payload };
+    case CLEAR_LOADING_ERROR:
+      return { ...state, error: null };
     case CLEAR_STATE:
       return { ...state, loading: null };
     default:

@@ -8,7 +8,7 @@ import ClientOrderList from './ClientOrderList';
 class ClientShow extends Component {
     componentDidMount() {
         this.props.fetchSingleData('/clients', this.props.match.params.id);
-        this.props.setActiveTab('clients');
+        this.props.setActiveTab('primary', 'clients');
     }
 
     render() {

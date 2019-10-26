@@ -6,7 +6,7 @@ import Spinner from '../elements/Spinner';
 
 class LoadingdList extends Component {
   componentDidMount() {
-    this.props.setActiveTab('loadings');
+    this.props.setActiveTab('primary', 'loadings');
     this.props.fetchData('/loadings');
   }
 

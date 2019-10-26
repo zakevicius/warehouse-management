@@ -23,13 +23,13 @@ const Modal = (props) => {
             <p>Do you really want to delete?</p>
           </div>
           <div className="actions">
-            <div className="ui green basic cancel inverted button" onClick={props.hideModal}>
-              <i className="remove icon"></i>
-              No
-            </div>
             <div className="ui red ok inverted button" onClick={onConfirm}>
               <i className="checkmark icon"></i>
               Yes
+            </div>
+            <div className="ui green basic cancel inverted button" onClick={props.hideModal}>
+              <i className="remove icon"></i>
+              No
             </div>
           </div>
         </div>

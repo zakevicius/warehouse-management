@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import Button from '../elements/Button';
-import { updateData, setError } from '../../action';
+import { updateData, setError, clearError } from '../../action';
 
 class LoadingStatus extends Component {
 
@@ -17,6 +17,7 @@ class LoadingStatus extends Component {
   }
 
   onSubmit = e => {
+    this.props.clearError('/loadings');
     e.preventDefault();
     let confirmLoaded = true;
     if (this.state.newStatus === "loaded") {
@@ -119,4 +120,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { updateData, setError })(LoadingStatus);
+export default connect(mapStateToProps, { updateData, setError, clearError })(LoadingStatus);

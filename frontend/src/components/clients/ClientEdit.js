@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateData, fetchSingleData } from '../../action';
+import { updateData, fetchSingleData, clearError, setActiveTab } from '../../action';
 import Button from '../elements/Button';
 import Error from '../elements/Error';
 
@@ -12,7 +12,12 @@ class ClientEdit extends Component {
         phone: ''
     }
 
+    componentWillMount() {
+        this.props.clearError('/clients');
+    }
+
     componentDidMount() {
+        this.props.setActiveTab('primary', 'clients');
         if (!this.props.client) {
             this.props.fetchSingleData('/clients', this.props.match.params.id);
         }
@@ -46,6 +51,7 @@ class ClientEdit extends Component {
     }
 
     onSubmit = e => {
+        this.props.clearError('/clients')
         e.preventDefault();
         this.props.updateData(`/clients`, this.state, this.props.match.params.id);
     }
@@ -102,5 +108,7 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps,
     {
         updateData,
-        fetchSingleData
+        fetchSingleData,
+        clearError,
+        setActiveTab
     })(ClientEdit);

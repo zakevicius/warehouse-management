@@ -14,13 +14,14 @@ class Table extends Component {
     loadingOrderList: this.props.loadingOrderList,
     page: this.props.page,
     url: this.props.url,
-    additional: this.props.additional
+    additional: this.props.additional,
+    color: this.props.color ? this.props.color : ''
   }
 
   render() {
     return (
       <Fragment>
-        <table className="ui celled striped table segment">
+        <table className={`ui celled striped table segment very compact ${this.state.color}`}>
           <TableHeader
             type={this.props.type}
             orders={this.props.orders}

@@ -22,3 +22,12 @@
   padding: 0.5rem 1rem;
   font-size: 0.8rem;
 }
+
+// MODAL
+
+.ui.modal {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+}

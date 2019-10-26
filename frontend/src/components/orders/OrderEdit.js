@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateData, fetchNewID, fetchData } from '../../action';
+import { updateData, fetchNewID, fetchData, fetchSingleData, clearError, setActiveTab } from '../../action';
 import Button from '../elements/Button';
 import Error from '../elements/Error';
 
@@ -21,10 +21,16 @@ class OrderEdit extends Component {
         status: 'Select status',
     }
 
+    componentWillMount() {
+        this.props.clearError('/orders');
+    }
+
     componentDidMount = async () => {
+        this.props.setActiveTab('primary', 'orders');
+
         await this.props.fetchData('/clients');
         if (!this.props.order) {
-            this.props.fetchSingleData('/orders', this.props.match.params.id);
+            await this.props.fetchSingleData('/orders', this.props.match.params.id);
         }
         const { orderID, additionalID, date, sender, receiver, truck, trailer, qnt, bruto, description, declarations, status } = this.props.order;
         const client = this.props.clients.filter(client => client._id === this.props.order.clientID)[0].name;
@@ -81,6 +87,7 @@ class OrderEdit extends Component {
     }
 
     onSubmit = e => {
+        this.props.clearError('/orders');
         e.preventDefault();
         this.props.updateData('/orders', this.state, this.props.match.params.id);
     }
@@ -193,4 +200,7 @@ export default connect(mapStateToProps,
         updateData,
         fetchNewID,
         fetchData,
+        fetchSingleData,
+        clearError,
+        setActiveTab
     })(OrderEdit);

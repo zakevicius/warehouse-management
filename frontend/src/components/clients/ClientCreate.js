@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { createData } from '../../action';
+import { createData, clearError, setActiveTab } from '../../action';
 import Button from '../elements/Button';
 import Spinner from '../elements/Spinner';
 import Error from '../elements/Error';
@@ -11,6 +11,11 @@ class ClientCreate extends Component {
         name: '',
         email: [],
         phone: ''
+    }
+
+    componentWillMount() {
+        this.props.setActiveTab('primary', 'clients');
+        this.props.clearError('/clients');
     }
 
     onChange = async e => {
@@ -31,6 +36,7 @@ class ClientCreate extends Component {
     }
 
     onSubmit = e => {
+        this.props.clearError('/clients');
         e.preventDefault();
         this.props.createData('/clients', this.state);
     }
@@ -88,4 +94,6 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps,
     {
         createData,
+        clearError,
+        setActiveTab
     })(ClientCreate);

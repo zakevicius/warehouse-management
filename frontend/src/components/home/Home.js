@@ -6,7 +6,7 @@ import Spinner from '../elements/Spinner';
 
 class Home extends Component {
   componentDidMount() {
-    this.props.setActiveTab('home');
+    this.props.setActiveTab('primary', 'home');
     if (!this.props.ordersToShow) {
       this.props.fetchData('/orders');
     }

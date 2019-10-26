@@ -134,108 +134,121 @@ router.post(
 // @route       PUT api/loadings/id
 // @desc        Update client
 // @access      Private
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id',
+    [
+        auth,
+        [
+            check('truck', 'Truck number is required').not().isEmpty()
+        ]
 
-    let { truck, trailer, orders, driverPhone, commentsOnLoading, status, totalQnt, totalBruto, commentsData } = req.body;
+    ], async (req, res) => {
 
-    // Build Loading object, which contains new information
-    const newLoadingInformation = {};
-    if (truck) newLoadingInformation.truck = truck;
-    if (trailer) newLoadingInformation.trailer = trailer;
-    if (orders) newLoadingInformation.orders = orders;
-    if (driverPhone) newLoadingInformation.driverPhone = driverPhone;
-    if (commentsOnLoading) newLoadingInformation.commentsOnLoading = commentsOnLoading;
-    if (status) newLoadingInformation.status = status;
-    if (totalQnt) newLoadingInformation.totalQnt = totalQnt;
-    if (totalBruto) newLoadingInformation.totalBruto = totalBruto;
-    if (commentsData) newLoadingInformation.commentsData = commentsData;
+        // const errors = validationResult(req);
 
-    // Find Loading to update
-    try {
-        let loading = await Loading.findOne({ _id: req.params.id });
-
-        if (!loading) return res.status(404).json({ msg: 'Loading not found' });
-
-        // Make sure user authorized to update loading
-        const user = await User.findById(req.user.id);
-
-        // if(!user) {
-        //   res.status(500).json({ msg: 'Server error. User not found'});
+        // if (!errors.isEmpty()) {
+        //     return res.status(400).json({ msg: errors.array()[0].msg });
         // }
 
-        if (loading.user.toString() !== req.user.id) {
-            if (user.type !== 'admin') {
-                if (user.clients[0].toString() !== loading.clientID.toString()) {
-                    return res.status(401).json({ msg: 'Not authorized ' });
+        let { truck, trailer, orders, driverPhone, commentsOnLoading, status, totalQnt, totalBruto, commentsData } = req.body;
+
+        // Build Loading object, which contains new information
+        const newLoadingInformation = {};
+        if (truck) newLoadingInformation.truck = truck;
+        if (trailer) newLoadingInformation.trailer = trailer;
+        if (orders) newLoadingInformation.orders = orders;
+        if (driverPhone) newLoadingInformation.driverPhone = driverPhone;
+        if (commentsOnLoading) newLoadingInformation.commentsOnLoading = commentsOnLoading;
+        if (status) newLoadingInformation.status = status;
+        if (totalQnt) newLoadingInformation.totalQnt = totalQnt;
+        if (totalBruto) newLoadingInformation.totalBruto = totalBruto;
+        if (commentsData) newLoadingInformation.commentsData = commentsData;
+
+        // Find Loading to update
+        try {
+            let loading = await Loading.findOne({ _id: req.params.id });
+
+            if (!loading) return res.status(404).json({ msg: 'Loading not found' });
+
+            // Make sure user authorized to update loading
+            const user = await User.findById(req.user.id);
+
+            // if(!user) {
+            //   res.status(500).json({ msg: 'Server error. User not found'});
+            // }
+
+            if (loading.user.toString() !== req.user.id) {
+                if (user.type !== 'admin' && user.type !== 'super') {
+                    if (user.clients[0].toString() !== loading.clientID.toString()) {
+                        return res.status(401).json({ msg: 'Not authorized ' });
+                    }
                 }
             }
-        }
 
-        // Update loading
-        loading = await Loading.findOneAndUpdate(
-            { _id: req.params.id },
-            { $set: newLoadingInformation },
-            { new: true }
-        );
+            // Update loading
+            loading = await Loading.findOneAndUpdate(
+                { _id: req.params.id },
+                { $set: newLoadingInformation },
+                { new: true }
+            );
 
-        // Udating order status
-        if (orders) {
-            let ordersToUpdate = await Order.find({ loadingID: loading._id });
+            // Udating order status
+            if (orders) {
+                let ordersToUpdate = await Order.find({ loadingID: loading._id });
 
-            await (async () => {
-                for (const item of ordersToUpdate) {
-                    let orderStatus;
-                    if (item.status === "waiting") {
-                        orderStatus = "waiting"
-                    } else {
-                        orderStatus = "in"
+                await (async () => {
+                    for (const item of ordersToUpdate) {
+                        let orderStatus;
+                        if (item.status === "waiting") {
+                            orderStatus = "waiting"
+                        } else {
+                            orderStatus = "in"
+                        }
+                        await Order.findByIdAndUpdate(
+                            item._id,
+                            { $set: { status: orderStatus, loadingID: null } },
+                            { new: true }
+                        )
                     }
-                    await Order.findByIdAndUpdate(
-                        item._id,
-                        { $set: { status: orderStatus, loadingID: null } },
-                        { new: true }
-                    )
-                }
-            })();
-            // await Order.updateMany(
-            //     { loadingID: loading._id },
-            //     { $set: { status: status === 'waiting' ? 'waiting' : 'in', loadingID: null } },
-            //     { multi: true }
-            // );
-        }
+                })();
+                // await Order.updateMany(
+                //     { loadingID: loading._id },
+                //     { $set: { status: status === 'waiting' ? 'waiting' : 'in', loadingID: null } },
+                //     { multi: true }
+                // );
+            }
 
-        if (orders) {
-            await (async () => {
-                for (const id of orders) {
-                    orderToUpdate = await Order.findOne({ _id: id });
-                    if (orderToUpdate.status === "waiting") {
-                        newStatus = "waiting";
-                    } else {
-                        newStatus = status === 'loaded' ? 'out' : status;
+            if (orders) {
+                await (async () => {
+                    for (const id of orders) {
+                        orderToUpdate = await Order.findOne({ _id: id });
+                        if (orderToUpdate.status === "waiting") {
+                            newStatus = "waiting";
+                        } else {
+                            newStatus = status === 'loaded' ? 'out' : status;
+                        }
+                        await Order.findByIdAndUpdate(
+                            id,
+                            { $set: { status: newStatus, loadingID: loading._id } },
+                            { new: true }
+                        )
                     }
-                    await Order.findByIdAndUpdate(
-                        id,
-                        { $set: { status: newStatus, loadingID: loading._id } },
-                        { new: true }
-                    )
-                }
-            })();
+                })();
 
-            // orders.forEach(async id => {
-            //     const newInfo = { status: status, loadingID: loading._id };
-            //     order = await Order.findByIdAndUpdate(id,
-            //         { $set: newInfo },
-            //         { new: true }
-            //     );
-            // });
+                // orders.forEach(async id => {
+                //     const newInfo = { status: status, loadingID: loading._id };
+                //     order = await Order.findByIdAndUpdate(id,
+                //         { $set: newInfo },
+                //         { new: true }
+                //     );
+                // });
+            }
+
+            res.json(loading);
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).json({ msg: 'Server error updating order status' });
         }
-
-        res.json(loading);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: 'Server error updating order status' });
-    }
-});
+    });
 
 // @route       DELETE api/loadings/id
 // @desc        Delete loading

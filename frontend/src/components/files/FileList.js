@@ -51,7 +51,7 @@ class FileList extends Component {
 
   render() {
     const { files, type } = this.props;
-    return !this.props.files ? <Spinner /> : (
+    return this.props.load ? <Spinner /> : (
       <Fragment>
         {this.renderFileList(files, type)}
       </Fragment>

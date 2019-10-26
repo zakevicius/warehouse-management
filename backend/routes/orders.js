@@ -188,7 +188,7 @@ router.put('/:id', auth, async (req, res) => {
 
     // Check if user authorized
     if (order.user.toString() !== req.user.id) {
-      if (req.user.type !== 'admin') {
+      if (req.user.type !== 'admin' && req.user.type !== 'super') {
         return res.status(401).json({ msg: 'not authorized' });
       }
     }

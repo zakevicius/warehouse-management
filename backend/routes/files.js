@@ -21,8 +21,39 @@ const options = {
 // @access      Private
 router.get('/:id', auth, async (req, res) => {
   try {
-    const files = await File.find({ order: req.params.id });
-    res.json(files);
+    const folder = req.params.id
+    let filesOnServer = [];
+
+    const paths = [`/files/${folder}/photo`, `/files/${folder}/document`];
+
+
+    const c = new Client();
+    c.on('ready', () => {
+      for (const path of paths) {
+        c.list(path, (err, list) => {
+          if (err) console.log(err);
+          for (const file of list) {
+            filesOnServer.push(file.name);
+          }
+        });
+      }
+      c.end();
+      c.on('close', async () => {
+        const files = await File.find({ order: req.params.id });
+        let filesToReturn = [];
+
+        for (const file of files) {
+          if (filesOnServer.indexOf(file.name) >= 0) {
+            filesToReturn.push(file);
+          } else {
+            console.log(`${file.name} does not exists on server`);
+          }
+        }
+
+        res.json(filesToReturn);
+      })
+    })
+    c.connect(options);
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Server error fetching files' });

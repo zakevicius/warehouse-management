@@ -3,11 +3,13 @@ import {
   uploadFiles,
   addFileToUploadList,
   removeFileFromUploadList,
-  clearFiles
+  clearFiles,
+  clearError
 } from '../../action';
 import { connect } from 'react-redux';
 import Button from '../elements/Button';
 import FileList from './FileList';
+import Error from '../elements/Error';
 
 
 class FileUpload extends Component {
@@ -23,10 +25,12 @@ class FileUpload extends Component {
   };
 
   componentWillMount() {
+    this.props.clearError('/files');
     this.props.clearFiles();
   }
 
   onSubmit = (e) => {
+    this.props.clearError('/files');
     e.preventDefault();
     if (this.props.files.length === 0) {
       this.setState({
@@ -69,6 +73,7 @@ class FileUpload extends Component {
                 onChange={this.onChange}
               />
               <FileList files={this.props.files} removeFile={this.props.removeFileFromUploadList} type="addRemoveFiles" />
+              {this.props.error && <Error error={this.props.error} />}
               <Button button={{ type: 'primary ', text: 'Submit' }} />
             </div>
           </form>
@@ -85,7 +90,8 @@ class FileUpload extends Component {
 
 const mapStateToProps = state => {
   return {
-    files: state.filesData.filesToUpload
+    files: state.filesData.filesToUpload,
+    error: state.filesData.error
   }
 }
 
@@ -95,6 +101,7 @@ export default connect(
     uploadFiles,
     addFileToUploadList,
     removeFileFromUploadList,
-    clearFiles
+    clearFiles,
+    clearError
   }
 )(FileUpload);

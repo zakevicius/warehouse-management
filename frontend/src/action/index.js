@@ -77,7 +77,7 @@ export const fetchData = (typeOfData, id = null) => async (dispatch) => {
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
         let message = err.response ? err.response.data.msg : err.message;
-        let errorType = setErrorType(typeOfData);
+        let errorType = setErrorType(typeOfData, 'set');
         dispatch({ type: errorType, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
@@ -94,7 +94,7 @@ export const fetchSingleData = (typeOfData, id) => async dispatch => {
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
         let message = err.response ? err.response.data.msg : err.message;
-        let errorType = setErrorType(typeOfData);
+        let errorType = setErrorType(typeOfData, 'set');
         dispatch({ type: errorType, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
@@ -114,7 +114,7 @@ export const createData = (typeOfData, data) => async dispatch => {
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
         let message = err.response ? err.response.data.msg : err.message;
-        let errorType = setErrorType(typeOfData);
+        let errorType = setErrorType(typeOfData, 'set');
         dispatch({ type: errorType, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
@@ -151,9 +151,7 @@ export const fetchNewID = (clientID, type) => async dispatch => {
                 // if there are already orders/loadings for this client take last id ant increase value by 1
                 switch (type) {
                     case '/orders':
-                        console.log(data)
                         arr = data.filter(d => d.orderID.slice(0, client.data.data.orderLetter.length) === client.data.data.orderLetter).map(item => item.orderID.slice(client.data.data.orderLetter.length));
-                        console.log(arr)
                         break;
                     case '/loadings':
                         arr = data.map(item => item.loadingID.slice(client.data.data.orderLetter.length + 3));
@@ -177,7 +175,7 @@ export const fetchNewID = (clientID, type) => async dispatch => {
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {
         let message = err.response ? err.response.data.msg : err.message;
-        let errorType = setErrorType(type);
+        let errorType = setErrorType(type, 'set');
         dispatch({ type: errorType, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
@@ -197,7 +195,7 @@ export const updateData = (typeOfData, data, id) => async dispatch => {
         }, 1000);
     } catch (err) {
         let message = err.response ? err.response.data.msg : err.message;
-        let errorType = setErrorType(typeOfData);
+        let errorType = setErrorType(typeOfData, 'set');
         dispatch({ type: errorType, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
@@ -220,7 +218,7 @@ export const removeData = (typeOfData, id) => async dispatch => {
         }
     } catch (err) {
         let message = err.response ? err.response.data.msg : err.message;
-        let errorType = setErrorType(typeOfData);
+        let errorType = setErrorType(typeOfData, 'set');
         dispatch({ type: errorType, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
@@ -386,29 +384,55 @@ export const clearState = () => ({ type: types.CLEAR_STATE });
 // ERRORS HANDLER
 
 export const setError = (msg, type) => {
-    const newType = setErrorType(type);
+    const newType = setErrorType(type, 'set');
     return {
         type: newType,
         payload: msg
     };
 };
 
+export const clearError = (type) => {
+    const newType = setErrorType(type, 'clear')
+    return {
+        type: newType
+    }
+}
+
 
 // PRIVATE FUNCTIONS
 
-const setErrorType = type => {
-    switch (type) {
-        case '/files':
-            return types.FILE_ERROR;
-        case '/orders':
-            return types.ORDER_ERROR;
-        case '/loadings':
-            return types.LOADING_ERROR;
-        case '/clients':
-            return types.CLIENT_ERROR;
+const setErrorType = (type, action) => {
+    switch (action) {
+        case 'set':
+            switch (type) {
+                case '/files':
+                    return types.FILE_ERROR;
+                case '/orders':
+                    return types.ORDER_ERROR;
+                case '/loadings':
+                    return types.LOADING_ERROR;
+                case '/clients':
+                    return types.CLIENT_ERROR;
+                default:
+                    return null;
+            };
+        case 'clear':
+            switch (type) {
+                case '/files':
+                    return types.CLEAR_FILE_ERROR;
+                case '/orders':
+                    return types.CLEAR_ORDER_ERROR;
+                case '/loadings':
+                    return types.CLEAR_LOADING_ERROR;
+                case '/clients':
+                    return types.CLEAR_CLIENT_ERROR;
+                default:
+                    return null;
+            };
         default:
             return null;
-    };
+    }
+
 };
 
 const setRequestType = (typeOfData, requestType) => {
