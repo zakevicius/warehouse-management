@@ -106,7 +106,9 @@ router.post('/', [
         truck,
         trailer,
         qnt,
+        finalQnt: qnt,
         bruto,
+        finalBruto: bruto,
         description,
         declarations,
         clientID,
@@ -152,7 +154,13 @@ router.post('/', [
 // @desc        Update order
 // @access      Private
 router.put('/:id', auth, async (req, res) => {
-  const { additionalID, sender, receiver, truck, trailer, qnt, bruto, description, declarations, clientID, orderID, status, date } = req.body;
+  const { additionalID, sender, receiver, truck, trailer, qnt, bruto, finalQnt, finalBruto, description, declarations, clientID, orderID, status, date } = req.body;
+
+  console.log('qnt', qnt);
+  console.log('finalQnt', finalQnt);
+  console.log('bruto', bruto);
+  console.log('finalBruto', finalBruto);
+
 
   // Creating updated order object
   const newOrderInformation = {};
@@ -162,6 +170,8 @@ router.put('/:id', auth, async (req, res) => {
   if (trailer) newOrderInformation.trailer = trailer;
   if (qnt) newOrderInformation.qnt = qnt;
   if (bruto) newOrderInformation.bruto = bruto;
+  if (finalQnt) newOrderInformation.finalQnt = finalQnt;
+  if (finalBruto) newOrderInformation.finalBruto = finalBruto;
   if (description) newOrderInformation.description = description;
   if (declarations) newOrderInformation.declarations = declarations;
   if (clientID) newOrderInformation.clientID = clientID;

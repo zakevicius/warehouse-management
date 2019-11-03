@@ -30,6 +30,12 @@ const LoadingSchema = mongoose.Schema({
     totalBruto: {
         type: Number
     },
+    finalTotalQnt: {
+        type: Number
+    },
+    finalTotalBruto: {
+        type: Number
+    },
     status: {
         type: String // waiting, loading, loaded
     },

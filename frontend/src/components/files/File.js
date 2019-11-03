@@ -17,20 +17,28 @@ const File = ({ type, file, downloadFile, ...props }) => {
     cursor: 'pointer',
   };
 
-  const styleP = {
+  const styleAddRemoveP = {
     marginRight: '2em',
-    display: 'flex',
     overflow: 'hidden',
     width: '10em'
   };
 
+  const styleP = {
+    overflow: 'hidden',
+    marginRight: '2em',
+    display: 'flex',
+    width: '10em'
+  }
+
   switch (type) {
     case "addRemove":
       return (
-        <p key={file._id} style={styleP}>
-          <i className="ui large link close red icon" onClick={() => props.removeFile(file)} />
-          {file.name}
-        </p>
+        <div style={{ 'display': 'flex' }}>
+          <p key={file._id} style={styleAddRemoveP}>
+            <i className="ui large link close red icon" onClick={() => props.removeFile(file)} />
+            {file.name}
+          </p>
+        </div>
       );
     case "photo":
     case "document":

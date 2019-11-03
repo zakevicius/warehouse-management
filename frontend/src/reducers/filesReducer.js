@@ -8,13 +8,16 @@ import {
   DOWNLOAD_FILE,
   FILE_ERROR,
   CLEAR_STATE,
-  CLEAR_FILE_ERROR
+  CLEAR_FILE_ERROR,
+  FILE_SET_LOADING,
+  FILE_UNSET_LOADING
 } from '../action/types';
 
 const initialState = {
   files: { photos: [], documents: [] },
   filesToUpload: [],
-  status: []
+  status: [],
+  load: false
 }
 
 export default (state = initialState, action) => {
@@ -41,7 +44,7 @@ export default (state = initialState, action) => {
     case ADD_FILE:
       return { ...state, filesToUpload: [...state.filesToUpload, action.payload] };
     case REMOVE_FILE:
-      return { ...state, filesToUpload: [state.filesToUpload.filter(file => file.name !== action.payload.name)] };
+      return { ...state, filesToUpload: state.filesToUpload.filter(file => file.name !== action.payload.name) };
     case DELETE_FILE:
       return {
         ...state,
@@ -56,6 +59,10 @@ export default (state = initialState, action) => {
       return { ...state, error: action.payload };
     case CLEAR_FILE_ERROR:
       return { ...state, error: null };
+    case FILE_SET_LOADING:
+      return { ...state, load: true };
+    case FILE_UNSET_LOADING:
+      return { ...state, load: false };
     case CLEAR_STATE:
       return { initialState };
     default:

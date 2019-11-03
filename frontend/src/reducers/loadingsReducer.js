@@ -5,7 +5,9 @@ import {
   LOADING_ERROR,
   NEW_LOADING_ID,
   CLEAR_STATE,
-  CLEAR_LOADING_ERROR
+  CLEAR_LOADING_ERROR,
+  UPDATE_ORDER,
+  UPDATE_LOADING
 } from '../action/types';
 
 export default (state = { loadings: [] }, action) => {
@@ -16,8 +18,22 @@ export default (state = { loadings: [] }, action) => {
       return { ...state, loading: action.payload };
     case CREATE_LOADING:
       return { ...state, loadings: [...state.loadings, action.payload] };
+    case UPDATE_LOADING:
+      return {
+        ...state, loading: {
+          ...state.loading,
+          data: action.payload
+        }
+      }
     case NEW_LOADING_ID:
       return { ...state, newLoadingID: action.payload };
+    case UPDATE_ORDER:
+      return {
+        ...state, loading: {
+          ...state.loading,
+          orders: [...state.loading.orders.map(order => order._id !== action.payload.order._id ? order : action.payload.order)]
+        }
+      }
     case LOADING_ERROR:
       return { ...state, error: action.payload };
     case CLEAR_LOADING_ERROR:

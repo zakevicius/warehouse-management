@@ -74,8 +74,6 @@ class LoadingEdit extends Component {
   }
 
   onSubmit = (e) => {
-    console.log(this.state.truck)
-
     e.preventDefault();
     let totalQnt = 0;
     let totalBruto = 0;
