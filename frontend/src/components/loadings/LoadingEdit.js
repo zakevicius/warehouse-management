@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { history } from '../history';
 import { fetchSingleData, updateData, clearError, setActiveTab } from '../../action';
@@ -74,8 +74,6 @@ class LoadingEdit extends Component {
   }
 
   onSubmit = (e) => {
-    console.log(this.state.truck)
-
     e.preventDefault();
     let totalQnt = 0;
     let totalBruto = 0;
@@ -98,63 +96,70 @@ class LoadingEdit extends Component {
 
   render() {
     return (
-      <div className="ui container">
-        <div className="ui very padded segment">
-          <form onSubmit={this.onSubmit} className="ui form">
-            <div className="three fields">
-              <div className="field">
-                <label htmlFor="client">Client</label>
-                <input type="text" name="client" value={this.state.client} disabled />
-                {/* {this.renderClientList()} */}
-              </div>
-              <div className="field">
-                <label htmlFor="loadingID">ID</label>
-                <input type="text" name="loadingID" value={this.state.loadingID} disabled />
-              </div>
-              <div className="field">
-                <label htmlFor="date">Date</label>
-                <input type="date" name="date" value={this.state.date.split('T')[0]} onChange={this.onChange} />
-              </div>
-            </div>
-            <div className="three fields">
-              <div className="field">
-                <label htmlFor="truck">Truck</label>
-                <input type="text" name="truck" value={this.state.truck} onChange={this.onChange} />
-              </div>
-              <div className="field">
-                <label htmlFor="trailer">Trailer</label>
-                <input type="text" name="trailer" value={this.state.trailer} onChange={this.onChange} />
-              </div>
-              <div className="field">
-                <label htmlFor="driverPhone">Driver's phone number</label>
-                <input type="text" name="driverPhone" value={this.state.driverPhone} onChange={this.onChange} />
-              </div>
-            </div>
-            <div className="field">
-              <label htmlFor="commentsOnLoading">Comments on loading</label>
-              <input type="text" name="commentsOnLoading" value={this.state.commentsOnLoading} onChange={this.onChange} />
-            </div>
-            {this.props.error ? <Error error={this.props.error} /> : null}
-            <Button button={{ type: 'primary ', text: 'Submit' }} />
-          </form>
-        </div>
+      <Fragment>
         <div className="ui container">
-          <div className="ui segment">
-            <LoadingOrderListCreate
-              orders={this.state.ordersToLoad}
-              removeOrderFromLoading={this.removeOrderFromLoading}
-              action='remove'
-            />
-          </div>
-          <div className="ui segment">
-            <LoadingOrderListCreate
-              orders={this.state.ordersList}
-              addOrderToLoading={this.addOrderToLoading}
-              action='add'
-            />
+          <div className="ui very padded segment">
+            <form onSubmit={this.onSubmit} className="ui form">
+              <div className="three fields">
+                <div className="field">
+                  <label htmlFor="client">Client</label>
+                  <input type="text" name="client" value={this.state.client} disabled />
+                  {/* {this.renderClientList()} */}
+                </div>
+                <div className="field">
+                  <label htmlFor="loadingID">ID</label>
+                  <input type="text" name="loadingID" value={this.state.loadingID} disabled />
+                </div>
+                <div className="field">
+                  <label htmlFor="date">Date</label>
+                  <input type="date" name="date" value={this.state.date.split('T')[0]} onChange={this.onChange} />
+                </div>
+              </div>
+              <div className="three fields">
+                <div className="field">
+                  <label htmlFor="truck">Truck</label>
+                  <input type="text" name="truck" value={this.state.truck} onChange={this.onChange} />
+                </div>
+                <div className="field">
+                  <label htmlFor="trailer">Trailer</label>
+                  <input type="text" name="trailer" value={this.state.trailer} onChange={this.onChange} />
+                </div>
+                <div className="field">
+                  <label htmlFor="driverPhone">Driver's phone number</label>
+                  <input type="text" name="driverPhone" value={this.state.driverPhone} onChange={this.onChange} />
+                </div>
+              </div>
+              <div className="field">
+                <label htmlFor="commentsOnLoading">Comments on loading</label>
+                <input type="text" name="commentsOnLoading" value={this.state.commentsOnLoading} onChange={this.onChange} />
+              </div>
+              {this.props.error ? <Error error={this.props.error} /> : null}
+              <Button button={{ type: 'primary ', text: 'Submit' }} />
+            </form>
           </div>
         </div>
-      </div>
+
+        <div className="ui segment">
+          <div style={{ 'display': 'flex' }}>
+            <div style={{ 'margin': '5px', 'flex': '1' }}>
+              <h4>In truck</h4>
+              <LoadingOrderListCreate
+                orders={this.state.ordersToLoad}
+                removeOrderFromLoading={this.removeOrderFromLoading}
+                action='remove'
+              />
+            </div>
+            <div style={{ 'margin': '5px', 'flex': '1' }}>
+              <h4>In warehouse</h4>
+              <LoadingOrderListCreate
+                orders={this.state.ordersList}
+                addOrderToLoading={this.addOrderToLoading}
+                action='add'
+              />
+            </div>
+          </div>
+        </div>
+      </Fragment>
     );
   }
 };

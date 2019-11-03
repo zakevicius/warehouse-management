@@ -12,12 +12,13 @@ class ClientOrderList extends Component {
     let orders = this.props.ordersToShow;
     let data = {
       type: 'clientOrders',
-      ur: this.props.url
+      url: this.props.url
     }
+    let link = `/clients/${orders.data._id}/page/1`;
 
     return (
       <Fragment>
-        <HeaderSecondary data={data} />
+        <HeaderSecondary data={data} link={link} list='clientOrderList' clientId={this.props.ordersToShow.data._id} />
         <Table
           type="orders"
           orders={orders}

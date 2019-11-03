@@ -117,7 +117,7 @@ class LoadingCreate extends Component {
             return (
                 <div className="ui segment">
                     <div style={{ 'display': 'flex' }}>
-                        <div style={{ 'margin': '5px' }}>
+                        <div style={{ 'margin': '5px', 'flex': '1' }}>
                             <h4>In truck</h4>
                             <LoadingOrderListCreate
                                 orders={this.state.ordersToLoad}
@@ -125,7 +125,7 @@ class LoadingCreate extends Component {
                                 action='remove'
                             />
                         </div>
-                        <div style={{ 'margin': '5px' }}>
+                        <div style={{ 'margin': '5px', 'flex': '1' }}>
                             <h4>In warehouse</h4>
                             <LoadingOrderListCreate
                                 orders={this.state.ordersList}

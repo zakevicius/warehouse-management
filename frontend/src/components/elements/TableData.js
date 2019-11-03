@@ -5,6 +5,7 @@ import Button from './Button';
 import FileUpload from '../files/FileUpload';
 import FileList from '../files/FileList';
 import CommentList from '../comments/CommentList';
+import NewOrderInfo from '../loadings/NewOrderInfo';
 
 class TableData extends Component {
   constructor(props) {
@@ -322,10 +323,28 @@ class TableData extends Component {
           <td className="center aligned">{order.receiver}</td>
           <td className="center aligned">{order.qnt}</td>
           <td className="center aligned">{order.bruto}</td>
+          <td className="center aligned" style={{ 'color': 'tomato' }}><NewOrderInfo type='cll' order={order} loading={this.props.loading} /></td>
+          <td className="center aligned" style={{ 'color': 'tomato' }}><NewOrderInfo type='bruto' order={order} loading={this.props.loading} /></td>
           <td className="center aligned"><CommentList order={order} /></td>
         </tr >
       );
     });
+  }
+
+  renderLoadingOrderListTotal() {
+    if (!this.props.loading) {
+      return this.renderSpinner();
+    }
+    return (
+      <tr style={{ 'fontWeight': 'bold' }}>
+        <td className="one wide center aligned right aligned" colSpan='5'>Total:</td>
+        <td className="one wide center aligned">{this.props.loading.data.totalQnt}</td>
+        <td className="one wide center aligned">{this.props.loading.data.totalBruto}</td>
+        <td className="one wide center aligned" style={{ 'color': 'tomato' }}>{this.props.loading.data.finalTotalQnt ? this.props.loading.data.finalTotalQnt : this.props.loading.data.totalQnt}</td>
+        <td className="one wide center aligned" style={{ 'color': 'tomato' }}>{this.props.loading.data.finalTotalBruto ? this.props.loading.data.finalTotalBruto : this.props.loading.data.totalBruto}</td>
+        <td className="one wide center aligned"></td>
+      </tr>
+    )
   }
 
   // SPINNER
@@ -442,7 +461,12 @@ class TableData extends Component {
         case 'loading':
           return this.renderLoading();
         case 'loadingOrderList':
-          return this.renderLoadingOrderList();
+          return (
+            <Fragment>
+              {this.renderLoadingOrderList()}
+              {this.renderLoadingOrderListTotal()}
+            </Fragment>
+          );
         case 'loadingOrderListCreate':
           return this.renderLoadingOrderListCreate();
         default:

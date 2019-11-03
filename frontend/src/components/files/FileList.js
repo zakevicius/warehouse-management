@@ -5,11 +5,16 @@ import Spinner from '../elements/Spinner';
 
 class FileList extends Component {
   renderAddRemoveFileList = (files) => {
-    if (!files || files.length === 0) return <div>No files</div>;
-    return files.map(file => <File key={file._id} file={file} type="addRemove" removeFile={this.props.removeFile} />)
+    if (!files || files.length === 0) return <div style={{ 'padding': '10px 0' }}>No files</div>;
+    return (
+      <div style={{ 'padding': '10px 0', 'display': 'flex' }}>
+        {files.map(file => <File key={file.name} file={file} type="addRemove" removeFile={this.props.removeFile} />)}
+      </div>
+    )
   };
 
   showFiles = ({ photos, documents }) => {
+    if (this.props.files.load) return <Spinner />
     const renderPhotos = () => {
       if (!photos || photos.length === 0 || photos[0].length === 0) return <div>No photos</div>;
       return photos.map(file => <File key={file._id} file={file} type="photo" />);
@@ -51,18 +56,17 @@ class FileList extends Component {
 
   render() {
     const { files, type } = this.props;
-    return this.props.load ? <Spinner /> : (
+    return (
       <Fragment>
         {this.renderFileList(files, type)}
       </Fragment>
-    )
+    );
   };
 }
 
 const mapStateToProps = state => {
   return ({
     files: state.filesData,
-    load: state.eventsData.load
   })
 }
 export default connect(mapStateToProps, {})(FileList);

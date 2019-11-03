@@ -6,7 +6,8 @@ import {
     DELETE_CLIENT,
     CLIENT_ERROR,
     CLEAR_STATE,
-    CLEAR_CLIENT_ERROR
+    CLEAR_CLIENT_ERROR,
+    FETCH_CLIENT_ORDERS_BY_STATUS
 } from '../action/types';
 
 export default (state = { clients: [] }, action) => {
@@ -15,6 +16,14 @@ export default (state = { clients: [] }, action) => {
             return { ...state, clients: action.payload };
         case FETCH_CLIENT:
             return { ...state, client: action.payload };
+        case FETCH_CLIENT_ORDERS_BY_STATUS:
+            return {
+                ...state,
+                client: {
+                    ...state.client,
+                    orders: action.payload
+                }
+            };
         case CREATE_CLIENT:
             return state;
         case UPDATE_CLIENT:

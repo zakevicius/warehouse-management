@@ -2,6 +2,7 @@ import api from '../apis/api';
 import { history } from '../components/history';
 import * as types from './types';
 import setAuthToken from '../utils/setAuthToken';
+import { request } from 'http';
 
 // LOGIN, LOGOUT, SIGNUP, REGISTER
 export const login = (user) => async (dispatch) => {
@@ -66,18 +67,51 @@ export const fetchData = (typeOfData, id = null) => async (dispatch) => {
     let requestType = setRequestType(typeOfData, 'fetchAll');
 
     try {
-        dispatch({ type: types.SET_LOADING });
         let res;
         if (typeOfData === '/files') {
+            dispatch({ type: types.FILE_SET_LOADING });
             res = await api.get(`${typeOfData}/${id}`);
+            dispatch({ type: types.FILE_UNSET_LOADING });
         } else {
+            dispatch({ type: types.SET_LOADING });
             res = await api.get(typeOfData);
+            dispatch({ type: types.UNSET_LOADING });
         }
         dispatch({ type: requestType, payload: res.data });
-        dispatch({ type: types.UNSET_LOADING });
+
     } catch (err) {
         let message = err.response ? err.response.data.msg : err.message;
         let errorType = setErrorType(typeOfData, 'set');
+        dispatch({ type: errorType, payload: message });
+        dispatch({ type: types.UNSET_LOADING });
+    }
+};
+
+// FETCHING DATA BY STATUS
+export const fetchDataByStatus = (status, list, id) => async (dispatch) => {
+    dispatch({ type: types.SET_LOADING });
+    try {
+        let res, finalRes;
+        if (!list) {
+            res = await api.get('/orders');
+            finalRes = res.data.filter(order => order.status === status);
+            dispatch({ type: types.FETCH_ORDERS_BY_STATUS, payload: finalRes });
+        } else {
+            switch (list) {
+                case '/clients':
+                    res = await api.get(`/clients/${id}`);
+                    finalRes = res.data.orders.filter(order => order.status === status);
+                    dispatch({ type: types.FETCH_CLIENT_ORDERS_BY_STATUS, payload: finalRes });
+                    break;
+                default:
+                    break;
+            }
+        }
+        dispatch({ type: types.UNSET_LOADING });
+
+    } catch (err) {
+        let message = err.response ? err.response.data.msg : err.message;
+        let errorType = setErrorType('/orders', 'set');
         dispatch({ type: errorType, payload: message });
         dispatch({ type: types.UNSET_LOADING });
     }
@@ -182,17 +216,18 @@ export const fetchNewID = (clientID, type) => async dispatch => {
 }
 
 // UPDATING DATA
-export const updateData = (typeOfData, data, id) => async dispatch => {
+export const updateData = (typeOfData, data, id, stayOnPage) => async dispatch => {
     const requestType = setRequestType(typeOfData, 'update');
 
     try {
-
         const res = await api.put(`${typeOfData}/${id}`, data);
         dispatch({ type: requestType, payload: res.data });
 
-        setTimeout(() => {
-            history.push(`${typeOfData}/${id}${typeOfData === '/clients' ? '/page/1' : ""}`);
-        }, 1000);
+        if (!stayOnPage) {
+            setTimeout(() => {
+                history.push(`${typeOfData}/${id}${typeOfData === '/clients' ? '/page/1' : ""}`);
+            }, 1000);
+        }
     } catch (err) {
         let message = err.response ? err.response.data.msg : err.message;
         let errorType = setErrorType(typeOfData, 'set');
@@ -276,6 +311,18 @@ export const sortTable = (type, sortType, data, info) => dispatch => {
                     break;
                 case 'Date':
                     sortedOrders = sortData(info, 'date', sortType);
+                    break;
+                case 'Sender':
+                    sortedOrders = sortData(info, 'sender', sortType);
+                    break;
+                case 'Receiver':
+                    sortedOrders = sortData(info, 'receiver', sortType);
+                    break;
+                case 'Truck':
+                    sortedOrders = sortData(info, 'truck', sortType);
+                    break;
+                case 'Trailer':
+                    sortedOrders = sortData(info, 'trailer', sortType);
                     break;
                 default:
                     break;

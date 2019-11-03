@@ -60,10 +60,12 @@ class FileUpload extends Component {
         <div className="ui segment">
           <form className="ui form" onSubmit={this.onSubmit} encType="multipart/form-data">
             <div className="ui six wide field">
-              <label htmlFor="uploadButton" className="ui inverted primary button">
+              <FileList files={this.props.files} removeFile={this.props.removeFileFromUploadList} type="addRemoveFiles" />
+              {this.props.error && <Error error={this.props.error} />}
+              <label htmlFor="uploadButton" className="ui inverted primary button" style={{ 'width': '200px' }}>
                 <i className="ui upload icon"></i>
                 Select Files
-            </label>
+              </label>
               <input
                 type="file"
                 name="file"
@@ -72,9 +74,7 @@ class FileUpload extends Component {
                 id="uploadButton"
                 onChange={this.onChange}
               />
-              <FileList files={this.props.files} removeFile={this.props.removeFileFromUploadList} type="addRemoveFiles" />
-              {this.props.error && <Error error={this.props.error} />}
-              <Button button={{ type: 'primary ', text: 'Submit' }} />
+              <Button button={{ type: 'primary ', text: 'Submit', style: { "width": "200px" } }} />
             </div>
           </form>
           {this.state.msg !== '' && (

@@ -47,6 +47,16 @@ const OrderSchema = mongoose.Schema({
     required: true,
     min: 0
   },
+  finalQnt: {
+    type: Number,
+    required: false,
+    min: 0
+  },
+  finalBruto: {
+    type: Number,
+    required: false,
+    min: 0
+  },
   description: {
     type: String,
     required: false,

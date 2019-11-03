@@ -22,7 +22,7 @@ class LoadingShow extends Component {
         <Table type="loading" loading={this.props.loading} />
         <LoadingStatus loading={this.props.loading} />
         {this.props.error && <Error error={this.props.error} />}
-        <LoadingOrderList orders={this.props.loading.orders} />
+        <LoadingOrderList loading={this.props.loading} orders={this.props.loading.orders} />
       </div>
     );
   }

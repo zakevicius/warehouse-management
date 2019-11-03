@@ -149,7 +149,7 @@ router.put('/:id',
         //     return res.status(400).json({ msg: errors.array()[0].msg });
         // }
 
-        let { truck, trailer, orders, driverPhone, commentsOnLoading, status, totalQnt, totalBruto, commentsData } = req.body;
+        let { truck, trailer, orders, driverPhone, commentsOnLoading, status, totalQnt, totalBruto, finalTotalQnt, finalTotalBruto, commentsData } = req.body;
 
         // Build Loading object, which contains new information
         const newLoadingInformation = {};
@@ -160,7 +160,9 @@ router.put('/:id',
         if (commentsOnLoading) newLoadingInformation.commentsOnLoading = commentsOnLoading;
         if (status) newLoadingInformation.status = status;
         if (totalQnt) newLoadingInformation.totalQnt = totalQnt;
+        if (finalTotalQnt) newLoadingInformation.finalTotalQnt = finalTotalQnt;
         if (totalBruto) newLoadingInformation.totalBruto = totalBruto;
+        if (finalTotalBruto) newLoadingInformation.finalTotalBruto = finalTotalBruto;
         if (commentsData) newLoadingInformation.commentsData = commentsData;
 
         // Find Loading to update

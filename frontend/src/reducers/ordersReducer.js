@@ -8,7 +8,9 @@ import {
     CLEAR_STATE,
     SORT_ORDERS,
     CLEAR_SORT_ORDERS,
-    CLEAR_ORDER_ERROR
+    CLEAR_ORDER_ERROR,
+    FETCH_ORDERS_BY_STATUS,
+    UPDATE_ORDER
 } from '../action/types';
 
 export default (state = { orders: [] }, action) => {
@@ -16,6 +18,8 @@ export default (state = { orders: [] }, action) => {
         case NEW_ORDER_ID:
             return { ...state, newOrderID: action.payload };
         case FETCH_ORDERS:
+            return { ...state, orders: action.payload };
+        case FETCH_ORDERS_BY_STATUS:
             return { ...state, orders: action.payload };
         case FETCH_ORDER:
             return { ...state, order: action.payload };

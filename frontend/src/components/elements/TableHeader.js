@@ -80,22 +80,28 @@ class TableHeader extends Component {
               </th>
               <th className="two wide center aligned">
                 Sender
-                {/* {this.renderSort()} */}
+                {this.renderSort()}
               </th>
               <th className="two wide center aligned">
                 Receiver
-                {/* {this.renderSort()} */}
+                {this.renderSort()}
               </th>
               <th className="one wide center aligned">
                 Truck
-                {/* {this.renderSort()} */}
+                {this.renderSort()}
               </th>
               <th className="one wide center aligned">
                 Trailer
-                {/* {this.renderSort()} */}
+                {this.renderSort()}
               </th>
-              <th className="one wide center aligned">CLL</th>
-              <th className="one wide center aligned">Bruto</th>
+              <th className="one wide center aligned">
+                CLL
+              {/* {this.renderSort()} */}
+              </th>
+              <th className="one wide center aligned">
+                Bruto
+              {/* {this.renderSort()} */}
+              </th>
               <th className="three wide center aligned">Description</th>
               <th className="two wide center aligned">Declarations</th>
             </tr>
@@ -231,8 +237,10 @@ class TableHeader extends Component {
               <th className="two wide center aligned">Date</th>
               <th className="two wide center aligned">Sender</th>
               <th className="two wide center aligned">Receiver</th>
-              <th className="two wide center aligned">CLL</th>
-              <th className="two wide center aligned">Bruto</th>
+              <th className="one wide center aligned">CLL</th>
+              <th className="one wide center aligned">Bruto</th>
+              <th className="one wide center aligned">Final CLL</th>
+              <th className="one wide center aligned">Final Bruto</th>
               <th className="three wide center aligned">Comments</th>
             </tr>
           </thead>

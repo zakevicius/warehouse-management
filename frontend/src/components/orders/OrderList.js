@@ -14,6 +14,7 @@ class OrderList extends Component {
   componentDidMount() {
     this.props.clearFilter();
     this.props.setActiveTab('primary', 'orders');
+    this.props.setActiveTab('secondary', 'all');
     if (!this.props.ordersToShow) {
       this.props.fetchData("/orders");
     }
@@ -48,7 +49,7 @@ class OrderList extends Component {
       return (
         <Table
           type="orders"
-          orders={{ orders: orders.filter(order => order.status === status) }}
+          orders={{ orders }}
           page={
             this.props.match
               ? this.props.match.params.no
@@ -67,7 +68,7 @@ class OrderList extends Component {
       ordersData = this.props.ordersData;
       return (
         <Fragment>
-          <HeaderSecondary />
+          <HeaderSecondary link='/orders/page/1' list='orderList' />
           <Filter />
           {this.renderTable(ordersData.filtered ? ordersData.filtered : ordersData.orders, this.props.activeSubTab)}
         </Fragment>
