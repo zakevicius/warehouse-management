@@ -217,13 +217,14 @@ class TableHeader extends Component {
         return (
           <thead>
             <tr>
-              <th className="two wide center aligned"></th>
+              <th className="one wide center aligned"></th>
+              <th className="two wide center aligned">Status</th>
               <th className="two wide center aligned">Cargo ID</th>
               <th className="two wide center aligned">Additional ID</th>
               <th className="two wide center aligned">Date</th>
               <th className="two wide center aligned">Sender</th>
               <th className="two wide center aligned">Receiver</th>
-              <th className="two wide center aligned">CLL</th>
+              <th className="one wide center aligned">CLL</th>
               <th className="two wide center aligned">Bruto</th>
             </tr>
           </thead>

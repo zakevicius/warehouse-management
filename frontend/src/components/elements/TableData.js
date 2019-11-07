@@ -290,6 +290,7 @@ class TableData extends Component {
             <td className="center aligned">
               {this.renderAddRemove(order._id)}
             </td>
+            <td className="center aligned">{order.status}</td>
             <td className="center aligned">{order.orderID}</td>
             <td className="center aligned">{order.additionalID}</td>
             <td className="center aligned">{order.date.split('T')[0]}</td>

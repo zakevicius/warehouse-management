@@ -156,12 +156,6 @@ router.post('/', [
 router.put('/:id', auth, async (req, res) => {
   const { additionalID, sender, receiver, truck, trailer, qnt, bruto, finalQnt, finalBruto, description, declarations, clientID, orderID, status, date } = req.body;
 
-  console.log('qnt', qnt);
-  console.log('finalQnt', finalQnt);
-  console.log('bruto', bruto);
-  console.log('finalBruto', finalBruto);
-
-
   // Creating updated order object
   const newOrderInformation = {};
   if (sender) newOrderInformation.sender = sender;
