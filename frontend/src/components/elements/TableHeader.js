@@ -234,7 +234,8 @@ class TableHeader extends Component {
           <thead>
             <tr>
               <th className="one wide center aligned"></th>
-              <th className="two wide center aligned">Cargo ID</th>
+              <th className="one wide center aligned">Cargo ID</th>
+              <th className="one wide center aligned">Additional ID</th>
               <th className="two wide center aligned">Date</th>
               <th className="two wide center aligned">Sender</th>
               <th className="two wide center aligned">Receiver</th>

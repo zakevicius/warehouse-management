@@ -20,11 +20,8 @@ class LoadingCreate extends Component {
         commentsOnLoading: ''
     }
 
-    componentWillMount() {
-        this.props.clearError('/loadings');
-    }
-
     componentDidMount() {
+        this.props.clearError('/loadings');
         this.props.setActiveTab('primary', 'loadings');
         this.props.fetchData('/clients');
     }
@@ -59,6 +56,44 @@ class LoadingCreate extends Component {
                 {client.name}
             </option>));
     };
+
+    renderClientSelect = () => {
+        // return this.props.clients.map((client, i) => {
+        // if (i === 0) {
+        return (
+            <Fragment>
+                <label htmlFor="client">Client</label>
+                <select
+                    className="ui fluid dropdown"
+                    name="client"
+                    value={this.state.client}
+                    onChange={this.onChange}
+                    required
+                >
+                    <option value=''>Select a client...</option>
+                    {this.renderClientList()}
+                </select>
+            </Fragment>
+        )
+        // } else {
+        //     return (
+        //         <Fragment>
+        //             <label htmlFor="client">Additional client</label>
+        //             <select
+        //                 className="ui fluid dropdown"
+        //                 name={`addClient`}
+        //                 value={this.state.addClient}
+        //                 onChange={this.onChange}
+        //                 required
+        //             >
+        //                 <option value=''>Select additional client...</option>
+        //                 {this.renderClientList()}
+        //             </select>
+        //         </Fragment>
+        //     )
+        // }
+        // })
+    }
 
     onChange = async e => {
         this.setState({
@@ -173,17 +208,7 @@ class LoadingCreate extends Component {
                         <form onSubmit={this.onSubmit} className="ui form">
                             <div className="three fields">
                                 <div className="field">
-                                    <label htmlFor="client">Client</label>
-                                    <select
-                                        className="ui fluid dropdown"
-                                        name="client"
-                                        value={this.state.client}
-                                        onChange={this.onChange}
-                                        required
-                                    >
-                                        <option value=''>Select a client...</option>
-                                        {this.renderClientList()}
-                                    </select>
+                                    {this.renderClientSelect()}
                                 </div>
                                 <div className="field">
                                     <label htmlFor="loadingID">ID</label>
