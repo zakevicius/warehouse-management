@@ -319,6 +319,7 @@ class TableData extends Component {
             </Link>
           </td>
           <td className="center aligned">{order.orderID}</td>
+          <td className="center aligned">{order.additionalID}</td>
           <td className="center aligned">{order.date.split('T')[0]}</td>
           <td className="center aligned">{order.sender}</td>
           <td className="center aligned">{order.receiver}</td>
