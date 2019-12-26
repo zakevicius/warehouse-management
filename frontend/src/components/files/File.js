@@ -1,41 +1,43 @@
-import React from 'react';
-import { removeData, downloadFile, showModal } from '../../action';
-import { connect } from 'react-redux';
-import Modal from '../elements/Modal';
-
+import React from "react";
+import { removeData, downloadFile, showModal } from "../../action";
+import { connect } from "react-redux";
+import Modal from "../elements/Modal";
 
 const File = ({ type, file, downloadFile, ...props }) => {
-  const onClickRemove = (id) => {
-    props.removeData('/files', id);
+  const onClickRemove = id => {
+    props.removeData("/files", id, props.typeOfData);
   };
 
-  const onClick = (id) => {
-    downloadFile(id, file.name)
+  const onClick = id => {
+    downloadFile(id, file.name);
   };
 
   const styleSpan = {
-    cursor: 'pointer',
+    cursor: "pointer"
   };
 
   const styleAddRemoveP = {
-    marginRight: '2em',
-    overflow: 'hidden',
-    width: '10em'
+    marginRight: "2em",
+    overflow: "hidden",
+    width: "10em"
   };
 
   const styleP = {
-    overflow: 'hidden',
-    marginRight: '2em',
-    display: 'flex',
-    width: '10em'
-  }
+    overflow: "hidden",
+    marginRight: "2em",
+    display: "flex",
+    width: "10em"
+  };
 
   switch (type) {
     case "addRemove":
       return (
-        <div style={{ 'display': 'flex' }}>
+        <div style={{ display: "flex" }}>
           <p key={file._id} style={styleAddRemoveP}>
-            <i className="ui large link close red icon" onClick={() => props.removeFile(file)} />
+            <i
+              className="ui large link close red icon"
+              onClick={() => props.removeFile(file)}
+            />
             {file.name}
           </p>
         </div>
@@ -44,14 +46,20 @@ const File = ({ type, file, downloadFile, ...props }) => {
     case "document":
       return (
         <div key={file._id} style={styleP}>
-          {props.userType === "admin" || props.userType === 'super' ?
-            <i className="ui large link close red icon" onClick={props.showModal} /> :
+          {props.userType === "admin" || props.userType === "super" ? (
+            <i
+              className="ui large link close red icon"
+              onClick={props.showModal}
+            />
+          ) : (
             <i className="file alternate outline icon" />
-          }
+          )}
           <Modal confirm={() => onClickRemove(file._id)} />
-          <span style={styleSpan} onClick={() => onClick(file._id)}>{file.name.split('.')[0].split('___')[1]}</span>
-        </div >
-      )
+          <span style={styleSpan} onClick={() => onClick(file._id)}>
+            {file.name.split(".")[0].split("___")[1]}
+          </span>
+        </div>
+      );
     default:
       return null;
   }
@@ -60,7 +68,11 @@ const File = ({ type, file, downloadFile, ...props }) => {
 const mapStateToProps = state => {
   return {
     userType: state.auth.user.type
-  }
-}
+  };
+};
 
-export default connect(mapStateToProps, { removeData, downloadFile, showModal })(File);
+export default connect(mapStateToProps, {
+  removeData,
+  downloadFile,
+  showModal
+})(File);

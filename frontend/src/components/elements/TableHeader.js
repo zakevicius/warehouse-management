@@ -171,7 +171,7 @@ class TableHeader extends Component {
                 }
 
               </th>
-              {this.props.type === "order" && <th className="six wide">Files</th>}
+              {(this.props.type === "order" || this.props.type === "loading") && <th className="six wide">Files</th>}
             </tr>
           </thead>
         );
