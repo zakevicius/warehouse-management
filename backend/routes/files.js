@@ -1,17 +1,17 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const auth = require('../middleware/auth');
-const fs = require('fs');
+const auth = require("../middleware/auth");
+const fs = require("fs");
 
-const Order = require('../models/Order');
-const Loading = require('../models/Loading');
-const File = require('../models/File');
+const Order = require("../models/Order");
+const Loading = require("../models/Loading");
+const File = require("../models/File");
 
 // FTP settings
-const ftp = require('../config/ftp');
-const Client = require('ftp');
+const ftp = require("../config/ftp");
+const Client = require("ftp");
 const options = {
-  host: 'logway1.lt',
+  host: "logway1.lt",
   port: 21,
   user: ftp.username,
   password: ftp.password
@@ -20,16 +20,15 @@ const options = {
 // @route       GET api/files
 // @desc        Get all users clients
 // @access      Private
-router.get('/:id', auth, async (req, res) => {
+router.get("/:id", auth, async (req, res) => {
   try {
-    const folder = req.params.id
+    const folder = req.params.id;
     let filesOnServer = [];
 
     const paths = [`/files/${folder}/photo`, `/files/${folder}/document`];
 
-
     const c = new Client();
-    c.on('ready', () => {
+    c.on("ready", () => {
       for (const path of paths) {
         c.list(path, (err, list) => {
           if (err) console.log(err);
@@ -39,7 +38,7 @@ router.get('/:id', auth, async (req, res) => {
         });
       }
       c.end();
-      c.on('close', async () => {
+      c.on("close", async () => {
         const files = await File.find({ order: req.params.id });
         let filesToReturn = [];
 
@@ -52,16 +51,16 @@ router.get('/:id', auth, async (req, res) => {
         }
 
         res.json(filesToReturn);
-      })
-    })
+      });
+    });
     c.connect(options);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ msg: 'Server error fetching files' });
+    res.status(500).json({ msg: "Server error fetching files" });
   }
 });
 
-router.get('/download/:id', async (req, res) => {
+router.get("/download/:id", async (req, res) => {
   const file = await File.findById(req.params.id);
   try {
     const { order, type, name } = file;
@@ -78,25 +77,23 @@ router.get('/download/:id', async (req, res) => {
     //   });
     // });
     // c.connect(options);
+  } catch (err) {
+    res.status(500).json({ msg: "Server error downloading files" });
   }
-  catch (err) {
-    res.status(500).json({ msg: 'Server error downloading files' });
-  }
-})
+});
 
 // @route       POST api/files
 // @desc        Add new client
 // @access      Private
-router.post('/:data/:id', auth, async (req, res, next) => {
+router.post("/:data/:id", auth, async (req, res, next) => {
   let data;
 
   switch (req.params.data) {
-    case 'order':
+    case "order":
       data = await Order.findById(req.params.id);
       break;
-    case 'loading':
+    case "loading":
       data = await Loading.findById(req.params.id);
-      console.log(data);
       break;
     default:
       break;
@@ -104,44 +101,53 @@ router.post('/:data/:id', auth, async (req, res, next) => {
 
   // Check if user authorized
   if (data.user.toString() !== req.user.id) {
-    if (req.user.type !== 'admin' && req.user.type !== 'super') {
-      return res.status(404).json({ msg: 'not authorized' });
+    if (req.user.type !== "admin" && req.user.type !== "super") {
+      return res.status(404).json({ msg: "not authorized" });
     }
   }
-
-  console.log('after not auth')
 
   let photos = [];
   let documents = [];
   let errors = [];
 
   const setType = ext => {
-    const photosTypes = ['jpeg', 'gif', 'jpg', 'bmp', 'png', 'JPEG', 'GIF', 'JPG', 'BMP', 'PNG']
+    const photosTypes = [
+      "jpeg",
+      "gif",
+      "jpg",
+      "bmp",
+      "png",
+      "JPEG",
+      "GIF",
+      "JPG",
+      "BMP",
+      "PNG"
+    ];
     if (photosTypes.indexOf(ext) >= 0) {
-      return 'photo';
+      return "photo";
     } else {
-      return 'document';
+      return "document";
     }
   };
 
   const uploadFile = async file => {
     const name = file.name;
-    const type = setType(name.split('.').pop());
+    const type = setType(name.split(".").pop());
     const saveAs = `${Date.now()}___${name}`;
-    const folder = req.params.id
+    const folder = req.params.id;
 
     const path = `/files/${folder}/${type}/${saveAs}`;
 
     const c = new Client();
-    c.on('ready', () => {
+    c.on("ready", () => {
       c.mkdir(`/files/${folder}/${type}/`, true, err => {
         if (err) console.log(err);
-      })
+      });
       c.put(file.tempFilePath, path, err => {
         if (err) console.log(err);
         c.end();
-      })
-    })
+      });
+    });
     c.connect(options);
 
     try {
@@ -157,26 +163,28 @@ router.post('/:data/:id', auth, async (req, res, next) => {
       await file.save();
 
       let newOrderInformation = {};
-      if (type === 'photo') {
-        newOrderInformation.photos = [...data.photos, file];
+      if (type === "photo") {
+        newOrderInformation.photos = [...photos, file];
         photos.push(file);
       } else {
-        newOrderInformation.documents = [...data.documents, file];
+        newOrderInformation.documents = [...documents, file];
         documents.push(file);
       }
 
       // Updating data info
       let updatedData;
 
-      switch (req.params.id) {
-        case 'order':
-          updatedData = await Order.findByIdAndUpdate(req.params.id,
+      switch (req.params.data) {
+        case "order":
+          updatedData = await Order.findByIdAndUpdate(
+            req.params.id,
             { $set: newOrderInformation },
             { new: true }
           );
           break;
-        case 'loading':
-          updatedData = await Loading.findByIdAndUpdate(req.params.id,
+        case "loading":
+          updatedData = await Loading.findByIdAndUpdate(
+            req.params.id,
             { $set: newOrderInformation },
             { new: true }
           );
@@ -186,9 +194,9 @@ router.post('/:data/:id', auth, async (req, res, next) => {
       }
     } catch (err) {
       console.error(err.message);
-      res.status(500).json({ msg: 'Server error creating new file' });
+      res.status(500).json({ msg: "Server error creating new file" });
     }
-  }
+  };
 
   try {
     if (errors.length > 0) {
@@ -207,28 +215,27 @@ router.post('/:data/:id', auth, async (req, res, next) => {
       })();
     }
   } catch (err) {
-    res.status(500).json({ msg: 'Server error uploading A file' })
+    res.status(500).json({ msg: "Server error uploading A file" });
   }
 });
 
 // @route       DELETE api/files
 // @desc        Delete client
 // @access      Private
-router.delete('/:id', auth, async (req, res) => {
-
-  const deleteFile = (file, order) => {
+router.delete("/:data/:id", auth, async (req, res) => {
+  const deleteFile = (file, dataFolder) => {
     const name = file.name;
-    const folder = order._id;
+    const folder = dataFolder._id;
     const type = file.type;
     const path = `/files/${folder}/${type}/${name}`;
 
     const c = new Client();
-    c.on('ready', () => {
+    c.on("ready", () => {
       c.delete(path, err => {
         if (err) console.log(err);
         c.end();
-      })
-    })
+      });
+    });
     c.connect(options);
   };
 
@@ -236,11 +243,11 @@ router.delete('/:id', auth, async (req, res) => {
     // Find File to delete
     const file = await File.findById(req.params.id);
 
-    // Check if user is authorized to delete client
+    // Check if user is authorized to delete file
 
     if (file.user.toString() !== req.user.id) {
-      if (req.user.type !== 'admin') {
-        res.status(401).json({ msg: 'Not authorized ' });
+      if (req.user.type !== "admin") {
+        res.status(401).json({ msg: "Not authorized " });
         return;
       } else {
         await File.findByIdAndRemove(req.params.id);
@@ -249,26 +256,54 @@ router.delete('/:id', auth, async (req, res) => {
       await File.findByIdAndRemove(req.params.id);
     }
 
-    // Update Order file list
-    const order = await Order.findById(file.order);
+    // Updating data info
+    let updatedData;
+
+    switch (req.params.data) {
+      case "order":
+        updatedData = await Order.findById(file.order);
+        break;
+      case "loading":
+        updatedData = await Loading.findById(file.order);
+        break;
+      default:
+        break;
+    }
 
     let newOrderInformation = {};
-    newOrderInformation.photos = order.photos.filter(photo => photo._id !== req.params.id);
-    newOrderInformation.documents = order.documents.filter(document => document._id !== req.params.id);
-
-    // Updating order
-    await Order.findByIdAndUpdate(req.params.orderid,
-      { $set: newOrderInformation },
-      { new: true }
+    newOrderInformation.photos = updatedData.photos.filter(
+      photo => photo._id.toString() !== req.params.id
+    );
+    newOrderInformation.documents = updatedData.documents.filter(
+      document => document._id.toString() !== req.params.id
     );
 
-    // Deleting file from system
-    deleteFile(file, order);
+    // Updating data
+    switch (req.params.data) {
+      case "order":
+        await Order.findByIdAndUpdate(
+          updatedData._id,
+          { $set: newOrderInformation },
+          { new: true }
+        );
+        break;
+      case "loading":
+        await Loading.findByIdAndUpdate(
+          updatedData._id,
+          { $set: newOrderInformation },
+          { new: true }
+        );
+      default:
+        break;
+    }
 
-    res.json({ id: req.params.id, msg: 'File succesfully removed' });
+    // Deleting file from system
+    deleteFile(file, updatedData);
+
+    res.json({ id: req.params.id, msg: "File succesfully removed" });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ msg: 'Server error deleting file' });
+    res.status(500).json({ msg: "Server error deleting file" });
   }
 });
 

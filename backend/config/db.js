@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-process.env.NODE_CONFIG_DIR = './backend/config';
-const config = require('config');
-const db = config.get('mongoURI');
+const mongoose = require("mongoose");
+process.env.NODE_CONFIG_DIR = "./backend/config";
+const config = require("config");
+const db = config.get("mongoURI");
 
 const connectDB = async () => {
   try {
@@ -11,7 +11,7 @@ const connectDB = async () => {
       useFindAndModify: false,
       useUnifiedTopology: true
     });
-    console.log('Database Connected');
+    console.log("Database Connected");
   } catch (err) {
     console.error(err.message);
     process.exit(1);
