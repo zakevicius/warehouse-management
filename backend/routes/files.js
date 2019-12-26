@@ -4,6 +4,7 @@ const auth = require('../middleware/auth');
 const fs = require('fs');
 
 const Order = require('../models/Order');
+const Loading = require('../models/Loading');
 const File = require('../models/File');
 
 // FTP settings
@@ -86,14 +87,24 @@ router.get('/download/:id', async (req, res) => {
 // @route       POST api/files
 // @desc        Add new client
 // @access      Private
-router.post('/:id', auth, async (req, res, next) => {
+router.post('/:data/:id', auth, async (req, res, next) => {
+  let data;
 
-  let order = await Order.findById(req.params.id);
+  switch (req.params.data) {
+    case 'order':
+      data = await Order.findById(req.params.id);
+      break;
+    case 'loading':
+      data = await Loading.findById(req.params.id);
+      console.log(data);
+      break;
+    default:
+      break;
+  }
 
   // Check if user authorized
-  if (order.user.toString() !== req.user.id) {
+  if (data.user.toString() !== req.user.id) {
     if (req.user.type !== 'admin' && req.user.type !== 'super') {
-      console.log(req.user.type)
       return res.status(404).json({ msg: 'not authorized' });
     }
   }
@@ -147,18 +158,32 @@ router.post('/:id', auth, async (req, res, next) => {
 
       let newOrderInformation = {};
       if (type === 'photo') {
-        newOrderInformation.photos = [...order.photos, file];
+        newOrderInformation.photos = [...data.photos, file];
         photos.push(file);
       } else {
-        newOrderInformation.documents = [...order.documents, file];
+        newOrderInformation.documents = [...data.documents, file];
         documents.push(file);
       }
 
-      // Updating order
-      order = await Order.findByIdAndUpdate(req.params.id,
-        { $set: newOrderInformation },
-        { new: true }
-      );
+      // Updating data info
+      let updatedData;
+
+      switch (req.params.id) {
+        case 'order':
+          updatedData = await Order.findByIdAndUpdate(req.params.id,
+            { $set: newOrderInformation },
+            { new: true }
+          );
+          break;
+        case 'loading':
+          updatedData = await Loading.findByIdAndUpdate(req.params.id,
+            { $set: newOrderInformation },
+            { new: true }
+          );
+          break;
+        default:
+          break;
+      }
     } catch (err) {
       console.error(err.message);
       res.status(500).json({ msg: 'Server error creating new file' });

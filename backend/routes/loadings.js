@@ -161,8 +161,8 @@ router.put('/:id',
         if (status) newLoadingInformation.status = status;
         if (totalQnt) newLoadingInformation.totalQnt = totalQnt;
         if (finalTotalQnt) newLoadingInformation.finalTotalQnt = finalTotalQnt;
-        if (totalBruto) newLoadingInformation.totalBruto = totalBruto;
-        if (finalTotalBruto) newLoadingInformation.finalTotalBruto = finalTotalBruto;
+        if (totalBruto) newLoadingInformation.totalBruto = totalBruto.toFixed(3);
+        if (finalTotalBruto) newLoadingInformation.finalTotalBruto = finalTotalBruto.toFixed(3);
         if (commentsData) newLoadingInformation.commentsData = commentsData;
 
         // Find Loading to update

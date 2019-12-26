@@ -24,7 +24,7 @@ class FileUpload extends Component {
     msg: ''
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.clearError('/files');
     this.props.clearFiles();
   }
@@ -44,7 +44,7 @@ class FileUpload extends Component {
       data.append('files', file);
     });
 
-    this.props.uploadFiles(data, this.props.id);
+    this.props.uploadFiles(data, this.props.id, this.props.typeOfData);
     this.props.clearFiles();
   };
 

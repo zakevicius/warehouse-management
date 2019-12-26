@@ -339,7 +339,7 @@ export const sortTable = (type, sortType, data, info) => dispatch => {
 
 // FILES
 
-export const uploadFiles = (files, id) => async dispatch => {
+export const uploadFiles = (files, id, typeOfData) => async dispatch => {
     const config = {
         headers: {
             "Content-type": "multipart/form-data"
@@ -347,7 +347,7 @@ export const uploadFiles = (files, id) => async dispatch => {
     };
     try {
         dispatch({ type: types.SET_LOADING });
-        const res = await api.post(`/files/${id}`, files, config);
+        const res = await api.post(`/files/${typeOfData}/${id}`, files, config);
         dispatch({ type: types.UPLOAD_FILES, payload: res.data });
         dispatch({ type: types.UNSET_LOADING });
     } catch (err) {

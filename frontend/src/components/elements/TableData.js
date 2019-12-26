@@ -92,8 +92,8 @@ class TableData extends Component {
           <tr key={i}>
             <td className="right aligned" style={{ fontWeight: "bold" }}>{text}</td>
             {renderInfo(i)}
-            {i === 1 && <td rowSpan={secondColumn.length - 3}><FileList id={order._id} type="showFiles" /></td>}
-            {(i === secondColumn.length - 2 && (this.props.userType === 'admin' || this.props.userType === 'super')) && <td rowSpan="3"><FileUpload id={order._id} /></td>}
+            {i === 1 && <td rowSpan={secondColumn.length - 3}><FileList id={order._id} type="showFiles" typeOfData='order' /></td>}
+            {(i === secondColumn.length - 2 && (this.props.userType === 'admin' || this.props.userType === 'super')) && <td rowSpan="3"><FileUpload id={order._id} typeOfData='order' /></td>}
           </tr >
         );
       })
@@ -256,6 +256,8 @@ class TableData extends Component {
           <tr key={i}>
             <td>{text}</td>
             <td className="left aligned">{secondColumn[i - 1]}</td>
+            {i === 1 && <td rowSpan={secondColumn.length - 3}><FileList id={data._id} type="showFiles" typeOfData='loading' /></td>}
+            {(i === secondColumn.length - 2 && (this.props.userType === 'admin' || this.props.userType === 'super')) && <td rowSpan="3"><FileUpload id={data._id} typeOfData='loading' /></td>}
           </tr>
         );
       })
@@ -339,7 +341,7 @@ class TableData extends Component {
     }
     return (
       <tr style={{ 'fontWeight': 'bold' }}>
-        <td className="one wide center aligned right aligned" colSpan='5'>Total:</td>
+        <td className="one wide center aligned right aligned" colSpan='6'>Total:</td>
         <td className="one wide center aligned">{this.props.loading.data.totalQnt}</td>
         <td className="one wide center aligned">{this.props.loading.data.totalBruto}</td>
         <td className="one wide center aligned" style={{ 'color': 'tomato' }}>{this.props.loading.data.finalTotalQnt ? this.props.loading.data.finalTotalQnt : this.props.loading.data.totalQnt}</td>
