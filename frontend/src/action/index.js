@@ -458,18 +458,36 @@ export const setActiveTab = (type, tab) => {
   };
 };
 
-export const showModal = () => {
-  return {
-    type: types.SHOW_MODAL,
-    payload: true
-  };
+export const showModal = (type = null, id = null) => {
+  switch (type) {
+    case "image":
+      console.log("image");
+      return {
+        type: types.SHOW_IMAGE_MODAL,
+        payload: true,
+        id
+      };
+    default:
+      return {
+        type: types.SHOW_MODAL,
+        payload: true
+      };
+  }
 };
 
-export const hideModal = () => {
-  return {
-    type: types.HIDE_MODAL,
-    payload: false
-  };
+export const hideModal = (type = null) => {
+  switch (type) {
+    case "image":
+      return {
+        type: types.HIDE_IMAGE_MODAL,
+        payload: false
+      };
+    default:
+      return {
+        type: types.HIDE_MODAL,
+        payload: false
+      };
+  }
 };
 
 export const clearState = () => ({ type: types.CLEAR_STATE });

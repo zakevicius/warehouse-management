@@ -11,14 +11,15 @@ import {
   CLEAR_FILE_ERROR,
   FILE_SET_LOADING,
   FILE_UNSET_LOADING
-} from '../action/types';
+} from "../action/types";
 
 const initialState = {
   files: { photos: [], documents: [] },
   filesToUpload: [],
   status: [],
-  load: false
-}
+  load: false,
+  imageToShow: null
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -26,8 +27,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         files: {
-          photos: action.payload.filter(file => file.type === 'photo'),
-          documents: action.payload.filter(file => file.type === 'document')
+          photos: action.payload.filter(file => file.type === "photo"),
+          documents: action.payload.filter(file => file.type === "document")
         }
       };
     case DOWNLOAD_FILE:
@@ -42,15 +43,27 @@ export default (state = initialState, action) => {
         status: [...state.status, action.payload]
       };
     case ADD_FILE:
-      return { ...state, filesToUpload: [...state.filesToUpload, action.payload] };
+      return {
+        ...state,
+        filesToUpload: [...state.filesToUpload, action.payload]
+      };
     case REMOVE_FILE:
-      return { ...state, filesToUpload: state.filesToUpload.filter(file => file.name !== action.payload.name) };
+      return {
+        ...state,
+        filesToUpload: state.filesToUpload.filter(
+          file => file.name !== action.payload.name
+        )
+      };
     case DELETE_FILE:
       return {
         ...state,
         files: {
-          photos: state.files.photos.filter(file => file._id !== action.payload.id),
-          documents: state.files.documents.filter(file => file._id !== action.payload.id)
+          photos: state.files.photos.filter(
+            file => file._id !== action.payload.id
+          ),
+          documents: state.files.documents.filter(
+            file => file._id !== action.payload.id
+          )
         }
       };
     case CLEAR_FILES:
@@ -68,4 +81,4 @@ export default (state = initialState, action) => {
     default:
       return state;
   }
-}
+};

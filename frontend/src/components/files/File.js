@@ -12,6 +12,10 @@ const File = ({ type, file, downloadFile, ...props }) => {
     downloadFile(id, file.name);
   };
 
+  const onClickPhoto = id => {
+    props.showModal("image", id);
+  };
+
   const styleSpan = {
     cursor: "pointer"
   };
@@ -55,7 +59,12 @@ const File = ({ type, file, downloadFile, ...props }) => {
             <i className="file alternate outline icon" />
           )}
           <Modal confirm={() => onClickRemove(file._id)} />
-          <span style={styleSpan} onClick={() => onClick(file._id)}>
+          <span
+            style={styleSpan}
+            onClick={() => {
+              type === "photo" ? onClickPhoto() : onClick(file._id);
+            }}
+          >
             {file.name.split(".")[0].split("___")[1]}
           </span>
         </div>

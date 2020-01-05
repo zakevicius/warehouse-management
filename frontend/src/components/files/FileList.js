@@ -2,6 +2,7 @@ import React, { Fragment, Component } from "react";
 import { connect } from "react-redux";
 import File from "./File";
 import Spinner from "../elements/Spinner";
+import ImageModal from "./ImageModal";
 
 class FileList extends Component {
   renderAddRemoveFileList = files => {
@@ -85,7 +86,12 @@ class FileList extends Component {
 
   render() {
     const { files, type } = this.props;
-    return <Fragment>{this.renderFileList(files, type)}</Fragment>;
+    return (
+      <Fragment>
+        {files.files.photos && <ImageModal images={files.files.photos} />}
+        {this.renderFileList(files, type)}
+      </Fragment>
+    );
   }
 }
 
