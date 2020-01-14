@@ -32,7 +32,10 @@ export default (state = initialState, action) => {
         }
       };
     case DOWNLOAD_FILE:
-      return state;
+      return {
+        ...state,
+        src: action.payload.imageData
+      };
     case UPLOAD_FILES:
       return {
         ...state,

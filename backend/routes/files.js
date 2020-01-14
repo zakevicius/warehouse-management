@@ -64,19 +64,32 @@ router.get("/download/:id", async (req, res) => {
   const file = await File.findById(req.params.id);
   try {
     const { order, type, name } = file;
-    const path = `ftp://${ftp.username}:${ftp.password}@logway1.lt/files/${order}/${type}/${name}`;
-    res.send(path);
+    const fullPath = `ftp://${ftp.username}:${ftp.password}@logway1.lt/files/${order}/${type}/${name}`;
 
-    // const path = `/files/${order}/${type}/${name}`;
-    // const c = new Client();
-    // c.on('ready', function () {
-    //   c.get(path, (err, stream) => {
-    //     if (err) throw err;
-    //     stream.once('close', function () { c.end(); });
-    //     stream.pipe(res);
-    //   });
-    // });
-    // c.connect(options);
+    const path = `/files/${order}/${type}/${name}`;
+    const c = new Client();
+
+    let chunks = [];
+    c.on("ready", function() {
+      c.get(path, (err, stream) => {
+        if (err) throw err;
+
+        stream.once("close", function() {
+          c.end();
+        });
+
+        stream.on("data", chunk => {
+          chunks.push(chunk);
+        });
+
+        stream.on("end", () => {
+          const finalBuffer = Buffer.concat(chunks);
+          const imageData = finalBuffer.toString("base64");
+          res.send({ fullPath, imageData });
+        });
+      });
+    });
+    c.connect(options);
   } catch (err) {
     res.status(500).json({ msg: "Server error downloading files" });
   }

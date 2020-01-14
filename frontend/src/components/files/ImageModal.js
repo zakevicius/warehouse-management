@@ -1,8 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { hideModal } from "../../action";
+import { hideModal, downloadFile } from "../../action";
 
 class ImageModal extends Component {
+  componentDidUpdate() {
+    console.log(this.state, this.props);
+    if (this.props.images.length > 0) {
+      let { _id, name } = this.props.images[0];
+      this.props.downloadFile(_id, name);
+    }
+  }
+
   onClose = () => {
     this.props.hideModal("image");
   };
@@ -19,7 +27,7 @@ class ImageModal extends Component {
             onClick={this.onClose}
           ></i>
           <div className="ui small basic test modal transition visible active">
-            <img src="ftp://webmaster@logway1.lt:5kEpMxBP7CM3Zkfh@logway1.lt/files/5e00d89eba31c700174fef31/photo/1577125899481___S74.JPG" />
+            <img src={`data:image/png;base64, ${this.props.src}`} />
           </div>
         </div>
       );
@@ -29,8 +37,11 @@ class ImageModal extends Component {
 
 const mapStateToProps = state => {
   return {
+    src: state.filesData.src,
     showImageModal: state.eventsData.showImageModal
   };
 };
 
-export default connect(mapStateToProps, { hideModal })(ImageModal);
+export default connect(mapStateToProps, { hideModal, downloadFile })(
+  ImageModal
+);

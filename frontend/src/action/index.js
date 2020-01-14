@@ -428,10 +428,8 @@ export const downloadFile = (id, filename) => async dispatch => {
     dispatch({ type: types.SET_LOADING });
     const res = await api.get(`/files/download/${id}`);
 
-    // const file = new Blob([res.data]);
-    // const fileURL = URL.createObjectURL(file);
     const link = document.createElement("a");
-
+    console.log(res.data);
     link.href = res.data;
     link.target = "_blank";
     link.download = filename;
@@ -461,7 +459,6 @@ export const setActiveTab = (type, tab) => {
 export const showModal = (type = null, id = null) => {
   switch (type) {
     case "image":
-      console.log("image");
       return {
         type: types.SHOW_IMAGE_MODAL,
         payload: true,
