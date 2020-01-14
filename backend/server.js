@@ -1,13 +1,15 @@
-const express = require('express');
-const connectDB = require('./config/db');
-const cors = require('cors');
-const fileUpload = require('express-fileupload');
+const express = require("express");
+const connectDB = require("./config/db");
+const cors = require("cors");
+const fileUpload = require("express-fileupload");
 
 const app = express();
-app.use((req, res, next) => {
-  res.append('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-},
+app.use(
+  (req, res, next) => {
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+    res.header("Access-Control-Allow-Origin", "*");
+    next();
+  },
   [
     cors(),
     fileUpload({
@@ -18,23 +20,23 @@ app.use((req, res, next) => {
     })
   ]
 );
-app.options('*', cors());
+app.options("*", cors());
 
 connectDB();
 
 // Initialize middleware
 app.use(express.json({ extended: false }));
 
-app.get('/', (req, res) => {
-  res.json({ msg: 'Welcome to Logway API' });
+app.get("/", (req, res) => {
+  res.json({ msg: "Welcome to Logway API" });
 });
 
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/users', require('./routes/users'));
-app.use('/api/clients', require('./routes/clients'));
-app.use('/api/orders', require('./routes/orders'));
-app.use('/api/loadings', require('./routes/loadings'));
-app.use('/api/files', require('./routes/files'));
+app.use("/api/auth", require("./routes/auth"));
+app.use("/api/users", require("./routes/users"));
+app.use("/api/clients", require("./routes/clients"));
+app.use("/api/orders", require("./routes/orders"));
+app.use("/api/loadings", require("./routes/loadings"));
+app.use("/api/files", require("./routes/files"));
 
 const PORT = process.env.PORT || 8000;
 
