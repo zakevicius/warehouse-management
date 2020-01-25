@@ -1,22 +1,57 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { hideModal, downloadFile } from "../../action";
+import { hideModal } from "../../action";
 
 class ImageModal extends Component {
-  componentDidUpdate() {
-    console.log(this.state, this.props);
-    if (this.props.images.length > 0) {
-      let { _id, name } = this.props.images[0];
-      this.props.downloadFile(_id, name);
-    }
-  }
+  state = {
+    src: ""
+  };
+
+  styleImagesLine = {
+    width: "100%",
+    height: "10em",
+    overflow: "hidden",
+    position: "absolute",
+    bottom: "50px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  };
+
+  showImage = () => {
+    let image = this.props.images.filter(
+      img => img._id.toString() === this.props._id.toString()
+    );
+    return (
+      <img
+        width="800"
+        height="auto"
+        src={`data:image/png;base64, ${image[0].src}`}
+      />
+    );
+  };
+
+  showImagesLine = () => {
+    return this.props.images.map(image => (
+      <img
+        key={image._id}
+        width="150"
+        height="auto"
+        src={`data:image/png;base64, ${image.src}`}
+      />
+    ));
+  };
 
   onClose = () => {
     this.props.hideModal("image");
   };
 
   render() {
-    if (!this.props.showImageModal) {
+    if (
+      !this.props.showImageModal ||
+      this.props.images.length === 0 ||
+      !this.props._id
+    ) {
       return null;
     } else {
       return (
@@ -27,8 +62,9 @@ class ImageModal extends Component {
             onClick={this.onClose}
           ></i>
           <div className="ui small basic test modal transition visible active">
-            <img src={`data:image/png;base64, ${this.props.src}`} />
+            {this.showImage()}
           </div>
+          <div style={this.styleImagesLine}>{this.showImagesLine()}</div>
         </div>
       );
     }
@@ -37,11 +73,10 @@ class ImageModal extends Component {
 
 const mapStateToProps = state => {
   return {
-    src: state.filesData.src,
-    showImageModal: state.eventsData.showImageModal
+    showImageModal: state.eventsData.showImageModal,
+    _id: state.eventsData._id,
+    images: state.filesData.files.photos
   };
 };
 
-export default connect(mapStateToProps, { hideModal, downloadFile })(
-  ImageModal
-);
+export default connect(mapStateToProps, { hideModal })(ImageModal);

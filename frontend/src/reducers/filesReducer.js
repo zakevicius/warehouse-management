@@ -24,11 +24,25 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_FILES:
+      let photos = action.payload.data.filter(file => file.type === "photo");
+      let documents = action.payload.data.filter(
+        file => file.type === "document"
+      );
+      let base64 = action.payload.base64;
+
+      photos.forEach(photo => {
+        base64.forEach(base => {
+          if (photo._id.toString() === base._id.toString()) {
+            photo.src = base.base64Data;
+          }
+        });
+      });
+
       return {
         ...state,
         files: {
-          photos: action.payload.filter(file => file.type === "photo"),
-          documents: action.payload.filter(file => file.type === "document")
+          photos,
+          documents
         }
       };
     case DOWNLOAD_FILE:

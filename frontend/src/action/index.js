@@ -71,13 +71,22 @@ export const fetchData = (typeOfData, id = null) => async dispatch => {
     if (typeOfData === "/files") {
       dispatch({ type: types.FILE_SET_LOADING });
       res = await api.get(`${typeOfData}/${id}`);
+      let base64Data = [];
+      for await (const file of res.data) {
+        let fileData = await api.get(`${typeOfData}/fileData/${file._id}`);
+        base64Data.push(fileData.data);
+      }
       dispatch({ type: types.FILE_UNSET_LOADING });
+      dispatch({
+        type: requestType,
+        payload: { data: res.data, base64: base64Data }
+      });
     } else {
       dispatch({ type: types.SET_LOADING });
       res = await api.get(typeOfData);
       dispatch({ type: types.UNSET_LOADING });
+      dispatch({ type: requestType, payload: res.data });
     }
-    dispatch({ type: requestType, payload: res.data });
   } catch (err) {
     let message = err.response ? err.response.data.msg : err.message;
     let errorType = setErrorType(typeOfData, "set");
@@ -429,7 +438,6 @@ export const downloadFile = (id, filename) => async dispatch => {
     const res = await api.get(`/files/download/${id}`);
 
     const link = document.createElement("a");
-    console.log(res.data);
     link.href = res.data;
     link.target = "_blank";
     link.download = filename;
@@ -461,8 +469,10 @@ export const showModal = (type = null, id = null) => {
     case "image":
       return {
         type: types.SHOW_IMAGE_MODAL,
-        payload: true,
-        id
+        payload: {
+          show: true,
+          _id: id
+        }
       };
     default:
       return {
@@ -477,7 +487,10 @@ export const hideModal = (type = null) => {
     case "image":
       return {
         type: types.HIDE_IMAGE_MODAL,
-        payload: false
+        payload: {
+          show: false,
+          _id: ""
+        }
       };
     default:
       return {

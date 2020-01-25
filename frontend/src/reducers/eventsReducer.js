@@ -14,7 +14,8 @@ const initialState = {
   activeSubTab: "all",
   load: false,
   showModal: false,
-  showImageModal: false
+  showImageModal: false,
+  _id: ""
 };
 
 export default (state = initialState, action) => {
@@ -29,10 +30,17 @@ export default (state = initialState, action) => {
       return { ...state, load: false };
     case SHOW_MODAL:
     case HIDE_MODAL:
-      return { ...state, showModal: action.payload };
+      return {
+        ...state,
+        showModal: action.payload.show
+      };
     case SHOW_IMAGE_MODAL:
     case HIDE_IMAGE_MODAL:
-      return { ...state, showImageModal: action.payload };
+      return {
+        ...state,
+        showImageModal: action.payload.show,
+        _id: action.payload._id
+      };
     default:
       return state;
   }

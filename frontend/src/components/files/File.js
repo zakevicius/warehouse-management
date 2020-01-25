@@ -1,19 +1,15 @@
 import React from "react";
-import { removeData, downloadFile, showModal } from "../../action";
+import { removeData, downloadFile } from "../../action";
 import { connect } from "react-redux";
 import Modal from "../elements/Modal";
 
-const File = ({ type, file, downloadFile, ...props }) => {
+const File = ({ type, file, downloadFile, src, onClickPhoto, ...props }) => {
   const onClickRemove = id => {
     props.removeData("/files", id, props.typeOfData);
   };
 
   const onClick = id => {
     downloadFile(id, file.name);
-  };
-
-  const onClickPhoto = id => {
-    props.showModal("image", id);
   };
 
   const styleSpan = {
@@ -28,9 +24,27 @@ const File = ({ type, file, downloadFile, ...props }) => {
 
   const styleP = {
     overflow: "hidden",
-    marginRight: "2em",
+    margin: "1em",
     display: "flex",
+    flexWrap: "wrap",
     width: "10em"
+  };
+
+  const imageDiv = {
+    flexBasis: "100%",
+    height: "7em",
+    cursor: "pointer",
+    overflow: "hidden",
+    marginBottom: "1em",
+    boxShadow:
+      "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19)"
+  };
+
+  const styleImg = {
+    position: "relative",
+    top: "50%",
+    transform: "translateY(-50%)",
+    borderRadius: "5px"
   };
 
   switch (type) {
@@ -47,6 +61,31 @@ const File = ({ type, file, downloadFile, ...props }) => {
         </div>
       );
     case "photo":
+      return (
+        <div key={file._id} style={styleP}>
+          <Modal confirm={() => onClickRemove(file._id)} />
+          <div className="imageDiv" style={imageDiv}>
+            <img
+              src={`data:image/png;base64, ${file.src}`}
+              width="100%"
+              height="auto"
+              style={styleImg}
+              onClick={() => onClickPhoto(file._id)}
+            />
+          </div>
+          {props.userType === "admin" || props.userType === "super" ? (
+            <i
+              className="ui large link close red icon"
+              onClick={props.showModal}
+            />
+          ) : (
+            <i className="file alternate outline icon" />
+          )}
+          <span style={styleSpan} onClick={() => onClick(file._id)}>
+            {file.name.split(".")[0].split("___")[1]}
+          </span>
+        </div>
+      );
     case "document":
       return (
         <div key={file._id} style={styleP}>
@@ -59,12 +98,7 @@ const File = ({ type, file, downloadFile, ...props }) => {
             <i className="file alternate outline icon" />
           )}
           <Modal confirm={() => onClickRemove(file._id)} />
-          <span
-            style={styleSpan}
-            onClick={() => {
-              type === "photo" ? onClickPhoto() : onClick(file._id);
-            }}
-          >
+          <span style={styleSpan} onClick={() => onClick(file._id)}>
             {file.name.split(".")[0].split("___")[1]}
           </span>
         </div>
@@ -82,6 +116,5 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, {
   removeData,
-  downloadFile,
-  showModal
+  downloadFile
 })(File);
