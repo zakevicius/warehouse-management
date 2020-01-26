@@ -33,25 +33,29 @@ const File = ({ type, file, downloadFile, src, onClickPhoto, ...props }) => {
   };
 
   const imageDiv = {
+    display: "flex",
     flexBasis: "100%",
+    justifyContent: "center",
     height: "7em",
     cursor: "pointer",
     overflow: "hidden",
     marginBottom: "1em",
     borderRadius: "5px",
+    backgroundColor: "rgba(0, 0, 0, 0.03)",
     boxShadow:
       "4px 4px 8px 0 rgba(0, 0, 0, 0.2), 6px 6px 10px 0 rgba(0, 0, 0, 0.19)"
   };
 
   const styleImg = {
     position: "relative",
-    width: "100%",
-    height: "auto"
+    maxWidth: "100%",
+    maxHeight: "100%",
+    objectFit: "contain"
   };
 
   const renderConfirmDelete = () => {
     return (
-      <div>
+      <div className="file_delete_icons">
         <i
           className="remove large green icon"
           onClick={() => setDeleteItem(0)}

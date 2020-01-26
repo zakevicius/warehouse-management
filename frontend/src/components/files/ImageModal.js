@@ -4,32 +4,8 @@ import { hideModal } from "../../action";
 
 class ImageModal extends Component {
   state = {
-    _id: this.props._id
-  };
-
-  styleImagesLine = {
-    width: "100%",
-    height: "10em",
-    overflow: "hidden",
-    position: "absolute",
-    bottom: "50px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center"
-  };
-
-  styleModalImage = {
-    maxWidth: "100%",
-    maxHeight: "700px",
-    height: "100%",
-    padding: "2em"
-  };
-
-  styleMainImageDiv = {
-    bottom: "15em",
-    width: "100%",
-    height: "700px",
-    zIndex: "1"
+    _id: this.props._id,
+    rotate: ""
   };
 
   showImage = () => {
@@ -43,7 +19,7 @@ class ImageModal extends Component {
       return (
         <img
           src={`data:image/png;base64, ${image[0].src}`}
-          style={this.styleModalImage}
+          className={`imageModal_mainImage ${this.state.rotate}`}
         />
       );
     }
@@ -51,7 +27,8 @@ class ImageModal extends Component {
 
   onImageClick = id => {
     this.setState({
-      _id: id
+      _id: id,
+      rotate: ""
     });
   };
 
@@ -59,12 +36,58 @@ class ImageModal extends Component {
     return this.props.images.map(image => (
       <img
         key={image._id}
-        width="150"
-        height="auto"
         src={`data:image/png;base64, ${image.src}`}
         onClick={() => this.onImageClick(image._id)}
+        className="imageModal_img"
       />
     ));
+  };
+
+  rotate = dir => {
+    console.log(dir);
+    switch (dir) {
+      case "rotate_left":
+        if (this.state.rotate === "") {
+          this.setState({
+            rotate: "rotate_left"
+          });
+        } else if (this.state.rotate === "rotate_left") {
+          this.setState({
+            rotate: "rotate_180"
+          });
+        } else if (this.state.rotate === "rotate_180") {
+          this.setState({
+            rotate: "rotate_right"
+          });
+        } else {
+          this.setState({
+            rotate: ""
+          });
+        }
+        break;
+      case "rotate_right":
+        if (this.state.rotate === "") {
+          this.setState({
+            rotate: "rotate_right"
+          });
+        } else if (this.state.rotate === "rotate_right") {
+          this.setState({
+            rotate: "rotate_180"
+          });
+        } else if (this.state.rotate === "rotate_180") {
+          this.setState({
+            rotate: "rotate_left"
+          });
+        } else {
+          this.setState({
+            rotate: ""
+          });
+        }
+        break;
+      default: {
+        console.log("no dir");
+      }
+    }
   };
 
   onClose = () => {
@@ -80,24 +103,27 @@ class ImageModal extends Component {
       return null;
     } else {
       return (
-        <div className="ui dimmer modals page active">
-          <div style={this.styleImagesLine}>{this.showImagesLine()}</div>
+        <div className="ui dimmer modals page active imageModal">
+          <div className="imageModal_imageLine">{this.showImagesLine()}</div>
           <i
-            className="large window close outline icon inverted"
-            style={{
-              position: "absolute",
-              top: "50px",
-              right: "50px",
-              zIndex: "10"
-            }}
+            className="big window close outline icon inverted imageModal_closeButton"
             onClick={this.onClose}
           ></i>
-          <div
-            style={this.styleMainImageDiv}
-            className="ui small basic test modal transition visible active"
-          >
+          <div className="imageModal_left"></div>
+          <div className="ui small basic test modal transition visible active imageModal_mainImageDiv">
+            <div className="imageModal_rotateButtons">
+              <i
+                className="big undo alternate icon inverted"
+                onClick={() => this.rotate("rotate_left")}
+              ></i>
+              <i
+                className="big redo alternate icon inverted"
+                onClick={() => this.rotate("rotate_right")}
+              ></i>
+            </div>
             {this.showImage()}
           </div>
+          <div className="right"></div>
         </div>
       );
     }
