@@ -6,8 +6,15 @@ import Spinner from "../elements/Spinner";
 import ImageModal from "./ImageModal";
 
 class FileList extends Component {
+  state = {
+    modalInitialImageId: ""
+  };
+
   onClickPhoto = id => {
     this.props.showModal("image", id);
+    this.setState({
+      modalInitialImageId: id
+    });
   };
 
   renderAddRemoveFileList = files => {
@@ -99,7 +106,12 @@ class FileList extends Component {
     const { files, type } = this.props;
     return (
       <Fragment>
-        {files.files.photos && <ImageModal images={files.files.base64} />}
+        {files.files.photos && this.props.showImageModal ? (
+          <ImageModal
+            images={files.files.base64}
+            initialImage={this.state.modalInitialImageId}
+          />
+        ) : null}
         {this.renderFileList(files, type)}
       </Fragment>
     );
@@ -108,6 +120,7 @@ class FileList extends Component {
 
 const mapStateToProps = state => {
   return {
+    showImageModal: state.eventsData.showImageModal,
     files: state.filesData
   };
 };

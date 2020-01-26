@@ -4,7 +4,7 @@ import { hideModal } from "../../action";
 
 class ImageModal extends Component {
   state = {
-    src: ""
+    _id: this.props._id
   };
 
   styleImagesLine = {
@@ -18,17 +18,33 @@ class ImageModal extends Component {
     justifyContent: "center"
   };
 
+  styleModalImage = {
+    maxWidth: "100%",
+    height: "auto",
+    padding: "2em"
+  };
+
   showImage = () => {
-    let image = this.props.images.filter(
-      img => img._id.toString() === this.props._id.toString()
-    );
-    return (
-      <img
-        width="800"
-        height="auto"
-        src={`data:image/png;base64, ${image[0].src}`}
-      />
-    );
+    if (this.state._id === "") {
+      console.log("state 0");
+      return;
+    } else {
+      let image = this.props.images.filter(
+        img => img._id.toString() === this.state._id.toString()
+      );
+      return (
+        <img
+          src={`data:image/png;base64, ${image[0].src}`}
+          style={this.styleModalImage}
+        />
+      );
+    }
+  };
+
+  onImageClick = id => {
+    this.setState({
+      _id: id
+    });
   };
 
   showImagesLine = () => {
@@ -38,6 +54,7 @@ class ImageModal extends Component {
         width="150"
         height="auto"
         src={`data:image/png;base64, ${image.src}`}
+        onClick={() => this.onImageClick(image._id)}
       />
     ));
   };
@@ -56,6 +73,7 @@ class ImageModal extends Component {
     } else {
       return (
         <div className="ui dimmer modals page active">
+          <div style={this.styleImagesLine}>{this.showImagesLine()}</div>
           <i
             className="large window close outline icon inverted"
             style={{ position: "absolute", top: "50px", right: "50px" }}
@@ -64,7 +82,6 @@ class ImageModal extends Component {
           <div className="ui small basic test modal transition visible active">
             {this.showImage()}
           </div>
-          <div style={this.styleImagesLine}>{this.showImagesLine()}</div>
         </div>
       );
     }

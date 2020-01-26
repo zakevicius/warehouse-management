@@ -23,7 +23,6 @@ const File = ({ type, file, downloadFile, src, onClickPhoto, ...props }) => {
   };
 
   const styleP = {
-    overflow: "hidden",
     margin: "1em",
     display: "flex",
     flexWrap: "wrap",
@@ -36,15 +35,15 @@ const File = ({ type, file, downloadFile, src, onClickPhoto, ...props }) => {
     cursor: "pointer",
     overflow: "hidden",
     marginBottom: "1em",
+    borderRadius: "5px",
     boxShadow:
-      "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19)"
+      "4px 4px 8px 0 rgba(0, 0, 0, 0.2), 6px 6px 10px 0 rgba(0, 0, 0, 0.19)"
   };
 
   const styleImg = {
     position: "relative",
-    top: "50%",
-    transform: "translateY(-50%)",
-    borderRadius: "5px"
+    width: "100%",
+    height: "auto"
   };
 
   switch (type) {
@@ -67,8 +66,6 @@ const File = ({ type, file, downloadFile, src, onClickPhoto, ...props }) => {
           <div className="imageDiv" style={imageDiv}>
             <img
               src={`data:image/png;base64, ${file.src}`}
-              width="100%"
-              height="auto"
               style={styleImg}
               onClick={() => onClickPhoto(file._id)}
             />
