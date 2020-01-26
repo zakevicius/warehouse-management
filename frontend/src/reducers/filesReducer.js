@@ -11,27 +11,59 @@ import {
   CLEAR_FILE_ERROR,
   FILE_SET_LOADING,
   FILE_UNSET_LOADING
-} from '../action/types';
+} from "../action/types";
 
 const initialState = {
   files: { photos: [], documents: [] },
   filesToUpload: [],
   status: [],
-  load: false
-}
+  load: false,
+  imageToShow: null
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_FILES:
+      let photos = action.payload.data.filter(file => file.type === "photo");
+      let documents = action.payload.data.filter(
+        file => file.type === "document"
+      );
+      let base64 = action.payload.base64;
+
+      photos.forEach(photo => {
+        base64.forEach(base => {
+          if (photo._id.toString() === base._id.toString()) {
+            photo.src = base.base64Data;
+          }
+        });
+      });
+      documents.forEach(doc => {
+        base64.forEach(base => {
+          if (doc._id.toString() === base._id.toString()) {
+            doc.src = base.base64Data;
+          }
+        });
+      });
+
       return {
         ...state,
         files: {
-          photos: action.payload.filter(file => file.type === 'photo'),
-          documents: action.payload.filter(file => file.type === 'document')
+          photos,
+          documents
         }
       };
     case DOWNLOAD_FILE:
-      return state;
+      let photo = state.files.photos.filter(
+        photo => photo._id === action.payload.id
+      );
+      let document = state.files.documents.filter(
+        doc => doc._id === action.payload.id
+      );
+      let fileToDownload = photo.length > 0 ? photo[0] : document[0];
+      return {
+        ...state,
+        fileToDownload
+      };
     case UPLOAD_FILES:
       return {
         ...state,
@@ -42,15 +74,27 @@ export default (state = initialState, action) => {
         status: [...state.status, action.payload]
       };
     case ADD_FILE:
-      return { ...state, filesToUpload: [...state.filesToUpload, action.payload] };
+      return {
+        ...state,
+        filesToUpload: [...state.filesToUpload, action.payload]
+      };
     case REMOVE_FILE:
-      return { ...state, filesToUpload: state.filesToUpload.filter(file => file.name !== action.payload.name) };
+      return {
+        ...state,
+        filesToUpload: state.filesToUpload.filter(
+          file => file.name !== action.payload.name
+        )
+      };
     case DELETE_FILE:
       return {
         ...state,
         files: {
-          photos: state.files.photos.filter(file => file._id !== action.payload.id),
-          documents: state.files.documents.filter(file => file._id !== action.payload.id)
+          photos: state.files.photos.filter(
+            file => file._id !== action.payload.id
+          ),
+          documents: state.files.documents.filter(
+            file => file._id !== action.payload.id
+          )
         }
       };
     case CLEAR_FILES:
@@ -68,4 +112,4 @@ export default (state = initialState, action) => {
     default:
       return state;
   }
-}
+};

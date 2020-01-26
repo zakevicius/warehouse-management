@@ -1,38 +1,65 @@
-import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import Button from './Button';
-import FileUpload from '../files/FileUpload';
-import FileList from '../files/FileList';
-import CommentList from '../comments/CommentList';
-import NewOrderInfo from '../loadings/NewOrderInfo';
+import React, { Component, Fragment } from "react";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import Button from "./Button";
+import FileUpload from "../files/FileUpload";
+import FileList from "../files/FileList";
+import CommentList from "../comments/CommentList";
+import NewOrderInfo from "../loadings/NewOrderInfo";
 
 class TableData extends Component {
   constructor(props) {
     super(props);
-    this.itemsPerPage = 15
+    this.itemsPerPage = 15;
   }
 
   renderButton() {
-    return <Button button={{ type: "secondary", text: 'More' }} />
+    return <Button button={{ type: "secondary", text: "More" }} />;
   }
 
   // RENDERING ORDERS
 
   renderOrder() {
     if (!this.props.order) {
-      return (<tr rowSpan="5">
-        <td colSpan="10">
-          <div className="ui active inverted dimmer">
-            <div className="ui text loader">Loading</div>
-          </div>
-        </td>
-      </tr>);
+      return (
+        <tr rowSpan="5">
+          <td colSpan="10">
+            <div className="ui active inverted dimmer">
+              <div className="ui text loader">Loading</div>
+            </div>
+          </td>
+        </tr>
+      );
     }
 
     const order = this.props.order;
-    const firstColumn = ['ID', 'Additional ID', 'Status', 'Date', 'Sender', 'Receiver', 'Truck', 'Trailer', 'CLL', 'Bruto', ' Description', 'Declarations'];
-    const secondColumn = [order.orderID, order.additionalID, order.status, order.date.split('T')[0], order.sender, order.receiver, order.truck, order.trailer, order.qnt, order.bruto, order.description];
+    const firstColumn = [
+      "ID",
+      "Additional ID",
+      "Status",
+      "Date",
+      "Sender",
+      "Receiver",
+      "Truck",
+      "Trailer",
+      "CLL",
+      "Bruto",
+      " Description",
+      "Declarations"
+    ];
+    const secondColumn = [
+      order.orderID,
+      order.additionalID,
+      order.status,
+      order.date.split("T")[0],
+      order.sender,
+      order.receiver,
+      order.truck,
+      order.trailer,
+      order.qnt,
+      order.bruto,
+      order.description
+    ];
 
     const renderDeclarations = decl => {
       return (
@@ -49,8 +76,8 @@ class TableData extends Component {
             </p>
           ))}
         </td>
-      )
-    }
+      );
+    };
     const renderStatus = status => {
       // switch (status) {
       //   case 'waiting to load':
@@ -58,46 +85,55 @@ class TableData extends Component {
       //   case 'out':
       if (order.loadingID !== null) {
         return (
-          <td style={{ 'display': 'flex', 'alignItems': 'center' }}>
-            <span style={{ 'marginRight': '10px' }}>{status}</span>
+          <td style={{ display: "flex", alignItems: "center" }}>
+            <span style={{ marginRight: "10px" }}>{status}</span>
             <Link to={`/loadings/${order.loadingID}`}>
-              <Button button={{ type: "secondary inverted", text: 'Go to loading' }} />
+              <Button
+                button={{ type: "secondary inverted", text: "Go to loading" }}
+              />
             </Link>
           </td>
         );
       } else {
         //   default:
-        return (
-          <td>{status}</td>
-        )
+        return <td>{status}</td>;
         // }
-
       }
-    }
+    };
     const renderInfo = i => {
       if (i === 3) {
         return renderStatus(order.status);
       } else if (i === firstColumn.length) {
-        return renderDeclarations(order.declarations)
+        return renderDeclarations(order.declarations);
       } else {
-        return <td>{secondColumn[i - 1]}</td>
+        return <td>{secondColumn[i - 1]}</td>;
       }
-    }
+    };
 
     let i = 0;
-    return (
-      firstColumn.map(text => {
-        i++;
-        return (
-          <tr key={i}>
-            <td className="right aligned" style={{ fontWeight: "bold" }}>{text}</td>
-            {renderInfo(i)}
-            {i === 1 && <td rowSpan={secondColumn.length - 3}><FileList id={order._id} type="showFiles" typeOfData='order' /></td>}
-            {(i === secondColumn.length - 2 && (this.props.userType === 'admin' || this.props.userType === 'super')) && <td rowSpan="3"><FileUpload id={order._id} typeOfData='order' /></td>}
-          </tr >
-        );
-      })
-    );
+    return firstColumn.map(text => {
+      i++;
+      return (
+        <tr key={i}>
+          <td className="right aligned" style={{ fontWeight: "bold" }}>
+            {text}
+          </td>
+          {renderInfo(i)}
+          {i === 1 && (
+            <td rowSpan={secondColumn.length - 3}>
+              <FileList id={order._id} type="showFiles" typeOfData="order" />
+            </td>
+          )}
+          {i === secondColumn.length - 2 &&
+            (this.props.userType === "admin" ||
+              this.props.userType === "super") && (
+              <td rowSpan="3">
+                <FileUpload id={order._id} typeOfData="order" />
+              </td>
+            )}
+        </tr>
+      );
+    });
   }
 
   renderOrders() {
@@ -117,14 +153,12 @@ class TableData extends Component {
         return (
           <tr key={order._id}>
             <td className="center aligned">
-              <Link to={`/orders/${order._id}`} >
-                {this.renderButton()}
-              </Link>
+              <Link to={`/orders/${order._id}`}>{this.renderButton()}</Link>
             </td>
             <td className="center aligned">{order.status}</td>
             <td className="center aligned">{order.orderID}</td>
             <td className="center aligned">{order.additionalID}</td>
-            <td className="center aligned">{order.date.split('T')[0]}</td>
+            <td className="center aligned">{order.date.split("T")[0]}</td>
             <td>{order.sender}</td>
             <td>{order.receiver}</td>
             <td className="center aligned">{order.truck}</td>
@@ -132,8 +166,8 @@ class TableData extends Component {
             <td className="center aligned">{order.qnt}</td>
             <td className="center aligned">{order.bruto}</td>
             <td>{order.description}</td>
-            <td className="center aligned">{order.declarations.join(', ')}</td>
-          </tr >
+            <td className="center aligned">{order.declarations.join(", ")}</td>
+          </tr>
         );
       });
     }
@@ -143,22 +177,24 @@ class TableData extends Component {
 
   renderClient() {
     if (!this.props.client) {
-      return (<tr rowSpan="5">
-        <td colSpan="10">
-          <div className="ui active inverted dimmer">
-            <div className="ui text loader">Loading</div>
-          </div>
-        </td>
-      </tr>);
+      return (
+        <tr rowSpan="5">
+          <td colSpan="10">
+            <div className="ui active inverted dimmer">
+              <div className="ui text loader">Loading</div>
+            </div>
+          </td>
+        </tr>
+      );
     }
     const { data } = this.props.client;
-    const firstColumn = ['Name', 'Phone'];
+    const firstColumn = ["Name", "Phone"];
     const secondColumn = [data.name, data.phone];
 
     // Creating additional email fields
     let emailNo = 1;
     data.email.forEach(email => {
-      if (email !== '') {
+      if (email !== "") {
         firstColumn.push(`Email ${emailNo}`);
         secondColumn.push(email);
         emailNo++;
@@ -166,28 +202,28 @@ class TableData extends Component {
     });
 
     let i = 0;
-    return (
-      firstColumn.map(text => {
-        i++;
-        return (
-          <tr key={i}>
-            <td>{text}</td>
-            <td className="left aligned">{secondColumn[i - 1]}</td>
-          </tr>
-        );
-      })
-    );
+    return firstColumn.map(text => {
+      i++;
+      return (
+        <tr key={i}>
+          <td>{text}</td>
+          <td className="left aligned">{secondColumn[i - 1]}</td>
+        </tr>
+      );
+    });
   }
 
   renderClients() {
     if (!this.props.clients) {
-      return (<tr rowSpan="5">
-        <td colSpan="10">
-          <div className="ui active inverted dimmer">
-            <div className="ui text loader">Loading</div>
-          </div>
-        </td>
-      </tr>);
+      return (
+        <tr rowSpan="5">
+          <td colSpan="10">
+            <div className="ui active inverted dimmer">
+              <div className="ui text loader">Loading</div>
+            </div>
+          </td>
+        </tr>
+      );
     }
     const { clients } = this.props.clients;
     const dataOnPage = this.showDataByPageNumber(clients, this.props.page);
@@ -201,7 +237,7 @@ class TableData extends Component {
           </td>
           <td className="center aligned">{client.name}</td>
           <td>{client.phone}</td>
-          <td>{client.email.join(', ')}</td>
+          <td>{client.email.join(", ")}</td>
         </tr>
       );
     });
@@ -211,13 +247,15 @@ class TableData extends Component {
 
   renderLoadings() {
     if (!this.props.loadings) {
-      return (<tr rowSpan="5">
-        <td colSpan="10">
-          <div className="ui active inverted dimmer">
-            <div className="ui text loader">Loading</div>
-          </div>
-        </td>
-      </tr>);
+      return (
+        <tr rowSpan="5">
+          <td colSpan="10">
+            <div className="ui active inverted dimmer">
+              <div className="ui text loader">Loading</div>
+            </div>
+          </td>
+        </tr>
+      );
     }
     const { loadings } = this.props.loadings;
     const dataOnPage = this.showDataByPageNumber(loadings, this.props.page);
@@ -225,13 +263,11 @@ class TableData extends Component {
       return (
         <tr key={loading._id}>
           <td className="center aligned">
-            <Link to={`/loadings/${loading._id}`}>
-              {this.renderButton()}
-            </Link>
+            <Link to={`/loadings/${loading._id}`}>{this.renderButton()}</Link>
           </td>
           <td className="center aligned">{loading.status}</td>
           <td className="center aligned">{loading.loadingID}</td>
-          <td className="center aligned">{loading.date.split('T')[0]}</td>
+          <td className="center aligned">{loading.date.split("T")[0]}</td>
           <td className="center aligned">{loading.truck}</td>
           <td className="center aligned">{loading.trailer}</td>
           <td className="center aligned">{loading.totalQnt}</td>
@@ -246,39 +282,57 @@ class TableData extends Component {
       return this.renderSpinner();
     }
     const { data, client } = this.props.loading;
-    const firstColumn = ['ID', 'Truck', 'Trailer', 'Client', 'Driver\'s phone number', 'Comments on loading'];
-    const secondColumn = [data.loadingID, data.truck, data.trailer, client.name, data.driverPhone, data.commentsOnLoading];
+    const firstColumn = [
+      "ID",
+      "Truck",
+      "Trailer",
+      "Client",
+      "Driver's phone number",
+      "Comments on loading"
+    ];
+    const secondColumn = [
+      data.loadingID,
+      data.truck,
+      data.trailer,
+      client.name,
+      data.driverPhone,
+      data.commentsOnLoading
+    ];
     let i = 0;
-    return (
-      firstColumn.map(text => {
-        i++;
-        return (
-          <tr key={i}>
-            <td>{text}</td>
-            <td className="left aligned">{secondColumn[i - 1]}</td>
-            {i === 1 && <td rowSpan={secondColumn.length - 3}><FileList id={data._id} type="showFiles" typeOfData='loading' /></td>}
-            {(i === secondColumn.length - 2 && (this.props.userType === 'admin' || this.props.userType === 'super')) && <td rowSpan="3"><FileUpload id={data._id} typeOfData='loading' /></td>}
-          </tr>
-        );
-      })
-    );
+    return firstColumn.map(text => {
+      i++;
+      return (
+        <tr key={i}>
+          <td>{text}</td>
+          <td className="left aligned">{secondColumn[i - 1]}</td>
+          {i === 1 && (
+            <td rowSpan={secondColumn.length - 3}>
+              <FileList id={data._id} type="showFiles" typeOfData="loading" />
+            </td>
+          )}
+          {i === secondColumn.length - 2 &&
+            (this.props.userType === "admin" ||
+              this.props.userType === "super") && (
+              <td rowSpan="3">
+                <FileUpload id={data._id} typeOfData="loading" />
+              </td>
+            )}
+        </tr>
+      );
+    });
   }
 
   renderAddRemove(id) {
-    const { addOrderToLoading, removeOrderFromLoading, action } = this.props.additional
-    if (action === 'add') {
+    const {
+      addOrderToLoading,
+      removeOrderFromLoading,
+      action
+    } = this.props.additional;
+    if (action === "add") {
+      return <i className="plus icon" onClick={() => addOrderToLoading(id)} />;
+    } else if (action === "remove") {
       return (
-        <i
-          className="plus icon"
-          onClick={() => addOrderToLoading(id)}
-        />
-      );
-    } else if (action === 'remove') {
-      return (
-        <i
-          className="minus icon"
-          onClick={() => removeOrderFromLoading(id)}
-        />
+        <i className="minus icon" onClick={() => removeOrderFromLoading(id)} />
       );
     }
   }
@@ -295,7 +349,7 @@ class TableData extends Component {
             <td className="center aligned">{order.status}</td>
             <td className="center aligned">{order.orderID}</td>
             <td className="center aligned">{order.additionalID}</td>
-            <td className="center aligned">{order.date.split('T')[0]}</td>
+            <td className="center aligned">{order.date.split("T")[0]}</td>
             <td className="center aligned">{order.sender}</td>
             <td className="center aligned">{order.receiver}</td>
             <td className="center aligned">{order.qnt}</td>
@@ -316,21 +370,33 @@ class TableData extends Component {
       return (
         <tr key={order._id}>
           <td className="center aligned">
-            <Link to={`/orders/${order._id}`} >
-              {this.renderButton()}
-            </Link>
+            <Link to={`/orders/${order._id}`}>{this.renderButton()}</Link>
           </td>
           <td className="center aligned">{order.orderID}</td>
           <td className="center aligned">{order.additionalID}</td>
-          <td className="center aligned">{order.date.split('T')[0]}</td>
+          <td className="center aligned">{order.date.split("T")[0]}</td>
           <td className="center aligned">{order.sender}</td>
           <td className="center aligned">{order.receiver}</td>
           <td className="center aligned">{order.qnt}</td>
           <td className="center aligned">{order.bruto}</td>
-          <td className="center aligned" style={{ 'color': 'tomato' }}><NewOrderInfo type='cll' order={order} loading={this.props.loading} /></td>
-          <td className="center aligned" style={{ 'color': 'tomato' }}><NewOrderInfo type='bruto' order={order} loading={this.props.loading} /></td>
-          <td className="center aligned"><CommentList order={order} /></td>
-        </tr >
+          <td className="center aligned" style={{ color: "tomato" }}>
+            <NewOrderInfo
+              type="cll"
+              order={order}
+              loading={this.props.loading}
+            />
+          </td>
+          <td className="center aligned" style={{ color: "tomato" }}>
+            <NewOrderInfo
+              type="bruto"
+              order={order}
+              loading={this.props.loading}
+            />
+          </td>
+          <td className="center aligned">
+            <CommentList order={order} />
+          </td>
+        </tr>
       );
     });
   }
@@ -340,15 +406,29 @@ class TableData extends Component {
       return this.renderSpinner();
     }
     return (
-      <tr style={{ 'fontWeight': 'bold' }}>
-        <td className="one wide center aligned right aligned" colSpan='6'>Total:</td>
-        <td className="one wide center aligned">{this.props.loading.data.totalQnt}</td>
-        <td className="one wide center aligned">{this.props.loading.data.totalBruto}</td>
-        <td className="one wide center aligned" style={{ 'color': 'tomato' }}>{this.props.loading.data.finalTotalQnt ? this.props.loading.data.finalTotalQnt : this.props.loading.data.totalQnt}</td>
-        <td className="one wide center aligned" style={{ 'color': 'tomato' }}>{this.props.loading.data.finalTotalBruto ? this.props.loading.data.finalTotalBruto : this.props.loading.data.totalBruto}</td>
+      <tr style={{ fontWeight: "bold" }}>
+        <td className="one wide center aligned right aligned" colSpan="6">
+          Total:
+        </td>
+        <td className="one wide center aligned">
+          {this.props.loading.data.totalQnt}
+        </td>
+        <td className="one wide center aligned">
+          {this.props.loading.data.totalBruto}
+        </td>
+        <td className="one wide center aligned" style={{ color: "tomato" }}>
+          {this.props.loading.data.finalTotalQnt
+            ? this.props.loading.data.finalTotalQnt
+            : this.props.loading.data.totalQnt}
+        </td>
+        <td className="one wide center aligned" style={{ color: "tomato" }}>
+          {this.props.loading.data.finalTotalBruto
+            ? this.props.loading.data.finalTotalBruto
+            : this.props.loading.data.totalBruto}
+        </td>
         <td className="one wide center aligned"></td>
       </tr>
-    )
+    );
   }
 
   // SPINNER
@@ -367,12 +447,15 @@ class TableData extends Component {
   // DISPLAY DATA BY PAGE NUMBER AND PAGINATION
 
   showDataByPageNumber(data, page) {
-    if (data === 'undefined') return null;
+    if (data === "undefined") return null;
     if (data.length <= this.itemsPerPage) {
       return data;
     } else {
       if (page) {
-        return data.slice((page - 1) * this.itemsPerPage, page * this.itemsPerPage);
+        return data.slice(
+          (page - 1) * this.itemsPerPage,
+          page * this.itemsPerPage
+        );
       } else {
         return data.slice(0, this.itemsPerPage);
       }
@@ -400,7 +483,7 @@ class TableData extends Component {
             {this.renderPageButtons(totalData, page, this.props.url)}
           </td>
         </tr>
-      )
+      );
     }
   }
 
@@ -410,14 +493,30 @@ class TableData extends Component {
       if (p > 1 && p < data.length / this.itemsPerPage) {
         return (
           <Fragment>
-            <Link className="ui secondary button" to={`${url}page/${p - 1}`}> Prev </Link>
-            <Link className="ui secondary button" to={`${url}page/${p + 1}`}> Next </Link>
+            <Link className="ui secondary button" to={`${url}page/${p - 1}`}>
+              {" "}
+              Prev{" "}
+            </Link>
+            <Link className="ui secondary button" to={`${url}page/${p + 1}`}>
+              {" "}
+              Next{" "}
+            </Link>
           </Fragment>
-        )
+        );
       } else if (p === 1) {
-        return <Link className="ui secondary button" to={`${url}page/${p + 1}`}> Next </Link>;
+        return (
+          <Link className="ui secondary button" to={`${url}page/${p + 1}`}>
+            {" "}
+            Next{" "}
+          </Link>
+        );
       } else {
-        return <Link className="ui secondary button" to={`${url}page/${p - 1}`}> Prev </Link>;
+        return (
+          <Link className="ui secondary button" to={`${url}page/${p - 1}`}>
+            {" "}
+            Prev{" "}
+          </Link>
+        );
       }
     }
   }
@@ -437,41 +536,41 @@ class TableData extends Component {
       );
     } else {
       switch (this.props.type) {
-        case 'orders':
+        case "orders":
           return (
             <Fragment>
               {this.renderOrders()}
               {this.renderPagination()}
             </Fragment>
           );
-        case 'order':
+        case "order":
           return this.renderOrder();
-        case 'clients':
+        case "clients":
           return (
             <Fragment>
               {this.renderClients()}
               {this.renderPagination()}
             </Fragment>
           );
-        case 'client':
+        case "client":
           return this.renderClient();
-        case 'loadings':
+        case "loadings":
           return (
             <Fragment>
               {this.renderLoadings()}
               {this.renderPagination()}
             </Fragment>
           );
-        case 'loading':
+        case "loading":
           return this.renderLoading();
-        case 'loadingOrderList':
+        case "loadingOrderList":
           return (
             <Fragment>
               {this.renderLoadingOrderList()}
               {this.renderLoadingOrderListTotal()}
             </Fragment>
           );
-        case 'loadingOrderListCreate':
+        case "loadingOrderListCreate":
           return this.renderLoadingOrderListCreate();
         default:
           return null;
@@ -480,11 +579,7 @@ class TableData extends Component {
   }
 
   render() {
-    return (
-      <tbody>
-        {this.renderTableData()}
-      </tbody>
-    );
+    return <tbody>{this.renderTableData()}</tbody>;
   }
 }
 
@@ -497,7 +592,7 @@ const mapStateToProps = state => {
       state.ordersData.error,
       state.filesData.error
     ]
-  }
+  };
 };
 
 export default connect(mapStateToProps, {})(TableData);

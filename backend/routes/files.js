@@ -22,13 +22,13 @@ const options = {
 // @access      Private
 router.get("/:id", auth, async (req, res) => {
   try {
-    const folder = req.params.id;
     let filesOnServer = [];
-
+    let filesToReturn = [];
+    const c = new Client();
+    const folder = req.params.id;
     const paths = [`/files/${folder}/photo`, `/files/${folder}/document`];
 
-    const c = new Client();
-    c.on("ready", () => {
+    c.on("ready", async () => {
       for (const path of paths) {
         c.list(path, (err, list) => {
           if (err) console.log(err);
@@ -37,10 +37,11 @@ router.get("/:id", auth, async (req, res) => {
           }
         });
       }
+
       c.end();
+
       c.on("close", async () => {
         const files = await File.find({ order: req.params.id });
-        let filesToReturn = [];
 
         for (const file of files) {
           if (filesOnServer.indexOf(file.name) >= 0) {
@@ -49,7 +50,6 @@ router.get("/:id", auth, async (req, res) => {
             console.log(`${file.name} does not exists on server`);
           }
         }
-
         res.json(filesToReturn);
       });
     });
@@ -60,23 +60,71 @@ router.get("/:id", auth, async (req, res) => {
   }
 });
 
+router.get("/fileData/:id", async (req, res) => {
+  const file = await File.findById(req.params.id);
+
+  try {
+    const { order, type, name } = file;
+    const path = `/files/${order}/${type}/${name}`;
+
+    const c = new Client();
+
+    let chunks = [];
+    c.on("ready", function() {
+      c.get(path, (err, stream) => {
+        if (err) throw err;
+
+        stream.once("close", function() {
+          c.end();
+        });
+
+        stream.on("data", chunk => {
+          chunks.push(chunk);
+        });
+
+        stream.on("end", () => {
+          const finalBuffer = Buffer.concat(chunks);
+          const fileData = finalBuffer.toString("base64");
+          res.send({ _id: req.params.id, base64Data: fileData });
+        });
+      });
+    });
+    c.connect(options);
+  } catch (err) {
+    res.status(500).json({ msg: "Server error downloading files" });
+  }
+});
+
 router.get("/download/:id", async (req, res) => {
   const file = await File.findById(req.params.id);
   try {
     const { order, type, name } = file;
-    const path = `ftp://${ftp.username}:${ftp.password}@logway1.lt/files/${order}/${type}/${name}`;
-    res.send(path);
+    const fullPath = `ftp://${ftp.username}:${ftp.password}@logway1.lt/files/${order}/${type}/${name}`;
 
-    // const path = `/files/${order}/${type}/${name}`;
-    // const c = new Client();
-    // c.on('ready', function () {
-    //   c.get(path, (err, stream) => {
-    //     if (err) throw err;
-    //     stream.once('close', function () { c.end(); });
-    //     stream.pipe(res);
-    //   });
-    // });
-    // c.connect(options);
+    const path = `/files/${order}/${type}/${name}`;
+    const c = new Client();
+
+    let chunks = [];
+    c.on("ready", function() {
+      c.get(path, (err, stream) => {
+        if (err) throw err;
+
+        stream.once("close", function() {
+          c.end();
+        });
+
+        stream.on("data", chunk => {
+          chunks.push(chunk);
+        });
+
+        stream.on("end", () => {
+          const finalBuffer = Buffer.concat(chunks);
+          const imageData = finalBuffer.toString("base64");
+          res.send({ fullPath, imageData });
+        });
+      });
+    });
+    c.connect(options);
   } catch (err) {
     res.status(500).json({ msg: "Server error downloading files" });
   }

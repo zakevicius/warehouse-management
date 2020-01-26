@@ -71,13 +71,22 @@ export const fetchData = (typeOfData, id = null) => async dispatch => {
     if (typeOfData === "/files") {
       dispatch({ type: types.FILE_SET_LOADING });
       res = await api.get(`${typeOfData}/${id}`);
+      let base64Data = [];
+      for await (const file of res.data) {
+        let fileData = await api.get(`${typeOfData}/fileData/${file._id}`);
+        base64Data.push(fileData.data);
+      }
+      dispatch({
+        type: requestType,
+        payload: { data: res.data, base64: base64Data }
+      });
       dispatch({ type: types.FILE_UNSET_LOADING });
     } else {
       dispatch({ type: types.SET_LOADING });
       res = await api.get(typeOfData);
       dispatch({ type: types.UNSET_LOADING });
+      dispatch({ type: requestType, payload: res.data });
     }
-    dispatch({ type: requestType, payload: res.data });
   } catch (err) {
     let message = err.response ? err.response.data.msg : err.message;
     let errorType = setErrorType(typeOfData, "set");
@@ -273,10 +282,8 @@ export const removeData = (typeOfData, id, data = null) => async dispatch => {
     dispatch({ type: types.SET_LOADING });
     let res;
     if (typeOfData !== "/files") {
-      console.log("notfile");
       res = await api.delete(`${typeOfData}/${id}`);
     } else {
-      console.log("file");
       res = await api.delete(`${typeOfData}/${data}/${id}`);
     }
     dispatch({ type: requestType, payload: res.data });
@@ -426,25 +433,47 @@ export const clearFiles = () => {
 export const downloadFile = (id, filename) => async dispatch => {
   try {
     dispatch({ type: types.SET_LOADING });
-    const res = await api.get(`/files/download/${id}`);
+    // const res = await api.get(`/files/download/${id}`);
 
-    // const file = new Blob([res.data]);
-    // const fileURL = URL.createObjectURL(file);
-    const link = document.createElement("a");
-
-    link.href = res.data;
-    link.target = "_blank";
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    // const link = document.createElement("a");
+    // link.href = res.data;
+    // link.target = "_blank";
+    // link.download = filename;
+    // document.body.appendChild(link);
+    // link.click();
+    // link.remove();
     // URL.revokeObjectURL(file);
-    dispatch({ type: types.DOWNLOAD_FILE, payload: res.data });
+    dispatch({ type: types.DOWNLOAD_FILE, payload: { id, filename } });
     dispatch({ type: types.UNSET_LOADING });
   } catch (err) {
     let message = err.response ? err.response.data.msg : err.message;
     dispatch({ type: types.FILE_ERROR, payload: message });
     dispatch({ type: types.UNSET_LOADING });
+  }
+};
+
+export const getBlob = (base64, fileName) => {
+  const binaryString = window.atob(base64);
+  const bytes = new Uint8Array(binaryString.length);
+  const result = bytes.map((byte, i) => binaryString.charCodeAt(i));
+
+  const blob = new Blob([result]);
+  // const fileName = `${fileName}`;
+  if (navigator.msSaveBlob) {
+    // IE 10+
+    navigator.msSaveBlob(blob, fileName);
+  } else {
+    const link = document.createElement("a");
+    // Browsers that support HTML5 download attribute
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", fileName);
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   }
 };
 
@@ -458,18 +487,44 @@ export const setActiveTab = (type, tab) => {
   };
 };
 
-export const showModal = () => {
-  return {
-    type: types.SHOW_MODAL,
-    payload: true
-  };
+export const showModal = (type = null, id = null) => {
+  switch (type) {
+    case "image":
+      return {
+        type: types.SHOW_IMAGE_MODAL,
+        payload: {
+          show: true,
+          _id: id
+        }
+      };
+    default:
+      return {
+        type: types.SHOW_MODAL,
+        payload: {
+          show: true
+        }
+      };
+  }
 };
 
-export const hideModal = () => {
-  return {
-    type: types.HIDE_MODAL,
-    payload: false
-  };
+export const hideModal = (type = null) => {
+  switch (type) {
+    case "image":
+      return {
+        type: types.HIDE_IMAGE_MODAL,
+        payload: {
+          show: false,
+          _id: ""
+        }
+      };
+    default:
+      return {
+        type: types.HIDE_MODAL,
+        payload: {
+          show: false
+        }
+      };
+  }
 };
 
 export const clearState = () => ({ type: types.CLEAR_STATE });
