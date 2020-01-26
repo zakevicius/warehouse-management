@@ -1,6 +1,6 @@
-import React, { Component, Fragment } from 'react';
-import TableHeader from './TableHeader';
-import TableData from './TableData';
+import React, { Component, Fragment } from "react";
+import TableHeader from "./TableHeader";
+import TableData from "./TableData";
 
 class Table extends Component {
   state = {
@@ -15,17 +15,16 @@ class Table extends Component {
     page: this.props.page,
     url: this.props.url,
     additional: this.props.additional,
-    color: this.props.color ? this.props.color : ''
-  }
+    color: this.props.color ? this.props.color : ""
+  };
 
   render() {
     return (
       <Fragment>
-        <table className={`ui celled striped table segment very compact ${this.state.color}`}>
-          <TableHeader
-            type={this.props.type}
-            orders={this.props.orders}
-          />
+        <table
+          className={`ui celled striped table segment very compact ${this.state.color}`}
+        >
+          <TableHeader type={this.props.type} orders={this.props.orders} />
           <TableData
             type={this.props.type}
             client={this.props.client}
@@ -42,8 +41,7 @@ class Table extends Component {
         </table>
       </Fragment>
     );
-  };
-};
-
+  }
+}
 
 export default Table;

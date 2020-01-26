@@ -20,8 +20,16 @@ class ImageModal extends Component {
 
   styleModalImage = {
     maxWidth: "100%",
-    height: "auto",
+    maxHeight: "700px",
+    height: "100%",
     padding: "2em"
+  };
+
+  styleMainImageDiv = {
+    bottom: "15em",
+    width: "100%",
+    height: "700px",
+    zIndex: "1"
   };
 
   showImage = () => {
@@ -76,10 +84,18 @@ class ImageModal extends Component {
           <div style={this.styleImagesLine}>{this.showImagesLine()}</div>
           <i
             className="large window close outline icon inverted"
-            style={{ position: "absolute", top: "50px", right: "50px" }}
+            style={{
+              position: "absolute",
+              top: "50px",
+              right: "50px",
+              zIndex: "10"
+            }}
             onClick={this.onClose}
           ></i>
-          <div className="ui small basic test modal transition visible active">
+          <div
+            style={this.styleMainImageDiv}
+            className="ui small basic test modal transition visible active"
+          >
             {this.showImage()}
           </div>
         </div>

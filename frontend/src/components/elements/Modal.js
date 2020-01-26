@@ -1,20 +1,19 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { hideModal } from '../../action';
+import React from "react";
+import { connect } from "react-redux";
+import { hideModal } from "../../action";
 
-const Modal = (props) => {
-
+const Modal = props => {
   const onConfirm = () => {
     props.confirm();
     props.hideModal();
-  }
+  };
 
   if (!props.showModal) {
     return null;
   } else {
     return (
-      <div className='ui dimmer modals page active'>
-        <div className="ui small basic test modal transition visible active" >
+      <div className="ui dimmer modals page active">
+        <div className="ui small basic test modal transition visible active">
           <div className="ui icon red header">
             <i className="power off icon red"></i>
             WARNING
@@ -27,22 +26,24 @@ const Modal = (props) => {
               <i className="checkmark icon"></i>
               Yes
             </div>
-            <div className="ui green basic cancel inverted button" onClick={props.hideModal}>
+            <div
+              className="ui green basic cancel inverted button"
+              onClick={props.hideModal}
+            >
               <i className="remove icon"></i>
               No
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     showModal: state.eventsData.showModal
-  }
-}
+  };
+};
 
 export default connect(mapStateToProps, { hideModal })(Modal);
-

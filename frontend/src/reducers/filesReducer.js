@@ -37,6 +37,13 @@ export default (state = initialState, action) => {
           }
         });
       });
+      documents.forEach(doc => {
+        base64.forEach(base => {
+          if (doc._id.toString() === base._id.toString()) {
+            doc.src = base.base64Data;
+          }
+        });
+      });
 
       return {
         ...state,
@@ -46,9 +53,16 @@ export default (state = initialState, action) => {
         }
       };
     case DOWNLOAD_FILE:
+      let photo = state.files.photos.filter(
+        photo => photo._id === action.payload.id
+      );
+      let document = state.files.documents.filter(
+        doc => doc._id === action.payload.id
+      );
+      let fileToDownload = photo.length > 0 ? photo[0] : document[0];
       return {
         ...state,
-        src: action.payload.imageData
+        fileToDownload
       };
     case UPLOAD_FILES:
       return {

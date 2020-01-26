@@ -7,7 +7,8 @@ import ImageModal from "./ImageModal";
 
 class FileList extends Component {
   state = {
-    modalInitialImageId: ""
+    modalInitialImageId: "",
+    reload: false
   };
 
   onClickPhoto = id => {
