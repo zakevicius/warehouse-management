@@ -184,7 +184,7 @@ export const fetchNewID = (clientID, type) => async dispatch => {
             item =>
               item.clientID === clientID &&
               item.orderID.replace(/[0-9]/g, "") ===
-                client.data.data.orderLetter
+              client.data.data.orderLetter
           );
           break;
         case "/loadings":

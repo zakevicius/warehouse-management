@@ -6,6 +6,8 @@ import Spinner from '../elements/Spinner';
 import Error from '../elements/Error';
 import LoadingOrderList from './LoadingOrderList';
 import LoadingStatus from './LoadingStatus';
+import FileList from '../files/FileList';
+import FileUpload from '../files/FileUpload';
 
 class LoadingShow extends Component {
 
@@ -23,6 +25,8 @@ class LoadingShow extends Component {
         <Table type="loading" loading={this.props.loading} />
         <LoadingStatus loading={this.props.loading} />
         {this.props.error && <Error error={this.props.error} />}
+        <FileList id={this.props.loading._id} type="showFiles" typeOfData="loading" />
+        <FileUpload id={this.props.loading._id} typeOfData="loading" />
         <LoadingOrderList loading={this.props.loading} orders={this.props.loading.orders} />
       </div>
     );

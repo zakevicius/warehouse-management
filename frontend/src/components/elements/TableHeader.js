@@ -156,6 +156,9 @@ class TableHeader extends Component {
                       </Link>
                     ) : null
                 }
+              </th>
+              <th className="one wide center aligned"></th>
+              <th className="four wide center aligned">
                 {
                   (this.props.user.type === 'admin' || this.props.user.type === 'super') ||
                     (this.props.type === 'loading') ?
@@ -169,9 +172,8 @@ class TableHeader extends Component {
                       </Fragment>
                     ) : null
                 }
-
               </th>
-              {(this.props.type === "order" || this.props.type === "loading") && <th className="six wide">Files</th>}
+              {/* {(this.props.type === "order" || this.props.type === "loading") && <th className="six wide">Files</th>} */}
             </tr>
           </thead>
         );
@@ -188,9 +190,9 @@ class TableHeader extends Component {
                     : ""
                 }
               </th>
-              <th className="two wide center aligned">Name</th>
-              <th className="two wide center aligned">Phone</th>
-              <th className="two wide center aligned">E-mail</th>
+              <th className="one wide center aligned">Name</th>
+              <th className="one wide center aligned">Phone</th>
+              <th className="four wide center aligned">E-mail</th>
             </tr>
           </thead>
         );

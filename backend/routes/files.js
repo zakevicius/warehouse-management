@@ -70,11 +70,11 @@ router.get("/fileData/:id", async (req, res) => {
     const c = new Client();
 
     let chunks = [];
-    c.on("ready", function() {
+    c.on("ready", function () {
       c.get(path, (err, stream) => {
         if (err) throw err;
 
-        stream.once("close", function() {
+        stream.once("close", function () {
           c.end();
         });
 
@@ -105,11 +105,11 @@ router.get("/download/:id", async (req, res) => {
     const c = new Client();
 
     let chunks = [];
-    c.on("ready", function() {
+    c.on("ready", function () {
       c.get(path, (err, stream) => {
         if (err) throw err;
 
-        stream.once("close", function() {
+        stream.once("close", function () {
           c.end();
         });
 

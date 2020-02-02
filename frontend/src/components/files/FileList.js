@@ -71,21 +71,21 @@ class FileList extends Component {
     return (
       <Fragment>
         <div>
-          <h4 style={{ marginTop: 10 }}>Photos</h4>
-          <div
-            className="ui segment"
-            style={{ display: "flex", flexWrap: "wrap" }}
-          >
-            {renderPhotos()}
-          </div>
-        </div>
-        <div>
           <h4 style={{ marginTop: 10 }}>Documents</h4>
           <div
             className="ui segment"
             style={{ display: "flex", flexWrap: "wrap" }}
           >
             {renderDocuments()}
+          </div>
+        </div>
+        <div>
+          <h4 style={{ marginTop: 10 }}>Photos</h4>
+          <div
+            className="ui segment"
+            style={{ display: "flex", flexWrap: "wrap" }}
+          >
+            {renderPhotos()}
           </div>
         </div>
       </Fragment>

@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { fetchSingleData, fetchData, setActiveTab } from "../../action";
 import Table from "../elements/Table";
 import Spinner from "../elements/Spinner";
+import FileList from '../files/FileList';
+import FileUpload from '../files/FileUpload'
 
 class OrderShow extends Component {
   async componentDidMount() {
@@ -13,11 +15,15 @@ class OrderShow extends Component {
   }
 
   render() {
-    return this.props.load ? (
+    return this.props.load || !this.props.order ? (
       <Spinner />
     ) : (
-      <Table type="order" order={this.props.order} rerender={this.rerender} />
-    );
+        <div>
+          <Table type="order" order={this.props.order} rerender={this.rerender} />
+          <FileList id={this.props.order._id} type="showFiles" typeOfData="order" />
+          <FileUpload id={this.props.order._id} typeOfData="order" />
+        </div>
+      );
   }
 }
 
