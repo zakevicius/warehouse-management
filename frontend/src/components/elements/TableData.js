@@ -39,13 +39,7 @@ class TableData extends Component {
       "Status",
       "Date",
       "Sender",
-      "Receiver",
-      "Truck",
-      "Trailer",
-      "CLL",
-      "Bruto",
-      " Description",
-      "Declarations"
+      "Receiver"
     ];
     const secondColumn = [
       order.orderID,
@@ -53,13 +47,24 @@ class TableData extends Component {
       order.status,
       order.date.split("T")[0],
       order.sender,
-      order.receiver,
+      order.receiver
+    ];
+    const thirdColumn = [
+      "Truck",
+      "Trailer",
+      "CLL",
+      "Bruto",
+      " Description",
+      "Declarations"
+    ];
+    const fourthColumn = [
       order.truck,
       order.trailer,
       order.qnt,
       order.bruto,
       order.description
     ];
+
 
     const renderDeclarations = decl => {
       return (
@@ -100,15 +105,23 @@ class TableData extends Component {
         // }
       }
     };
-    const renderInfo = i => {
+    const renderSecondColumn = i => {
       if (i === 3) {
         return renderStatus(order.status);
-      } else if (i === firstColumn.length) {
-        return renderDeclarations(order.declarations);
       } else {
         return <td>{secondColumn[i - 1]}</td>;
       }
     };
+    const renderThirdColumn = i => {
+      return <td className="right aligned" style={{ fontWeight: "bold" }}>{thirdColumn[i - 1]}</td>;
+    }
+    const renderFourthColumn = i => {
+      if (i === firstColumn.length) {
+        return renderDeclarations(order.declarations);
+      } else {
+        return <td>{fourthColumn[i - 1]}</td>;
+      }
+    }
 
     let i = 0;
     return firstColumn.map(text => {
@@ -118,8 +131,10 @@ class TableData extends Component {
           <td className="right aligned" style={{ fontWeight: "bold" }}>
             {text}
           </td>
-          {renderInfo(i)}
-          {i === 1 && (
+          {renderSecondColumn(i)}
+          {renderThirdColumn(i)}
+          {renderFourthColumn(i)}
+          {/* {i === 1 && (
             <td rowSpan={secondColumn.length - 3}>
               <FileList id={order._id} type="showFiles" typeOfData="order" />
             </td>
@@ -130,7 +145,7 @@ class TableData extends Component {
               <td rowSpan="3">
                 <FileUpload id={order._id} typeOfData="order" />
               </td>
-            )}
+            )} */}
         </tr>
       );
     });
@@ -270,8 +285,8 @@ class TableData extends Component {
           <td className="center aligned">{loading.date.split("T")[0]}</td>
           <td className="center aligned">{loading.truck}</td>
           <td className="center aligned">{loading.trailer}</td>
-          <td className="center aligned">{loading.totalQnt}</td>
-          <td className="center aligned">{loading.totalBruto.toFixed(3)}</td>
+          <td className="center aligned">{loading.finalTotalQnt ? loading.finalTotalQnt : loading.totalQnt}</td>
+          <td className="center aligned">{loading.finalTotalBruto ? loading.finalTotalBruto : loading.totalBruto.toFixed(3)}</td>
         </tr>
       );
     });
@@ -305,7 +320,7 @@ class TableData extends Component {
         <tr key={i}>
           <td>{text}</td>
           <td className="left aligned">{secondColumn[i - 1]}</td>
-          {i === 1 && (
+          {/* {i === 1 && (
             <td rowSpan={secondColumn.length - 3}>
               <FileList id={data._id} type="showFiles" typeOfData="loading" />
             </td>
@@ -314,9 +329,10 @@ class TableData extends Component {
             (this.props.userType === "admin" ||
               this.props.userType === "super") && (
               <td rowSpan="3">
+                <FileList id={data._id} type="showFiles" typeOfData="loading" />
                 <FileUpload id={data._id} typeOfData="loading" />
               </td>
-            )}
+            )} */}
         </tr>
       );
     });
