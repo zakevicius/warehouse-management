@@ -15,7 +15,6 @@ class OrderShow extends Component {
   }
 
   render() {
-    console.log(this.props)
     return this.props.load || !this.props.order ? (
       <Spinner />
     ) : (
