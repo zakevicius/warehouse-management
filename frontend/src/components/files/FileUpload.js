@@ -56,6 +56,7 @@ class FileUpload extends Component {
   };
 
   render() {
+    console.log(this.props);
     return (
       <Fragment>
         <div className="ui segment">
